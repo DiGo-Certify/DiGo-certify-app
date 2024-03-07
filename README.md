@@ -13,7 +13,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![GNU License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -77,7 +77,6 @@ SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform applic
 - [![Node][Node.js]][Node-url]
 - [![React Native][ReactNative.js]][ReactNative-url]
 - [![Expo React Native][Expo.js]][Expo-url]
-- [![React Route][ReactRoute.js]][ReactRoute-url]
 - [![FireBase][FireBase.js]][FireBase-url]
 - [![Smart Contract][Solidity.sol]][Solidity-url]
 - [![Hardhat][Hardhat.js]][Hardhat-url]
@@ -142,11 +141,13 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 ## Contact
 
-:inbox_tray: Diogo Rodrigues - [Contact](mailto:a49513@alunos.isel.pt)
+:inbox_tray: Diogo Rodrigues(developer) - [Contact](mailto:a49513@alunos.isel.pt)
 
-:inbox_tray: Gonçalo Frutuoso - [Contact](mailto:a49495@alunos.isel.pt)
+:inbox_tray: Gonçalo Frutuoso(developer) - [Contact](mailto:a49495@alunos.isel.pt)
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+:inbox_tray: Cátia Vaz(supervisor) - [Contact](mailto:cvaz@isel.pt)
+
+:inbox_tray: Alexandre Francisco(supervisor) - [Contact](mailto:aplf@tecnico.pt)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -185,8 +186,6 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [Ethereum-url]: https://ethereum.org/en/
 [FireBase.js]: https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black
 [FireBase-url]: https://firebase.google.com/
-[ReactRoute.js]: https://img.shields.io/badge/react%20router-CA4245?style=for-the-badge&logo=react-router&logoColor=white
-[ReactRoute-url]: https://reactrouter.com/
 [TypeScript.ts]: https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [TypeScript-url]: https://www.typescriptlang.org/
 [ReactNative.js]: https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB
