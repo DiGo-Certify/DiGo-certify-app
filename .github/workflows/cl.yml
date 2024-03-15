@@ -13,6 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Copy assets
+        run: cp -r ./docs/assets/* ./docs/project-proposal # Adjust the path as needed
+
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v3
         with:
@@ -20,5 +23,3 @@ jobs:
           working_directory: ./docs/project-proposal # Set to the directory containing your LaTeX files
           extra_system_packages: "inkscape" # Install additional packages if needed
 
-      - name: Copy assets
-        run: cp -r ./docs/assets/* ./docs/project-proposal # Adjust the path as needed
