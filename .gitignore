@@ -5,6 +5,8 @@
 *.log
 *.out
 *.synctex.gz
+*.bbl
+*.blg
 
 # Mac OS ignored files
 *.DS_Store
