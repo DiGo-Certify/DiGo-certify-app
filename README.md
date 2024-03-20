@@ -19,7 +19,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/DiGo-Certify/DiGo-certify-app/blob/main/docs/images/logo.png">
-    <img src="images/splash-screen.png" alt="Logo" width="80" height="80">
+    <img src="docs/images/splash-screen.png" alt="Logo">
   </a>
 
 <h3 align="center">SCAR: A Blockchain based approach for academic registry</h3>
