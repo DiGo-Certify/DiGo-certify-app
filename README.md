@@ -10,16 +10,16 @@
 -->
 
 [![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
+![GitHub repo size](https://img.shields.io/github/repo-size/DiGo-Certify/DiGo-certify-app)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DiGo-Certify/DiGo-certify-app/cl.yml)
+![GitHub Release](https://img.shields.io/github/v/release/DiGo-Certify/DiGo-certify-app)
 [![GNU License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/DiGo-Certify/DiGo-certify-app">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/DiGo-Certify/DiGo-certify-app/blob/main/docs/images/logo.png">
+    <img src="images/splash-screen.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">SCAR: A Blockchain based approach for academic registry</h3>
@@ -163,7 +163,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/DiGo-Certify/DiGo-certify-app.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/DiGo-Certify/DiGo-certify-app.svg
 [contributors-url]: https://github.com/DiGo-Certify/DiGo-certify-app/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/DiGo-Certify/DiGo-certify-app.svg?style=for-the-badge
 [forks-url]: https://github.com/DiGo-Certify/DiGo-certify-app/network/members
@@ -171,7 +171,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 [stars-url]: https://github.com/DiGo-Certify/DiGo-certify-app/stargazers
 [issues-shield]: https://img.shields.io/github/issues/DiGo-Certify/DiGo-certify-app.svg?style=for-the-badge
 [issues-url]: https://github.com/DiGo-Certify/DiGo-certify-app/issues
-[license-shield]: https://img.shields.io/github/license/DiGo-Certify/DiGo-certify-app.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/DiGo-Certify/DiGo-certify-app.svg
 [license-url]: https://github.com/DiGo-Certify/DiGo-certify-app/blob/main/LICENSE
 [product-screenshot]: ./docs/images/blockchain-and-smart-contract-image.png
 [Node.js]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
