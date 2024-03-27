@@ -135,13 +135,13 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 ## Contact
 
-:inbox_tray: Diogo Rodrigues(developer) - [Contact](mailto:a49513@alunos.isel.pt)
+:inbox_tray: Diogo Rodrigues(developer) - [a49513@alunos.isel.pt](mailto:a49513@alunos.isel.pt)
 
-:inbox_tray: Gonçalo Frutuoso(developer) - [Contact](mailto:a49495@alunos.isel.pt)
+:inbox_tray: Gonçalo Frutuoso(developer) - [a49495@alunos.isel.pt](mailto:a49495@alunos.isel.pt)
 
-:inbox_tray: Cátia Vaz(supervisor) - [Contact](mailto:cvaz@isel.pt)
+:inbox_tray: Cátia Vaz(supervisor) - [cvaz@isel.pt](mailto:cvaz@isel.pt)
 
-:inbox_tray: Alexandre Francisco(supervisor) - [Contact](mailto:aplf@tecnico.pt)
+:inbox_tray: Alexandre Francisco(supervisor) - [aplf@tecnico.pt](mailto:aplf@tecnico.pt)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
