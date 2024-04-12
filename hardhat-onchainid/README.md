@@ -54,3 +54,9 @@ Any service provider is able to request this information from Information Provid
   - Implementation Authority 
   - Identity Factory 
 - Why do they need the implementation authority and the identity factory?
+
+- What does the addKey function do?
+  - It is used after we created the contract of a ClaimIssuer into an entity.
+
+My interpretation is that the addKey function is used to say that an entity is now a ClaimIssuer and can issue claims about other entities.
+Is that correct? 

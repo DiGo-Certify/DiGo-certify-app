@@ -11,3 +11,18 @@
 # Mac OS ignored files
 *.DS_Store
 *.idea
+
+# Hardhat project ignored files
+node_modules
+
+# Hardhat files
+**/cache/
+**/artifacts
+
+# TypeChain files
+**/typechain
+**/typechain-types
+
+# solidity-coverage files
+**/coverage
+**/coverage.json

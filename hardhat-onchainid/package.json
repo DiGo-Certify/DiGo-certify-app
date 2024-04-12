@@ -14,8 +14,6 @@
     "hardhat": "^2.22.2"
   },
   "dependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.5",
-    "@onchain-id/identity-sdk": "^1.7.1",
-    "chalk": "^5.3.0"
+    "@onchain-id/identity-sdk": "^1.7.1"
   }
 }
