@@ -7,23 +7,24 @@ const { createClaimIssuer } = require("./aux/createClaimIssuer");
 async function main() {
     const [deployer, aliceWallet, bobWallet] = await ethers.getSigners();
     const { identityFactory } = await deployOnchainIdSuite(deployer);
-    const claimIssuerContractAddr = await deployClaimIssuer(deployer);
-    // await createIdentity(
-    //     identityFactory,
-    //     aliceWallet.address,
-    //     deployer,
-    //     "alice-salt"
-    // );
-    // await createIdentity(
-    //     identityFactory,
-    //     bobWallet.address,
-    //     deployer,
-    //     "bob-salt"
-    // );
+    const claimIssuerContractAddr = await deployClaimIssuer(aliceWallet);
+    
+    await createIdentity(
+        identityFactory,
+        aliceWallet.address,
+        deployer,
+        "alice-salt"
+    );
+    await createIdentity(
+        identityFactory,
+        bobWallet.address,
+        deployer,
+        "bob-salt"
+    );
 
     // Create a ClaimIssuer
-    await createClaimIssuer(claimIssuerContractAddr, deployer, aliceWallet, 1);
-    await createClaimIssuer(claimIssuerContractAddr, deployer, bobWallet, 1);
+    // To change this function and the deployClaimIssuer depending on the question about claimIssuer and keys
+    await createClaimIssuer(claimIssuerContractAddr, aliceWallet, 1);
 }
 
 main()

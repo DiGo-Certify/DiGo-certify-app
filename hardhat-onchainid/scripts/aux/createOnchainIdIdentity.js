@@ -12,7 +12,7 @@ async function createIdentity(
     const event = txReceipt.logs.find(e => e.eventName === "Deployed");
 
     console.log(
-        `\n[✓] Identity "${event.args}" created by for wallet ${deployer.address}`
+        `\n[✓] Identity "${event.args}" created by management ${deployer.address}`
     );
 
     return event.args;

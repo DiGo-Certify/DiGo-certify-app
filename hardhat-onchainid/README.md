@@ -57,6 +57,7 @@ Any service provider is able to request this information from Information Provid
 
 - What does the addKey function do?
   - It is used after we created the contract of a ClaimIssuer into an entity.
+    - My interpretation is that the addKey function is used to say that an entity is now a ClaimIssuer and can issue claims about other entities.
+  - The only entity that can have the key of a ClaimIssuer is the one that created the contract of the ClaimIssuer? Is there a way to attribute a claimIssuer to an entity that is not the creator of the contract?
+    - If i want a new entity to be a ClaimIssuer, i need to create a new contract of a ClaimIssuer and then add the key of the new entity to the entity that i want to be a ClaimIssuer?
 
-My interpretation is that the addKey function is used to say that an entity is now a ClaimIssuer and can issue claims about other entities.
-Is that correct? 
