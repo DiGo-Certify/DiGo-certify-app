@@ -5,16 +5,16 @@ const {
 
 /**
  * Function that is responsible for deploying the ClaimIssuer contract
- * 
- * @param {*} claimIssuer The wallet that will deploy the ClaimIssuer contract
- * @returns 
+ *
+ * @param {*} managementKey The wallet that will deploy the ClaimIssuer contract
+ * @returns
  */
-async function deployClaimIssuer(claimIssuer) {
+async function deployClaimIssuer(managementKey) {
     const claimIssuerContract = await new ethers.ContractFactory(
         ClaimIssuer.abi,
         ClaimIssuer.bytecode,
-        claimIssuer
-    ).deploy(claimIssuer.address);
+        managementKey
+    ).deploy(managementKey.address);
 
     const claimIssuerContractAddress = await claimIssuerContract.getAddress();
 
