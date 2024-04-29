@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
-import Colors from '../../constants/Colors';
+import Colors from '../../constants/colors.js';
+import Images from '../../constants/images.js';
 
 function InitialScreen() {
     return (
@@ -15,11 +16,11 @@ function InitialScreen() {
                     index={0}
                 >
                     <View style={styles.slide}>
-                        <Image source={require('../../assets/wallet.png')} style={styles.image} />
+                        <Image source={Images.wallet} style={styles.image} />
                         <Text style={styles.sliderText}>Private & Secure</Text>
                     </View>
                     <View style={styles.slide}>
-                        <Image source={require('../../assets/certificate.png')} style={styles.image} />
+                        <Image source={Images.certificate} style={styles.image} />
                         <Text style={styles.sliderText}>Certificate Validation</Text>
                     </View>
                 </Swiper>
