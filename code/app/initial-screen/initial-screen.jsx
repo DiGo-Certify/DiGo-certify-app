@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
-import Colors from '../../constants/colors.js';
+import Colors from '@/constants/colors.js';
 import Images from '../../constants/images.js';
 import { router } from 'expo-router';
 

@@ -1,185 +1,133 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
-import Icons from '../../constants/icons';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { View, StyleSheet, Image, Text, Dimensions } from 'react-native';
+import Icons from '@/constants/icons';
+import Images from '@/constants/images';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Colors from '@/constants/colors';
+import { List } from 'react-native-paper';
 
-const ProfileInfo = ({ title, subtitle }) => (
-    <View style={styles.profileInfoContainer}>
-        <Text style={styles.profileTitle}>{title}</Text>
-        <Text style={styles.profileSubtitle}>{subtitle}</Text>
-    </View>
-);
+const Profile = () => {
+    // Mockup profile
+    const profile = {
+        username: 'Username',
+        from: 'Lisbon',
+        image: Images.mockupProfileImage,
+        wallet: 'Define your wallet',
+        since: '2021',
+    };
 
-const FeatureItem = ({ icon, title }) => {  
     return (
-        <View style={styles.featureItemContainer}>
-            <Image resizeMode="cover" source={icon} style={styles.featureIcon} />
-            <Text>{title}</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.profile}>
+                <ProfileImage source={profile.image} />
+                <ProfileInfo username={profile.username} from={profile.from} since={profile.since} />
+            </View>
+            <View style={styles.walletAccount}>
+                <WalletInfo title="Wallet" info={profile.wallet} />
+                <WalletInfo title="Account" info="Account information" />
+            </View>
+            <View style={styles.options}>
+                <ListItem title="Your favorite" onPress={() => console.log('Favorite')} icon={Icons.favorite} />
+                <ListItem
+                    title="Tell your friends"
+                    onPress={() => console.log('Tell your friends')}
+                    icon={Icons.send}
+                />
+                <ListItem title="Settings" onPress={() => console.log('Settings')} icon={Icons.settings} />
+                <ListItem title="Log out" onPress={() => console.log('Log out')} icon={Icons.logOut} />
+            </View>
+        </SafeAreaView>
     );
 };
 
-function Profile({ firstName, lastName, image, hasWallet, wallet, accountDate }) {
-    const features = [
-        { icon: Icons.favorite, title: 'Your Favorite' },
-        { icon: Icons.send, title: 'Tell your friends' },
-        { icon: Icons.settings, title: 'Settings' },
-        { icon: Icons.logOut, title: 'Log Out' },
-    ];
+export default Profile;
 
-    return (
-        <View style={styles.mainContainer}>
-            <View style={styles.profileSection}>
-                <Image resizeMode="cover" source={Icons.profile} style={styles.avatarImage} />
-                <View style={styles.profileDetails}>
-                    <ProfileInfo title={firstName} subtitle={lastName} />
-                    <ProfileInfo title={`since ${accountDate}`} />
-                </View>
-            </View>
-            <View style={styles.walletSection}>
-                <View style={styles.walletInfo}>
-                    <Text style={styles.walletInfoTitle}>Wallet</Text>
-                    {hasWallet ? <Text style={styles.walletAmount}>{wallet}</Text> : <Text>Define your wallet</Text>}
-                </View>
-                <View style={styles.spentInfo}>
-                    <Text style={styles.spentTitle}>Spent</Text>
-                    <Text style={styles.spentAmount}>PKR 2K+</Text>
-                </View>
-            </View>
-            {features.map((feature, index) => (
-                <FeatureItem key={index} iconUri={feature.iconUri} title={feature.title} />
-            ))}
-        </View>
-    );
-}
+const ProfileImage = ({ source }) => <Image source={source} style={styles.profileImage} />;
+
+const ProfileInfo = ({ username, from, since }) => (
+    <View style={styles.profileInfo}>
+        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.info}>{from}</Text>
+        <Text style={styles.info}>{'Since ' + since}</Text>
+    </View>
+);
+
+const WalletInfo = ({ title, info }) => (
+    <View style={styles.walletInfo}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.info}>{info}</Text>
+    </View>
+);
+
+const ListItem = ({ title, onPress, icon }) => (
+    <List.Item
+        title={title}
+        style={styles.item}
+        titleStyle={styles.itemTitle}
+        onPress={onPress}
+        left={() => <List.Icon icon={icon} />}
+    />
+);
+
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        backgroundColor: Colors.backgroundColor,
+    container: {
         flex: 1,
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        width: '100%',
-    },
-    headerContainer: {
-        display: 'flex',
-        width: '100%',
-        alignItems: 'start',
-        justifyContent: 'space-between',
-        padding: 12,
-    },
-    timeText: {
-        color: '#000',
-        textAlign: 'center',
-        marginTop: 8,
-        fontFamily: 'Acme',
-        fontSize: 17,
-    },
-    profileImage: {
-        width: 92,
-        height: 92,
-        borderRadius: 46,
-    },
-    iconsContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    iconImage: {
-        width: 18,
-        height: 18,
-    },
-    iconImageLarge: {
-        width: 27,
-        height: 27,
-    },
-    profileSection: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginTop: 31,
+        backgroundColor: '#fff',
         padding: 20,
     },
-    avatarImage: {
-        width: 135,
-        height: 135,
-        borderRadius: 67.5,
-    },
-    profileDetails: {
-        flex: 1,
-        marginLeft: 20,
+    profile: {
+        flexDirection: 'row',
+        marginBottom: 50,
         justifyContent: 'center',
     },
-    profileInfoContainer: {
-        marginBottom: 5,
+    profileImage: {
+        width: windowWidth * 0.4,
+        height: windowWidth * 0.4,
+        borderRadius: windowWidth * 0.2, // Half of width and height
+        paddingRight: 50,
     },
-    profileTitle: {
-        fontFamily: 'Lato-Bold',
-        fontSize: 24,
+    profileInfo: {
+        marginLeft: 50,
+        justifyContent: 'center',
     },
-    profileSubtitle: {
-        fontFamily: 'Lato-Regular',
-        fontSize: 20,
-        textAlign: 'center',
+    username: {
+        fontSize: 25,
+        fontFamily: 'Poppins-SemiBold',
     },
-    walletSection: {
+    info: {
+        fontSize: 16,
+        fontFamily: 'Poppins-Regular',
+    },
+    walletAccount: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 20,
-        padding: 20,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: Colors.black,
     },
     walletInfo: {
-        alignItems: 'center',
-    },
-    walletInfoTitle: {
-        fontSize: 20,
-        fontFamily: 'Lato-Bold',
-    },
-    walletAmount: {
-        marginTop: 5,
-        fontSize: 18,
-        fontFamily: 'Lato-Regular',
-    },
-    spentInfo: {
-        alignItems: 'center',
-    },
-    spentTitle: {
-        fontSize: 20,
-        fontFamily: 'Lato-Bold',
-    },
-    spentAmount: {
-        marginTop: 5,
-        fontSize: 18,
-        fontFamily: 'Lato-Regular',
-    },
-    menuOptionContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 20,
+        flex: 1,
+        borderWidth: 1,
+        borderColor: 'black',
         padding: 10,
-    },
-    menuOptionImage: {
-        width: 36,
-        height: 36,
-    },
-    menuOptionText: {
-        marginLeft: 10,
-        fontSize: 18,
-        fontFamily: 'Lato-Regular',
-    },
-    featureItemContainer: {
-        flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
     },
-    featureIcon: {
-        width: 36,
-        height: 36,
-        marginRight: 20,
+    title: {
+        fontSize: 20,
+        fontFamily: 'Poppins-SemiBold',
     },
-    featureItemTextContainer: {
-        fontFamily: 'Lato-Regular',
+    options: {
+        flex: 1,
+        marginHorizontal: 10,
+        marginBottom: 40,
+    },
+    item: {
+        padding: 20,
+        marginVertical: 8,
+    },
+    itemTitle: {
+        fontSize: 20,
+        fontFamily: 'Poppins-Regular',
     },
 });
-
-export default Profile;
