@@ -18,9 +18,11 @@ function SignUp() {
     const handleSubmit = async () => {
         if (form.username === '' || form.email === '' || form.password === '' || form.confirmPassword === '') {
             Alert.alert('Error', 'Please fill in all fields');
+            return;
         }
         if (form.password !== form.confirmPassword) {
             Alert.alert('Error', 'Passwords do not match');
+            return;
         }
 
         setSubmitting(true);
@@ -29,7 +31,7 @@ function SignUp() {
             // setUser(result);
             // setIsLogged(true);
 
-            router.replace('/home');
+            router.replace('/profile');
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {
@@ -73,6 +75,7 @@ function SignUp() {
                 buttonStyle={styles.registerButton}
                 textStyle={styles.registerButtonText}
                 isLoading={isSubmitting}
+                color={Colors.green}
             />
         </View>
     );
@@ -90,6 +93,7 @@ const styles = StyleSheet.create({
     inputField: {
         width: '85%',
         marginTop: 24,
+        borderRadius: 10,
         borderBottomWidth: 2,
         borderBottomColor: Colors.sonicSilver,
     },
@@ -103,21 +107,20 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginTop: 20,
         marginRight: 30,
+        padding: 30,
         fontSize: 20,
     },
     registerButton: {
         alignSelf: 'flex-end',
-        marginTop: 75,
+        marginTop: 55,
         marginRight: 20,
-        backgroundColor: Colors.green,
-        padding: 10,
         borderRadius: 10,
-        width: '45%',
-        alignItems: 'center',
     },
+
     registerButtonText: {
+        fontSize: 20,
+        lineHeight: 50,
+        fontFamily: 'Poppins-Bold',
         color: '#FFF',
-        fontSize: 22,
-        fontWeight: '900',
     },
 });

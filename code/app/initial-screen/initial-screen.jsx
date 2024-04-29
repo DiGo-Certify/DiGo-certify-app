@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Colors from '../../constants/colors.js';
 import Images from '../../constants/images.js';
+import { router } from 'expo-router';
 
 function InitialScreen() {
     return (
@@ -25,7 +26,12 @@ function InitialScreen() {
                     </View>
                 </Swiper>
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                    router.push('/sign-up');
+                }}
+            >
                 <Text style={styles.buttonText}>Create Wallet</Text>
             </TouchableOpacity>
             <Text style={styles.bottomText}>Already have a wallet</Text>

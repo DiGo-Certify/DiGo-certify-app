@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import InitialScreen from './initial-screen/initial-screen';
 import ProfileScreen from './(tabs)/profile';
 import SignUp from '@/app/(auth)/sign-up';
-import { PaperProvider } from 'react-native-paper';
+
 
 // A possibility of the decision to decide what the first screen should be
 function App() {
@@ -15,12 +15,7 @@ function App() {
 
     // For now will always go the Initial Screen
     if (userInfo === null) {
-        // return <InitialScreen />;
-        return (
-            <PaperProvider>
-                <SignUp />
-            </PaperProvider>
-        );
+        return <InitialScreen />;
     } else {
         return; // <ProfileScreen />; or whatever the main screen will be
     }

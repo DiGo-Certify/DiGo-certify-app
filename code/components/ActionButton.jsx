@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+// import { Text, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-paper';
 
 // const ActionButton = ({ text, onPress, buttonStyle, textStyle }) => {
@@ -11,7 +11,7 @@ import { Button } from 'react-native-paper';
 // };
 
 //Using button from rn-paper
-const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading }) => {
+const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color }) => {
     return (
         <Button
             icon={icon}
@@ -20,6 +20,7 @@ const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading }
             loading={isLoading}
             style={buttonStyle}
             labelStyle={textStyle}
+            buttonColor={color}
         >
             {text}
         </Button>
