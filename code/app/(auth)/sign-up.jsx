@@ -7,6 +7,7 @@ import ClickableText from '@/components/ClickableText';
 import ActionButton from '@/components/ActionButton';
 import Background from '@/components/Background';
 import Images from '@/constants/images';
+import HeaderImage from '@/components/HeaderImage';
 
 const windowWidth = Dimensions.get('window').width * 0.325;
 
@@ -45,12 +46,7 @@ function SignUp() {
 
     return (
         <Background
-            header={
-                // Image with app logo and a circle around it
-                <View style={styles.header}>
-                    <Image source={Images.splashScreenImage} style={styles.headerImage} />
-                </View>
-            }
+            header={<HeaderImage imageSource={Images.splashScreenImage} />}
             body={
                 <View>
                     <Text style={styles.registerText}>Register</Text>
@@ -102,19 +98,6 @@ function SignUp() {
 export default SignUp;
 
 const styles = StyleSheet.create({
-    header: {
-        // Circle with the image inside
-        aspectRatio: 1,
-        borderRadius: Dimensions.get('window').width * 0.325,
-        borderWidth: 5,
-        width: '65%',
-        height: '65%',
-    },
-    headerImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain',
-    },
     inputField: {
         width: '85%',
         marginTop: 20,
@@ -146,6 +129,6 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
     footer: {
-        marginTop: -100
-    }
+        marginTop: -100,
+    },
 });
