@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 0.5,
-        marginLeft: 60,
+        alignItems: 'center',
         width: '100%',
         justifyContent: 'center',
     },
     footer: {
         flex: 0.1,
         width: '100%',
-        marginRight: 60
+        alignItems: 'center',
     }
 });
