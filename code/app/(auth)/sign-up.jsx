@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text, Alert, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Alert, Dimensions } from 'react-native';
 import Colors from '@/constants/colors';
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
@@ -8,8 +8,6 @@ import ActionButton from '@/components/ActionButton';
 import Background from '@/components/Background';
 import Images from '@/constants/images';
 import HeaderImage from '@/components/HeaderImage';
-
-const windowWidth = Dimensions.get('window').width * 0.325;
 
 function SignUp() {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -46,9 +44,13 @@ function SignUp() {
 
     return (
         <Background
-            header={<HeaderImage imageSource={Images.splashScreenImage} />}
+            header={
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <HeaderImage imageSource={Images.splashScreenImage} />
+                </View>
+            }
             body={
-                <View>
+                <View style={{ width: '100%', paddingHorizontal: 30, marginTop: -35 }}>
                     <Text style={styles.registerText}>Register</Text>
                     <FormField
                         label="Full Name"
@@ -79,8 +81,12 @@ function SignUp() {
                 </View>
             }
             footer={
-                <View style={styles.footer}>
-                    <ClickableText text="Forgot Password?" onPress={() => {}} style={styles.forgotPasswordText} />
+                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -98 }}>
+                    <ClickableText
+                        text="Already have an Account?"
+                        onPress={() => router.replace('/sign-in')}
+                        style={styles.forgotPasswordText}
+                    />
                     <ActionButton
                         text="Register"
                         onPress={handleSubmit}
@@ -99,7 +105,7 @@ export default SignUp;
 
 const styles = StyleSheet.create({
     inputField: {
-        width: '85%',
+        justifyContent: 'center',
         marginTop: 20,
         borderRadius: 10,
         borderBottomWidth: 2,
@@ -109,7 +115,6 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: '900',
         alignSelf: 'flex-start',
-        marginTop: -150,
     },
     forgotPasswordText: {
         textDecorationLine: 'underline',
@@ -127,8 +132,5 @@ const styles = StyleSheet.create({
         lineHeight: 50,
         fontFamily: 'Poppins-Bold',
         color: '#FFF',
-    },
-    footer: {
-        marginTop: -100,
     },
 });

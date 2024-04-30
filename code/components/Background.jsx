@@ -22,25 +22,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.backgroundColor,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     header: {
         flex: 0.4,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20
     },
     body: {
         flex: 0.5,
         alignItems: 'center',
         width: '100%',
-        justifyContent: 'center',
     },
     footer: {
         flex: 0.1,
         width: '100%',
         alignItems: 'center',
-    }
+    },
 });
