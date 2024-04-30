@@ -1,0 +1,10 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{x}{}%
+\contentsline {section}{\numberline {1.1}Outline}{x}{}%
+\contentsline {chapter}{\numberline {2}Background}{xii}{}%
+\contentsline {chapter}{\numberline {3}Requirements}{xiv}{}%
+\contentsline {section}{\numberline {3.1}Smart Contracts}{xiv}{}%
+\contentsline {chapter}{\numberline {4}Solution Architecture}{xvi}{}%
+\contentsline {section}{\numberline {4.1}Multiplatform Application}{xvi}{}%
+\contentsline {chapter}{\numberline {5}Implementation}{xviii}{}%
+\contentsline {chapter}{\numberline {6}Work Plan}{xx}{}%
