@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import InitialScreen from './initial-screen/initial-screen';
-import ProfileScreen from './(tabs)/profile';
-import SignUp from '@/app/(auth)/sign-up';
-
 
 // A possibility of the decision to decide what the first screen should be
 function App() {

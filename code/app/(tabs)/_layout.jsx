@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import icons from '@/constants/icons';
 import { BottomNavigation, Text } from 'react-native-paper';
 import ProfileScreen from './profile';
+import CertificateScreen from './certificate';
 
 const HomeRoute = () => (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -16,11 +17,7 @@ const HomeRoute = () => (
 //! There must be another way to render the ProfileScreen
 const ProfileRoute = () => <ProfileScreen />;
 
-const CertificateRoute = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Certificate</Text>
-    </View>
-);
+const CertificateRoute = () => <CertificateScreen />;
 
 function TabLayout() {
     const [idx, setIdx] = useState(0);

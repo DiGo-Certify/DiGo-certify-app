@@ -11,11 +11,11 @@ import { Button } from 'react-native-paper';
 // };
 
 //Using button from rn-paper
-const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color }) => {
+const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color, mode }) => {
     return (
         <Button
             icon={icon}
-            mode="contained-tonal"
+            mode={mode ?? 'contained-total'}
             onPress={onPress}
             loading={isLoading}
             style={buttonStyle}
