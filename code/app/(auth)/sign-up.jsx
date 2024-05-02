@@ -34,7 +34,7 @@ function SignUp() {
             // setUser(result);
             // setIsLogged(true);
 
-            router.replace('/profile');
+            router.push('/profile');
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {

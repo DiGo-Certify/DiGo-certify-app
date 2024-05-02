@@ -29,7 +29,7 @@ const SignIn = () => {
             // setUser(result);
             // setIsLogged(true);
 
-            router.replace('/profile');
+            router.push('/profile');
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {
@@ -63,8 +63,16 @@ const SignIn = () => {
                 </View>
             }
             footer={
-                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200}}>
-                    <ClickableText text="Forgot Password?" onPress={() => {}} style={styles.forgotPasswordText} />
+                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200 }}>
+                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                        <ClickableText
+                            text="Create an account"
+                            onPress={() => router.replace('/sign-up')}
+                            style={styles.dontHaveAccountText}
+                        />
+                        <Text style={{ marginHorizontal: 3, fontSize: 20 }}> • </Text>
+                        <ClickableText text="Can't Login?" onPress={() => {}} style={styles.forgotPasswordText} />
+                    </View>
                     <ActionButton
                         text="Login"
                         onPress={handleSubmit}
@@ -108,6 +116,11 @@ const styles = StyleSheet.create({
         lineHeight: 50,
         fontFamily: 'Poppins-Bold',
         color: '#FFF',
+    },
+    dontHaveAccountText: {
+        textDecorationLine: 'underline',
+        alignSelf: 'flex-start',
+        fontSize: 20,
     },
 });
 

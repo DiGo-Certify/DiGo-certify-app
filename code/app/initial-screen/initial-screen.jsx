@@ -29,12 +29,12 @@ function InitialScreen() {
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                    router.push('/sign-up');
+                    router.replace('/sign-up');
                 }}
             >
                 <Text style={styles.buttonText}>Create Wallet</Text>
             </TouchableOpacity>
-            <Text style={styles.bottomText} onPress={() => router.push('/sign-in')}>
+            <Text style={styles.bottomText} onPress={() => router.replace('/sign-in')}>
                 Already have a wallet
             </Text>
         </View>

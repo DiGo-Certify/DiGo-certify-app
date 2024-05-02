@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
 import Icons from '@/constants/icons';
 import Images from '@/constants/images';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,6 +16,11 @@ const Profile = () => {
         since: '2021',
     };
 
+    // Handle wallet connect with metamask
+    const handleWalletConnect = async () => {
+        console.log('Wallet connect');
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.profile}>
@@ -23,7 +28,7 @@ const Profile = () => {
                 <ProfileInfo username={profile.username} from={profile.from} since={profile.since} />
             </View>
             <View style={styles.walletAccount}>
-                <WalletInfo title="Wallet" info={profile.wallet} />
+                <WalletInfo title="Wallet" info={profile.wallet} onPress={handleWalletConnect} />
                 <WalletInfo title="Account" info="Account information" />
             </View>
             <View style={styles.options}>
@@ -52,11 +57,11 @@ const ProfileInfo = ({ username, from, since }) => (
     </View>
 );
 
-const WalletInfo = ({ title, info }) => (
-    <View style={styles.walletInfo}>
+const WalletInfo = ({ title, info, onPress }) => (
+    <TouchableOpacity onPress={onPress} style={styles.walletInfo}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.info}>{info}</Text>
-    </View>
+    </TouchableOpacity>
 );
 
 const ListItem = ({ title, onPress, icon }) => (
