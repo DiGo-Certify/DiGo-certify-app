@@ -8,6 +8,7 @@ import settings from '../assets/icons/settings.png';
 import email from '../assets/icons/email.png';
 import password from '../assets/icons/password.png';
 import fullName from '../assets/icons/register-profile.png';
+import admin from '../assets/icons/admin.png';
 
 export default {
     certificate,
@@ -20,4 +21,5 @@ export default {
     email,
     password,
     fullName,
+    admin,
 };

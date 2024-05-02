@@ -8,7 +8,7 @@ import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';
 
-const Certificate = () => {
+const Validation = () => {
     const [valid, setValid] = useState(false);
 
     const handleValidate = () => {
@@ -66,12 +66,12 @@ const Certificate = () => {
     );
 };
 
-export default Certificate;
+export default Validation;
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 28,
-        fontFamily: 'Poppins-Bold',
+        fontSize: 30,
+        fontFamily: 'Poppins-ExtraBold',
     },
     or: {
         textAlign: 'center',

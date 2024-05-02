@@ -6,7 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import icons from '@/constants/icons';
 import { BottomNavigation, Text } from 'react-native-paper';
 import ProfileScreen from './profile';
-import CertificateScreen from './certificate';
+import ValidationScreen from './validation';
+import EmissionScreen from './emission';
 
 const HomeRoute = () => (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -14,23 +15,27 @@ const HomeRoute = () => (
     </View>
 );
 
-//! There must be another way to render the ProfileScreen
+//! There must be another way to render the screens without calling them directly
 const ProfileRoute = () => <ProfileScreen />;
 
-const CertificateRoute = () => <CertificateScreen />;
+const ValidationRoute = () => <ValidationScreen />;
+
+const AdminRoute = () => <EmissionScreen />; //!To be changed to Admin Route, only Emission for testing
 
 function TabLayout() {
     const [idx, setIdx] = useState(0);
     const [routes] = useState([
         { key: 'home', title: 'Home', focusedIcon: icons.home },
         { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
-        { key: 'certificate', title: 'Certificate', focusedIcon: icons.certificate },
+        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+        { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
     ]);
 
     const renderScene = BottomNavigation.SceneMap({
         home: HomeRoute,
         profile: ProfileRoute,
-        certificate: CertificateRoute,
+        validation: ValidationRoute,
+        admin: AdminRoute,
     });
 
     const validIdx = idx >= 0 && idx < routes.length ? idx : 0;
