@@ -11,6 +11,7 @@
 
 %% Useful packages
 \usepackage{graphicx}
+\usepackage{makeidx}    % allowsindexgeneration
 
 %% Numbering the pages in roman
 \pagenumbering{roman}
@@ -52,7 +53,7 @@
 \thispagestyle{empty}
 \mbox{}
 
-% Abstract
+%%%%% Abstract %%%%%
 \input{abstract/abstract.tex}
 
 % Empty page before the resumo
@@ -60,7 +61,7 @@
 \thispagestyle{empty}
 \mbox{}
 
-% Resumo
+%%%%% Resumo %%%%%
 \input{resume/resumo.tex}
 
 % Empty page before the acknowledgements
@@ -68,20 +69,24 @@
 \thispagestyle{empty}
 \mbox{}
 
-% Acknowledgements
+%%%%% Acknowledgements %%%%%
 \input{acknowleggements/acknowledgements.tex}
 
-% Table of contents
-\tableofcontents{Contents}
+%%%%% Index %%%%%
+\renewcommand{\contentsname}{Índice}
+\tableofcontents
 
-% List of figures
+%%%%% List of figures %%%%%
+\listoffigures
 
-% List of tables
+%%%%% List of tables %%%%%
+\listoftables
 
-% List of acronyms
+%%%%% List of acronyms %%%%%
+\include{losymb}    %\listofsymbols
 
 
-% chapters with an empty page before each one
+%%%%% CHAPTERS (with an empty page before each one) %%%%%
 \newpage
 \thispagestyle{empty}
 \mbox{}
@@ -112,11 +117,11 @@
 \mbox{}
 \input{chapters/06-work-plan.tex}
 
-% Conclusion
+%%%%% Conclusion %%%%%
 
 \vspace{.75cm}
 
-% References
+%%%%% References %%%%%
 \bibliography{references}
 \bibliographystyle{abbrv}
 

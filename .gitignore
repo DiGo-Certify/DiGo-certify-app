@@ -7,6 +7,9 @@
 *.synctex.gz
 *.bbl
 *.blg
+*.lof
+*.lot
+*.toc
 
 # Mac OS ignored files
 *.DS_Store
