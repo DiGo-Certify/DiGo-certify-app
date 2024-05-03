@@ -1,3 +1,4 @@
+import '@walletconnect/react-native-compat'
 import React, { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import InitialScreen from './initial-screen/initial-screen';
