@@ -100,10 +100,10 @@ more detail in the next sections.
 There are three main types of blockchain~\cite{paul2021blockchain}:
 
 \begin{itemize}
-    \item {Public}: type of blockchain technology computer network that are accessible to anyone interested in transactions. Here based on validation the validated
-          person basically receives the transaction rewards and furthermore, two kinds of \textit{Proof-of-Work} and \textit{Proof-of-Stake} models are being used.
-          It is furthermore a non-restrictive and distributed ledger system which doesn't seek any kind of permission and anyone having access can be authorized one to get
-          data or part of the Blockchain. Examples of this type of blockchain are \textbf{Bitcoin} and \textbf{Ethereum}. The main advantages of this type of blockchain are:
+    \item {Public}: is called public if each participants can read and use it to carry out transactions but also
+          if everyone can participate in the process of creating the \textbf{consensus} which can be \textit{Proof-of-Work} or \textit{Proof-of-Stake}.
+          In this type of blockchain there is no central authority nor a trusted third party to control the network.
+          Examples of this type of blockchain are \textbf{Bitcoin}~\cite{nakamoto2008bitcoin} and \textbf{Ethereum}~\cite{tual2015ethereum}. The main advantages of this type of blockchain are:
           \begin{itemize}
               \item High security and privacy,
               \item Open and Flexible Environment,
@@ -112,9 +112,10 @@ There are three main types of blockchain~\cite{paul2021blockchain}:
               \item Distributed, etc.
           \end{itemize}
 
-    \item {Private}: these are restricted and not open, such kind of blockchain also hjas features of access. This type of blockchains works mostly on closed systems and networks only, and are usually
-          useful in organizations and companies which only selected member can join and access the data. Private blockchains have running only authorized nodes and that means that no one from the outside
-          of the private network is able to access the information and data exchanged between two nodes. Examples of this type of blockchain are \textbf{Hyperledger Fabric}~\cite{hyperLedger} and \textbf{R3 Corda}.
+    \item {Private}: these are restricted and not open, such kind of blockchain also haas features of access. This type of blockchains works mostly on closed systems and networks and are usually
+          useful in organizations and companies which only selected members can join and access the data. Private blockchains have running only authorized nodes and that means that no one from the outside
+          of the private network is able to access the information and data exchanged between two nodes. In this type there is no mining, no proof of work, and no remuneration~\cite{guegan:halshs-01524440}. 
+          Examples of this type of blockchain are \textbf{Hyperledger Fabric}~\cite{hyperLedger} and \textbf{R3 Corda}~\cite{r3Corda}.
           The main advantages of this type of blockchain are:
           \begin{itemize}
               \item Full of privacy,
@@ -122,8 +123,16 @@ There are three main types of blockchain~\cite{paul2021blockchain}:
               \item Faster Transaction,
               \item Better Scability,
           \end{itemize}
+    \item {Consortium~\cite{KASI20221}}: a combination of both public and private blockchains. As in a private blockchain, participants may join the network only by invitation and must be approved by the network owner, however,
+          there is not a single organization that has control over the network. Instead, the control is distributed among a group of participants.
+          \begin{itemize}
+              \item High Security,
+              \item High Scalability,
+              \item High Efficiency,
+              \item High Privacy,
+              \item High Flexibility,
+          \end{itemize}
 
-    \item {Hybrid}:
 \end{itemize}
 
 \subsection*{Distributed Consensus Mechanisms}\label{subsec:distributed-consensus-mechanisms}
