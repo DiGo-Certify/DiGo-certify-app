@@ -88,10 +88,43 @@ The content of each transaction that is stored in a single block depends on the 
 the academic certificate; we will discuss this in more detail in the next chapters. Other example used for the time being is the Bitcoin, where the main information registered are exchanges of
 bitcoins between accounts.
 
-Other important aspect of the chain and the major reason for its security is the \textbf{hash}. The hash is a mathematical function that takes an input (or `message') and returns a fixed-size string of bytes.
-This function is used to verify whether or not the data contained in the block has been tampered with. It is created when a new block is added or updated on the chain. Any minimal change in the
-block's content will result in a completely different hash, also the hash of a block contains the information of the previous block's hash.
+Other important aspect of a chain node and the major reason for its security is the \textbf{hash}. The hash is a mathematical function that takes an input (or `message') and returns a fixed-size string of bytes.
+This function is used to verify whether or not the data contained in the block has been tampered with. It is created when a new block is added or updated onto the chain.
+In the blockchain, the hash of a block contains the information of the previous block's hash and any minimal change in the block's content will result in a completely different hash.
 This is the reason why the blockchain is considered tamper-proof and secure.
+
+Some blockchains support the use of \textit{Smart Contracts}~\cite{kaur2023introduction} which are a modern version of the tradition paper-based agreements mencioned before.
+These Smart Contracts are a critical component of several applications and platforms using a distributed ledger technology that we will be using in out solution and for better understading we will explain with
+more detail in the next sections.
+
+There are three main types of blockchain~\cite{paul2021blockchain}:
+
+\begin{itemize}
+    \item {Public}: type of blockchain technology computer network that are accessible to anyone interested in transactions. Here based on validation the validated
+          person basically receives the transaction rewards and furthermore, two kinds of \textit{Proof-of-Work} and \textit{Proof-of-Stake} models are being used.
+          It is furthermore a non-restrictive and distributed ledger system which doesn't seek any kind of permission and anyone having access can be authorized one to get
+          data or part of the Blockchain. Examples of this type of blockchain are \textbf{Bitcoin} and \textbf{Ethereum}. The main advantages of this type of blockchain are:
+          \begin{itemize}
+              \item High security and privacy,
+              \item Open and Flexible Environment,
+              \item No regulations,
+              \item Full Transparency and Systems,
+              \item Distributed, etc.
+          \end{itemize}
+
+    \item {Private}: these are restricted and not open, such kind of blockchain also hjas features of access. This type of blockchains works mostly on closed systems and networks only, and are usually
+          useful in organizations and companies which only selected member can join and access the data. Private blockchains have running only authorized nodes and that means that no one from the outside
+          of the private network is able to access the information and data exchanged between two nodes. Examples of this type of blockchain are \textbf{Hyperledger Fabric} and \textbf{R3 Corda}.
+          The main advantages of this type of blockchain are:
+          \begin{itemize}
+              \item Full of privacy,
+              \item High Efficiency,
+              \item Faster Transaction,
+              \item Better Scability,
+          \end{itemize}
+
+    \item {Hybrid}:
+\end{itemize}
 
 \subsection*{Distributed Consensus Mechanisms}\label{subsec:distributed-consensus-mechanisms}
 \paragraph{}
