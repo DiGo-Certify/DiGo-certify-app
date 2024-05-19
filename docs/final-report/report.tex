@@ -13,21 +13,30 @@
 \usepackage{graphicx}
 \usepackage{makeidx}    % allowsindexgeneration
 
-%% Numbering the pages in roman
 \pagenumbering{roman}
 
 \begin{document}
+\thispagestyle{empty}
+
+\begin{figure}[h]
+    \includegraphics[width=0.45\textwidth]{assets/logo.png}
+\end{figure}
+
 \begin{center}
 
-    \includegraphics[scale=0.5]{assets/logo.png}
+
+    \begin{Huge}
+        \textbf{SCAR\@: Smart Contract Academic \\ \vspace{.25cm}
+            Registry}
+    \end{Huge}
+
+    \vspace{.75cm}
 
     \begin{LARGE}
-        \textbf{SCAR\@: A \textit{blockchain} based approach for academic registry}
+        \textbf{A Blockchain approach for Academic Registry}
     \end{LARGE}
 
-    \vspace{.75cm} Projeto e Seminário
-
-    \vspace{.25cm} Licenciatura em Engenharia Informática e Computadores
+    \vspace{1cm}
 
     \vspace{.75cm}
     \begin{large}
@@ -36,15 +45,22 @@
             \texttt{49513@alunos.isel.pt} & \texttt{49495@alunos.isel.pt} \\
         \end{tabular}
 
-        \vspace{.75cm} Orientadores \vspace{0.25cm}
+        \vspace{5.75cm} Supervisors \vspace{0.25cm}
 
         \begin{tabular}{ c c }
-            Cátia Vaz                    & Alexandre Francisco      \\
+            Cátia Vaz, ISEL              & Alexandre Francisco, IST \\
             \texttt{cvaz@cc.isel.ipl.pt} & \texttt{aplf@tecnico.pt}
         \end{tabular}
+
+        \vspace{1.25cm}
+
+        \begin{Large}
+            Final Report written for Project and Seminary \\ \vspace{.25cm}
+            Licenciatura em Engenharia Informática e de Computadores
+        \end{Large}
     \end{large}
 
-    \vspace{.75cm} \today \vspace{.75cm}
+    \vspace{1.75cm} \today \vspace{.75cm}
 
 \end{center}
 
@@ -73,7 +89,7 @@
 \input{acknowleggements/acknowledgements.tex}
 
 %%%%% Index %%%%%
-\renewcommand{\contentsname}{Índice}
+\renewcommand{\contentsname}{Index}
 \tableofcontents
 
 %%%%% List of figures %%%%%
@@ -83,7 +99,7 @@
 \listoftables
 
 %%%%% List of acronyms %%%%%
-\include{losymb}    %\listofsymbols
+\include{losymb}
 
 
 %%%%% CHAPTERS (with an empty page before each one) %%%%%
