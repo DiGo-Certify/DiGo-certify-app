@@ -3,9 +3,95 @@
 %
 \chapter{Solution Architecture}\label{chap:architecture}
 
-This is where the architecture goes to.
+The present chapter covers the system's components, their interactions, and the underlying technologies used to implement the solution. The architecture is designed to ensure data integrity, security, and scalability while providing a seamless user experience. We will cover the concept of a multiplatform application, how it functions, the various solutions available, and a detailed discussion of the chosen technology stack, specifically React Native with the Expo platform.
 
 \section{Multiplatform Application}\label{sec:multiplatform-application}
 
-This is where the multiplatform application goes to. Some descrpition what it is, how it works,
-which solutions are available and detailed talk about the chosen one.
+A multiplatform application is designed to run seamlessly on multiple operating systems, such as iOS and Android, using a single codebase. This approach significantly reduces development time and costs while ensuring a consistent user experience across different devices. The core idea is to write the code once and deploy it across multiple platforms, which is particularly beneficial for applications that need to reach a broad audience.
+
+\subsection{Functionality and Operation}
+
+Multiplatform applications leverage frameworks that provide tools and libraries to facilitate cross-platform development. These frameworks abstract away the differences between the various platforms, allowing developers to focus on building features rather than dealing with platform-specific nuances. The primary goal is to achieve native-like performance and look-and-feel while maintaining a shared codebase.
+
+\subsection{Available Solutions}
+
+Several frameworks are available for developing multiplatform applications, each with its own set of features and trade-offs. The most notable ones include:
+
+\begin{itemize}
+    \item React Native
+    \item Flutter
+    \item Kotlin Multiplatform Mobile (KMP)
+\end{itemize}
+
+\subsubsection{React Native}
+
+React Native is a popular open-source framework developed by Facebook. It allows developers to build mobile applications using JavaScript and React, a widely-used library for building user interfaces. React Native bridges the gap between web and mobile development by enabling code reuse across platforms while providing near-native performance\cite{ReactNativeBook}.
+
+\paragraph{Key Features:}
+
+\begin{itemize}
+    \item \textbf{Component-Based Architecture:} Enables modular and maintainable code.
+    \item \textbf{Hot Reloading:} Allows developers to see changes in real-time without recompiling the entire application.
+    \item \textbf{Rich Ecosystem:} A vast collection of libraries and tools that streamline development.
+    \item \textbf{Community Support:} Extensive community contributions and support.
+\end{itemize}
+
+\subsubsection{Flutter}
+
+Flutter, developed by Google, is another powerful framework for building natively compiled applications for mobile, web, and desktop from a single codebase. It uses the Dart programming language and provides a rich set of pre-designed widgets to create highly customizable interfaces\cite{Flutter}.
+
+\paragraph{Key Features:}
+
+\begin{itemize}
+    \item \textbf{Hot Reload:} Similar to React Native's hot reloading, enabling quick iterations.
+    \item \textbf{Expressive UIs:} Rich set of customizable widgets.
+    \item \textbf{Performance:} Compiled directly to native code, which can lead to better performance.
+\end{itemize}
+
+\subsubsection{Kotlin Multiplatform Mobile (KMP)}
+
+KMP, developed by JetBrains, allows developers to use Kotlin for developing iOS and Android applications. It focuses on sharing code, particularly business logic, while allowing platform-specific code where necessary\cite{KMP}.
+
+\paragraph{Key Features:}
+
+\begin{itemize}
+    \item \textbf{Code Sharing:} Share common code across platforms while writing platform-specific code when needed.
+    \item \textbf{Native Performance:} Utilizes native components and performance optimizations.
+\end{itemize}
+
+\subsection{Chosen Solution: React Native with Expo}
+
+For the \texttt{DiGO Certify} application, we chose React Native with the \texttt{Expo} platform. This decision was influenced by several factors, including our team's familiarity with JavaScript and React, the maturity and stability of the React Native ecosystem, and the added benefits provided by Expo\cite{Expo}.
+
+\subsubsection{Why React Native with Expo?}
+
+\begin{itemize}
+    \item \textbf{Ease of Use:} React Native's component-based architecture aligns well with our need for a modular and maintainable codebase. Our team’s existing knowledge of JavaScript and React significantly reduced the learning curve.
+    \item \textbf{Performance:} React Native provides near-native performance, ensuring that our application runs smoothly on both iOS and Android.
+    \item \textbf{Development Speed:} Features like hot reloading and a rich ecosystem of libraries accelerated our development process.
+    \item \textbf{Community and Support:} The extensive community support for React Native ensured that we had access to numerous resources, tutorials, and third-party libraries.
+    \item \textbf{Expo Platform:} Expo enhances React Native by offering a suite of tools and services that simplify development. It includes a managed workflow, which handles many of the complexities of building and deploying mobile applications, allowing us to focus on developing features.
+\end{itemize}
+
+\paragraph{Expo Specific Benefits:}
+
+\begin{itemize}
+    \item \textbf{Development Tools:} Expo provides an integrated environment for developing, building, and deploying React Native applications.
+    \item \textbf{Easy Setup:} Simplifies the initial setup and configuration process.
+    \item \textbf{Over-the-Air Updates:} Enables pushing updates to users without requiring a full app store review process.
+\end{itemize}
+
+\subsubsection{Detailed Workflow Using React Native and Expo}
+
+The development workflow for \texttt{DiGo Certify} app using React Native and Expo involves several key steps:
+
+\begin{enumerate}
+    \item \textbf{Project Initialization:} Setting up the project with Expo CLI, which provides a streamlined setup process and essential tools.
+    \item \textbf{Component Development:} Building the application UI using React Native’s component-based approach. Components are reusable UI elements that help maintain consistency and simplify development.
+    \item \textbf{State Management:} Using state management libraries such as Redux to handle the application’s state efficiently.
+    \item \textbf{Integration with Blockchain:} Implementing smart contracts in Solidity and integrating them with the React Native application through Web3.js, enabling secure interactions with the Ethereum blockchain.
+    \item \textbf{Testing and Debugging:} Utilizing Expo’s built-in tools for testing and debugging the application on various devices and simulators.
+    \item \textbf{Deployment:} Expo simplifies the deployment process with its build and publish services, allowing us to distribute the application through app stores seamlessly.
+\end{enumerate}
+
+In conclusion, the choice of React Native with Expo for the mobile application provides a robust, efficient, and scalable solution for developing a secure and user-friendly multiplatform application. This architecture leverages modern technologies to meet the needs of our diverse user base, ensuring a high-quality user experience across all supported devices.
