@@ -2,76 +2,81 @@
 % Chapter 2
 %
 \chapter{Background}\label{chap:background}
-
-% Do an introduction to the chapter
-
-\section{Introduction to the Problem}\label{sec:introduction-to-the-problem}
 \paragraph{}
 
-In today's fast paced world, the authenticity and accessibility of academic certificates play a crucial role in ensuring trust and credibility in various
+Nowadays, the authenticity and accessibility of academic certificates play a crucial role in ensuring trust and credibility in various
 domains, ranging from education to employment and beyond.
 The current and traditional \textit{paper-based} system of issuing and verifying academic certificates is not only time consuming but also prone to a lot of fraud and manipulation.
-The rampant proliferation of counterfeit certificates, inefficient verification processes and the risk of loss or damage highlight the need for a more reliable, robust and secure academic
-certificate registry system.
+The widespread issue of counterfeit certificates\cite{certCounterfeitAdv, certCounterfeitRid}, coupled with inefficient verification processes and the risk of loss or damage, highlight the need for a more reliable and secure academic certificate registry system.
 
-The current system of academic certificate registry is plagued by numerous challenges. Firstly, the reliance and trust on paper-based certificates is a major issue
-making them susceptible to forgery and tampering undermining the credibility and integrity of academic qualifications. Secondly, the manual verification process is
+The current system of academic certificate registry faces numerous challenges. Firstly, the reliance on paper-based is problematic. Paper-based certificates are easily forged and tampered with. This undermines the credibility and integrity of academic qualifications. Secondly, the manual verification process is
 time-consuming and prone to errors, leading to delays in credential validation, possible fraudulent activities and also potential loss of revenue for institutions due to
-errors in the manual release. Thirdly, the centralized nature of certificate issuance by educational institutions xacerbates the difficulty
-of maintaining a unified and updated registry, hampering efficient verification mechanisms.
+errors in the manual release. Thirdly, since the issue of certificates from educational institutions are mostly centralized, this intensify the difficulty
+of maintaining a unified and updated registry, avoiding efficient verification mechanisms.
 
-\section{Alternative Approaches}\label{sec:alternative-approaches}
+\section{Overview}\label{sec:overview}
 \paragraph{}
 
-Several attempts have been made to address the imperfections of the traditional academic certificate registry system.
-One such solution is the implementation of \textit{centralized databases}~\cite{OLSON200971} managed by government or regulatory authorities, where educational institutions are required to
-submit digital copies of certificates for verification purposes. Additionally this approach aims to centralize certificate records and simplify the verification process. However it still faces challenges
-such as the risk and concerns of data privacy and security, interoperability issues between different databases and the need of a trusted third party to manage the database.
-This centralized mechanism of keeping record is also devoted to have a single point of failure.
-% missing examples of centralized databases
+There are several approaches to address the challenges of the traditional academic certificate registry system. One such solution is the implementation of centralized databases managed by government or regulatory authorities,
+where educational institutions are required to submit digital copies of certificates for verification purposes~\cite{LinWays}.
+Other solution is the adoption of distributed systems where the data is stored across multiple nodes in a network, but not all nodes have the same equal authority and the data is not fully decentralized. Which means that there's an entity that has control over the network~\cite{sharples2016blockchain}.
+This solution is not centralized neither fully distributed but have a mix of both approaches that makes the system more secure and reliable than only a centralized one.
+The third solution that we will approach is a fully distributed one that offers a decentralized, secure and tamper-proof ledger where certificates can be stored and verified where
+there is no single entity that has control over the network. This solution is based on the \textit{blockchain technology}~\cite{app14020706, saleh2020blockchain}.
 
-Another solution that is gaining traction is the adoption of \textit{blockchain technology} for academic certificate registry. Blockchain offers a decentralized, secure and tamper-proof ledger where certificates can be stored and verified.
-The use of blockchain technology ensures that certificates are immutable, transparent and accessible to all stakeholders. Moreover, this technology enables the instant verification trough cryptographic methods,
+\section{Centralized Systems}\label{subsec:centralized-systems}
+\paragraph{}
+
+Several attempts have been made to address the challenges of the traditional academic certificate registry system.
+One such solution is the implementation of \textit{centralized databases}~\cite{OLSON200971} managed by government or regulatory authorities, where educational institutions are required to
+submit digital copies of certificates for verification purposes. Although this approach aims to centralize certificate records and simplify the verification process, it still faces challenges
+such as the risk and concerns of data privacy and security, interoperability issues between different databases and the need of a trusted third party to manage the database.
+This centralized systems often only store grades and not the actual certificates which undermines the credibility and integrity of academic qualifications.
+Moreover, the reliance on a central authority to manage the registry increases the risk of fraud and manipulation, as the data can be altered or deleted by a single entity.
+
+\section{Distributed Systems}\label{subsec:distributed-systems}
+\paragraph{}
+
+Another solution to address the challenges of the traditional academic certificate registry system is the adoption of distributed systems where the data is stores in multiple nodes in a network.
+In this approach, the data is replicated across multiple nodes of the system, ensuring that the data is available even if some nodes fail. However, not all nodes have the same equal authority which means that
+it is not fully decentralized.
+
+In the context of education, distributed systems can significantly enhance the reliability and security of academic certificate validation.
+Educational institutions, accrediting bodies, and employers can benefit from a system where academic records are distributed across a network of trusted nodes,
+rather than being stored in a single central repository.
+The key benefits of this approach in the education sector include improved security, enhanced reliability, scalability and resistance to a single point of failure.
+
+\section{Blockchain}\label{sec:blockchain}
+\paragraph{}
+
+Recently, another solution that have being proposed is the adoption of blockchain technology for academic certificate registry. Blockchain offers a decentralized, secure and \textit{tamper-proof ledger} where certificates can be stored and verified.
+Tamper-proof ledger is a system designed to maintain records where once information is added, it cannot be altered or deleted. This is achieved through a combination of cryptographic techniques and a distributed network of computers (nodes) that each hold a copy of the ledger.
+Every transaction or entry is verified by these nodes, and any attempt to change past records would require altering the data on a majority of these nodes simultaneously, which is virtually impossible. This ensures the integrity and authenticity of the stored certificates, making them highly resistant to fraud and manipulation.
+
+The use of blockchain technology ensures that certificates are immutable, transparent and accessible to all stakeholders~\cite{alammary2019blockchain}. Moreover, this technology enables the instant verification through cryptographic methods,
 eliminating the need for a central authority to manage the registry, thereby reducing the risk of fraud and manipulation.
 
-In contrast to the traditional centralized data-based system, in our opinion, blockchain emerges as a disruptive force capable of revolutionizing academic certificate registry systems
-by providing in a decentralized and secure manner, an immutable and tamper-proof ledger where certificates will be stored and verified.
-The decision to embrace blockchain technology as the foundation of our solution is based on what we sad above as well as the fact that blockchain technology is a key enabler of the \textit{Web3} vision,
-which aims to create decentralized applications (\textit{dApps}) that are secure, transparent and trustless where users have full control over their data and digital assets without having a \textbf{single point of failure}.
-% missing examples of blockchain technology
-
-\pagebreak % temporary solution to avoid the section title to be alone in the previous page
-
-% tempo de duração de uma transação
-\section{Distributed System}\label{sec:distributed-systems}
-\paragraph{}
-
-As we transition to a blockchain-based solution for our problem it is crucial to understand the foundational concepts that make this technology both revolutionary and reliable.
-Central to blockchain's efficacy is the principle of \textit{distributed consensus}, which ensures the integrity, security and transparency of the ledger.
+In contrast to the traditional centralized data-based system, in our opinion, blockchain emerges with a huge influence capable of revolutionizing academic certificate registry systems.
+The decision to use blockchain technology as the foundation of our solution on the fact that blockchain technology is a key enabler of the \textit{Web3} vision~\cite{buldas2022towards},
+which aims to create decentralized and fully distributed applications (\textit{dApps}) that are secure, transparent and trustless where users have full control over their data and digital assets without having a \textbf{single point of failure}.
+For the implementation of a blockchain-based solution for our problem it is crucial to understand the foundational concepts that make this technology both revolutionary and reliable.
+Central to blockchain's efficacy is the principle of \textit{distributed consensus}~\cite{xiao2020survey}, which ensures the integrity, security and transparency of the ledger like mentioned before.
 This next sections explore into the mechanics of distributed consensus, the broader vision of \textit{Web3} and other key concepts integral to understanding how blockchain can transform
 academic certificate registry systems.
 
-\subsection*{Blockchain Technology}\label{subsec:blockchain}
-\paragraph{}
+% Should we add a subsection here where walk deeper into the blockchain technology and its concepts?
 
-% Some history of blockchain 
-Blockchain is a technology behind the cryptocurrency Bitcoin initially described by Satoshi Nakamoto in a 2008 white paper entitled `Bitcoin: A Peer-to-Peer Electronic Cash System'~\cite{nakamoto2008bitcoin}.
+Blockchain technology started to gain popularity in 2008 initially described by Satoshi Nakamoto in a white paper entitled `Bitcoin: A Peer-to-Peer Electronic Cash System'~\cite{nakamoto2008bitcoin}.
 Although the term blockchain gained popularity in that year, with the introduction of Bitcoin cryptocurrency by Nakamoto, its underlying concepts have been used since the 1980s.
-Later in 2004, Harold Thomas Finney II (Hal Finney) introduced the Reusable Proof of Work (\textit{RPOW}) system~\cite{RPOW}. The RPOW system was a digital
-currency system that used a \textit{proof-of-work} limit the amount of work done by the server and to limit the amount of work done by the client.
-The RPOW system was the first system to use a blockchain-like structure to store and verify transactions. After sometime, in 2009 the first bitcoin transaction was made by Nakamoto
+Later in 2004, Harold Thomas Finney II introduced the Reusable Proof of Work (\textit{RPOW}) system~\cite{RPOW}. The RPOW system was a digital
+currency system that used a \textit{proof-of-work} that limit the amount of work done by the server and to limit the amount of work done by the client.
+The RPOW system was the first system to use a blockchain-like structure to store and verify transactions. Later, in 2009 the first bitcoin transaction was made by Nakamoto
 to his friend Hal Finney~\cite{peterson2014hal} where was transferred 10 BTC (bitcoin). This marked the beginning of the blockchain technology era.
 In 2013, Vitalik Buterin proposed the concept of \textit{smart contracts} in his white paper `Ethereum: The Ultimate Smart Contract and Decentralized Application Platform'~\cite{buterin2013ethereum}. Upon this publication,
 \textit{Ethereum} has launched his own blockchain in 2015.~\cite{reiff2020bitcoin}.
 
-All of the above information is to show how blockchain has evolved over the past few years and is presented in~\cite{TRIPATHI2023100344}. % it is really necessary to have this information?
-
-\subsubsection*{What is Blockchain?}\label{subsubsec:what-is-the-blockchain}
-\paragraph{}
-
-A blockchain is a time-ordered set of blocks where each block is cryptographically linked to the previous one forming a chain. All blocks are stored in a decentralized and distributed ledger and become
-trustworthy digital records what are unmodifiable in practice but very easy to verify. Like mentioned in the previous section~\ref{sec:alternative-approaches} there is no centralized or hierarchical structure in the blockchain network
-and the information is shared by a network of \textit{peers}.
+Blockchain can be defined as a time-ordered set of blocks or nodes where each block is cryptographically linked to the previous one forming a chain. All blocks are stored in a decentralized and distributed ledger and become
+trustworthy digital records what are unmodifiable in practice but very easy to verify. Like mentioned before, there is no centralized or hierarchical structure in the blockchain network and the information is shared by a network of \textit{peers}.
 
 \begin{figure}[h]\label{fig:blockchain}
     \begin{center}
@@ -80,20 +85,18 @@ and the information is shared by a network of \textit{peers}.
     \end{center}
 \end{figure}
 
-Each block contains a reliable register of one or more actually executed transactions that are created and exchanged by the network participants (peers) which eventually must modify
-its state. To add new information to the chain, a \textbf{consensus} about its truthfulness must be reached among the peers in the network.
+As it can be observed in Figure~\ref{fig:blockchain}, each block contains a reliable register of one or more actually executed transactions that are created and exchanged by the network participants (peers) which eventually must modify
+its state. To add new information to the chain, a \textbf{consensus}( \ref{subsec:distributed-consensus-mechanisms}) about its truthfulness must be reached among the peers in the network.
 
-The content of each transaction that is stored in a single block depends on the specific type of blockchain and its purpose. In our case and very succinctly, the transaction has an `item' that contains information about
-the academic certificate; we will discuss this in more detail in the next chapters. Other example used for the time being is the Bitcoin, where the main information registered are exchanges of
-bitcoins between accounts.
+The content of each transaction that is stored in a single block depends on the specific type of blockchain and its purpose. In our case and very succinctly, the transaction has an `item' that contains information about the academic certificate; we will discuss this in more detail in the next chapters. Other example used nowadays is the Bitcoin, where the main information registered in transactions are exchanges of bitcoins between accounts.
 
-Other important aspect of a chain node and the major reason for its security is the \textbf{hash}. The hash is a mathematical function that takes an input (or `message') and returns a fixed-size string of bytes.
-This function is used to verify whether or not the data contained in the block has been tampered with. It is created when a new block is added or updated onto the chain.
-In the blockchain, the hash of a block contains the information of the previous block's hash and any minimal change in the block's content will result in a completely different hash.
+Other important aspect of a chain node and the major reason for its security is the \textbf{hash} function.
+This function is used like a digital fingerprint to verify whether or not the data contained in the block has been tampered with. It is created when a new block is added or updated onto the chain.
+In the blockchain, each block's hash includes the hash of the previous block, linking them together in a chain. If someone tries to change any information in a block, even just a tiny bit, the hash of that block will change completely. This change would break the link to the next block, making it obvious that the information has been tampered with.
 This is the reason why the blockchain is considered tamper-proof and secure.
 
-Some blockchains support the use of \textit{Smart Contracts}~\cite{kaur2023introduction} which are a modern version of the tradition paper-based agreements mentioned before.
-These Smart Contracts are a critical component of several applications and platforms using a distributed ledger technology that we will be using in out solution and for better understanding we will explain with
+Some blockchains support the use of \textit{Smart Contracts}~\cite{kaur2023introduction} which are self-executing contracts with the terms of the agreement directly written into code.
+These Smart Contracts are a critical component of several applications and platforms using a distributed ledger technology that we will be using in our solution and for better understanding we will explain with
 more detail in the next sections.
 
 There are three main types of blockchain~\cite{paul2021blockchain}:
@@ -113,7 +116,7 @@ There are three main types of blockchain~\cite{paul2021blockchain}:
 
     \item {Private}: these are restricted and not open, such kind of blockchain also has features of access. This type of blockchains works mostly on closed systems and networks and are usually
           useful in organizations and companies which only selected members can join and access the data. Private blockchains have running only authorized nodes and that means that no one from the outside
-          of the private network is able to access the information and data exchanged between two nodes. In this type there is no mining, no proof of work, and no remuneration~\cite{guegan:halshs-01524440}. 
+          of the private network is able to access the information and data exchanged between two nodes. In this type there is no mining, no proof of work, and no remuneration~\cite{guegan:halshs-01524440}.
           Examples of this type of blockchain are \textbf{Hyperledger Fabric}~\cite{hyperLedger} and \textbf{R3 Corda}~\cite{r3Corda}.
           The main advantages of this type of blockchain are:
           \begin{itemize}
@@ -137,12 +140,39 @@ There are three main types of blockchain~\cite{paul2021blockchain}:
 \subsection*{Distributed Consensus Mechanisms}\label{subsec:distributed-consensus-mechanisms}
 \paragraph{}
 
-Distributed consensus feature allows a blockchain-based system
+As mentioned in the beginning of the section~\ref{sec:blockchain}, the blockchain technology is based on the concept of distributed consensus, which is a procedure used to achieve an
+agreement among all the peers of the blockchain network about the present state of the ledger. Through this mechanism, consensus algorithms ensure that all nodes in the network agree on the validity of the transactions and the order in which they are added to the blockchain~\cite{consensusMechanisms}.
+To do a parallelism with the real world, the consensus mechanism is the way that humans agree on the rules of a game, for example, in Monopoly where there are a lot of different ways to win, buying all the properties or end up with a lot of money in the bank
+and bankrupt all the other players but no matter what the rules are, everyone has agreed that it is a fair way to end the game~\cite{whatIsConsensus}.
+Consensus mechanisms are essential to the security and integrity of the blockchain network, as they prevent malicious actors from altering the ledger and ensure that all transactions are valid and consistent across all nodes.
+It prevent the \textit{double-spending} problem, where a user spends the same digital currency more than once, which is a common issue in digital currency systems.
 
+\begin{itemize}
+    \item \textbf{Proof-of-Work (PoW)}: is the first consensus algorithm used in blockchain technology, introduced by Nakamoto in the Bitcoin white paper~\cite{nakamoto2008bitcoin}.
+          In this mechanism, miners compete to solve complex mathematical puzzles to validate transactions and add new blocks to the blockchain. The first miner to solve the puzzle is rewarded with a certain amount of cryptocurrency.
+          PoW is known for its high energy consumption and slow transaction speeds, as miners must perform a large number of computations to solve the puzzle. However, it is also highly secure and resistant to attacks, as it would require a majority of the network's computing power to alter the blockchain.
+          Examples of blockchains that use PoW are Bitcoin and Litecoin~\cite{takashima2018litecoin}.
+    \item \textbf{Proof-of-Stake (PoS)}: is an alternative consensus algorithm to PoW that aims to reduce energy consumption and increase transaction speeds.
+          In PoS, validators are chosen to create new blocks based on the number of coins they hold, rather than the amount of computational power they contribute.
+          Unlike PoW, PoS contributors (validators) are not rewarded with new coins, but with transaction fees. PoS is considered more energy-efficient than PoW, and more secure
+          against 51\% attacks, as it would require a majority of the network's coins to alter the blockchain. However, as the system is based on the number of coins held by the validators, it can lead to centralization, as those with more coins have more influence over the network.
+\end{itemize}
 
-\section{Differente Approaches to Blockchain}\label{sec:different-approaches-to-blockchain}
-\paragraph{}
+How we can see in the Table~\ref{tab:pow-vs-pos} both consensus mechanisms are efficient but there are some distinguish between them~\cite{9376868}:
 
-
-
+\begin{table}[h!]\label{tab:pow-vs-pos}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5} % Default value: 1
+        \begin{tabular}{|c |c |c |c |c |}
+            \hline
+                                    & Energy consumption & Transaction Speed & Security & Reward  \\
+            \hline
+            \textbf{Proof-of-Work}  & High               & Slow              & High     & Mining  \\
+            \hline
+            \textbf{Proof-of-Stake} & Low                & Fast              & High     & Staking \\
+            \hline
+        \end{tabular}
+        \caption{Proof of Work vs Proof of Stake.}
+    \end{center}
+\end{table}
 
