@@ -1,6 +1,5 @@
 import '@walletconnect/react-native-compat';
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
 
 const projectId = 'b57487c51107cc8b2509a12a8d028338';
