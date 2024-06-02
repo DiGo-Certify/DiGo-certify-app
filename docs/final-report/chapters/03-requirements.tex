@@ -3,34 +3,38 @@
 %
 \chapter{Requirements}\label{chap:requirements}
 
-With the purpose of fulfilling all the objectives of the project SCAR, we have developed DiGo Certify mobile application. Our mobile application, allows different interveners to access, share and emit certificates to the Ethereum blockchain, from anywhere in the world, offering a futuristic solution for the problems described in section (…).
+To meet the objectives of the SCAR project, the application to be developed, named DiGo Certify, should allow different stakeholders to access, share, and issue certificates on the Ethereum blockchain from anywhere in the world, offering a futuristic solution to the problems described in section (...).
 
-The \texttt{DiGo Certify} application aims to meet the needs of different stakeholders in the educational ecosystem. Mandatory and optional requirements have been defined based on essential functionalities and additional enhancements desired for the application.
+The DiGo Certify application aims to address the needs of various stakeholders in the educational ecosystem. Mandatory and optional requirements have been defined based on essential functionalities and additional enhancements desired for the application.
 
-\subsection{Stakeholders}\label{subsec:stakeholders}
+.
+
+
+
+\section{Stakeholders}\label{subsec:stakeholders}
 The SCAR solution involves three main stakeholders: students or alumni, employers or third-party entities, and college administrators. Each plays a crucial role in the application's ecosystem.
 
 \subsubsection{Role of Each Stakeholder and Actions They Can Perform:}
 
 \begin{itemize}
 
-    \item \textbf{Students or Alumni:} Students or alumni are the essence of the SCAR platform. They will have the ability to register on the mobile application, where they can securely upload and store their academic certificates on the blockchain. Additionally, students or alumni can view and share their certificates with employers or third-party entities during recruitment processes, providing a transparent and efficient experience.
+    \item \textbf{Students or Alumni:} Students or alumni are the essence of our application. They will have the ability to register on the mobile application, where they can securely upload and store their academic certificates on the blockchain. Additionally, students or alumni can view and share their certificates with employers or third-party entities during recruitment processes, providing a transparent and efficient experience.
 
-    \item \textbf{College Administrators:} College administrators are responsible for providing and validating the academic certificates issued by the educational institution. They will have the ability to access the application to issue and authenticate students' or alumni's certificates, thus ensuring the integrity and validity of the documents.
+    \item \textbf{College Administrators:} College administrators are responsible for issuing and validating academic certificates provided by the educational institution. They will have access to the application to issue and authenticate certificates for students or alumni, thereby ensuring the integrity and validity of the documents.
 
-    \item \textbf{Employers or External Entities:} Employers play a crucial role in requesting the verification of academic certificates during job interviews. By accessing the SCAR platform, employers or external entities can instantly verify the authenticity of the certificates presented by students or alumni, without the need of possessing a wallet and with this ensuring a more reliable and transparent recruitment process.
+    \item \textbf{Employers or External Entities:} Employers play a crucial role in requesting the verification of academic certificates during job interviews. By accessing the DiGo Certify platform, employers or external entities can instantly verify the authenticity of the certificates presented by students or alumni, without the need of possessing a wallet and with this ensuring a more reliable and transparent recruitment process.
 
 \end{itemize}
 
-\subsection{Mandatory Requirements:}
+\section{Mandatory Requirements:}
 
 \begin{itemize}
 
     \item \textbf{Implementation of the mobile application using React Native with Expo platform:} The choice of React Native along with the Expo platform provides an effective approach for developing multiplatform mobile applications. This ensures a consistent experience for users, regardless of the device used, and facilitates the development process for the development team.
 
-    \item \textbf{Utilization of smart contracts in Solidity to store and validate academic certificates on the Ethereum blockchain:} The use of smart contracts in Solidity offers a secure and reliable solution for storing and validating  academic certificates on the Ethereum blockchain. This approach ensures data integrity and immutability, making the SCAR platform highly reliable and resistant to fraud.
+    \item \textbf{Utilization of smart contracts in Solidity to store and validate academic certificates on the Ethereum blockchain:} The use of smart contracts in Solidity offers a secure and reliable solution for storing and validating academic certificates on the Ethereum blockchain. This approach ensures data integrity and immutability, making the DiGo Certify platform highly reliable and resistant to fraud.
 
-    \item \textbf{Development of features for registration, authentication, and secure storage of certificates on the blockchain:} Developing robust features for registering, authenticating, and securely storing certificates on the blockchain is essential to ensure the security and reliability of the SCAR platform. These features should be designed with a focus on usability and security, providing an intuitive and transparent experience for users.
+    \item \textbf{Development of features for registration, authentication, and secure storage of certificates on the blockchain:} Developing robust features for registering, authenticating, and securely storing certificates on the blockchain is essential to ensure the security and reliability of the DiGo Certify platform. These features should be designed with a focus on usability and security, providing an intuitive and transparent experience for users.
 
 \end{itemize}
 
@@ -38,20 +42,20 @@ The SCAR solution involves three main stakeholders: students or alumni, employer
 
 \begin{itemize}
 
-    \item \textbf{Integration of additional features, such as real-time notifications and sharing of certificates through digital channels:} Incorporating extra functionalities like real-time notifications and certificate sharing through digital channels, such as social media platforms, can further enhance the user experience on the SCAR platform. This enhancement can boost usability and attract new users to the platform.
+    \item \textbf{Integration of additional features, such as real-time notifications and sharing of certificates through digital channels:} Incorporating extra functionalities like real-time notifications and certificate sharing through digital channels, such as social media platforms, can further enhance the user experience on the DiGo Certify platform. This enhancement can boost usability and attract new users to the platform.
 
 \end{itemize}
 
 \section{Use Cases}\label{sec:use-cases}
 
-The following use cases describe the interactions between the different stakeholders in the SCAR platform. Each use case outlines the actions performed by the stakeholders and the expected outcomes of these interactions.
+The following use cases describe the interactions between the different stakeholders in the DiGo Certify platform. Each use case outlines the actions performed by the stakeholders and the expected outcomes of these interactions. The use cases are illustrated using diagrams based on the 4+1 View Model, which provides a comprehensive view of the system from multiple perspectives\cite{4+1-architecture-viewmodel}.
 
 \subsection{Use Case 1: Student Registration and Certificate Requesting}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth, height=0.6\textheight, keepaspectratio]{../diagrams/certificate-requesting.drawio.png}
-    \caption{Use Case 1: Student Registration and Certificate Requesting}
+    \includegraphics[width=0.6\textwidth, height=0.6\textheight, keepaspectratio]{./assets/certificate-requesting.drawio.png}
+    \caption{Use Case 1: Student Registration and Certificate Requesting.}
     \label{fig:use-case-1}
 \end{figure}
 
@@ -59,7 +63,7 @@ The following use cases describe the interactions between the different stakehol
 
     \item \textbf{Actors:} Student, College Administrator
     \item \textbf{Description:} A student registers on the mobile application and requests academic certificates from the college administrator.
-    \item \textbf{Preconditions:} The student has access to the SCAR platform. The college administrator has access to the platform and the student's academic records.
+    \item \textbf{Preconditions:} The student has access to the DiGo Certify platform. The college administrator has access to the platform and the student's academic records.
     \item \textbf{Postconditions:} The student receives the academic certificates and stores them on the blockchain.
     \item \textbf{Main Flow:}
     \item 1. The student downloads the \texttt{DiGo Certify} mobile application from the app store.
@@ -69,7 +73,7 @@ The following use cases describe the interactions between the different stakehol
           emits the claims that will allow the student to access the certificates.
     \item 5. The student receives a notification that the certificates are available for download.
     \item \textbf{Alternative Flow:}
-    \item 1.1 The student already has an account on the SCAR platform.
+    \item 1.1 The student already has an account on the DiGo Certify platform.
     \item 1.2 The student logs in to their account using their email address.
     \item 1.3 The student requests additional academic certificates from the college administrator.
     \item 1.4 The college administrator issues the new certificates and submits them to the blockchain.
@@ -85,8 +89,8 @@ The following use cases describe the interactions between the different stakehol
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=0.6\textwidth, keepaspectratio]{../diagrams/certificate-validation.drawio.png}
-    \caption{Use Case 2: Certificate Verification by an External Entity}
+    \includegraphics[height=0.6\textwidth, keepaspectratio]{./assets/certificate-validation.drawio.png}
+    \caption{Use Case 2: Certificate Verification by an External Entity.}
     \label{fig:use-case-2}
 \end{figure}
 
@@ -112,8 +116,8 @@ The following use cases describe the interactions between the different stakehol
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth, height=0.6\textheight, keepaspectratio]{../diagrams/certificate-update.drawio.png}
-    \caption{Use Case 3: Student or Alumni requests a change to the certificate}
+    \includegraphics[width=0.6\textwidth, height=0.6\textheight, keepaspectratio]{./assets/certificate-update.drawio.png}
+    \caption{Use Case 3: Student or Alumni requests a change to the certificate.}
     \label{fig:use-case-3}
 \end{figure}
 
@@ -121,7 +125,7 @@ The following use cases describe the interactions between the different stakehol
 
     \item \textbf{Actors:} Student, College Administrator
     \item \textbf{Description:} A student or alumni requests a change to the academic certificates issued by the college administrator.
-    \item \textbf{Preconditions:} The student has access to the SCAR platform. The college administrator has access to the platform and the student's academic records.
+    \item \textbf{Preconditions:} The student has access to the DiGo Certify platform. The college administrator has access to the platform and the student's academic records.
     \item \textbf{Postconditions:} The student receives the updated academic certificates and stores them on the blockchain.
     \item \textbf{Main Flow:}
     \item 1. The student logs in to the \texttt{DiGo Certify} mobile application.

@@ -5,7 +5,7 @@
 
 The present chapter covers the system's components, their interactions, and the underlying technologies used to implement the solution. The architecture is designed to ensure data integrity, security, and scalability while providing a seamless user experience. We will cover the concept of a multiplatform application, how it functions, the various solutions available, and a detailed discussion of the chosen technology stack, specifically React Native with the Expo\cite{Expo} platform.
 
-\section{Architecture Overview}\label{sec:architecture-overview}
+\section{Architecture Overview (CHAPTER UNDER DEVELOPMENT)}\label{sec:architecture-overview}
 
 The architecture of the \texttt{DiGo Certify} system is designed to be modular, scalable, and secure. The system~\ref{fig:architecture-overview} is divided into two main layers: the mobile application layer and the fully distributed layer. Each layer has specific responsibilities and interacts with the others to deliver the desired functionality.
 
@@ -22,7 +22,7 @@ Below is a high-level diagram of the DiGo Certify architecture:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{../diagrams/architecture-overview.drawio.png}
+    \includegraphics[width=1\textwidth]{assets/architecture-overview.drawio.png}
     \caption{Architecture Overview Diagram (inspired by \cite{geeksforgeeks-dApps}).}
     \label{fig:architecture-overview}
 \end{figure}
@@ -81,6 +81,9 @@ Multiplatform applications leverage frameworks that provide tools and libraries 
 Several frameworks are available for developing multiplatform applications, each with its own set of features and trade-offs. The most notable ones include:
 
 \begin{itemize}
+    \item React Native\cite{ReactNativeBook}
+    \item Flutter\cite{Flutter}
+    \item Kotlin Multiplatform Mobile (KMP)\cite{KMP}
     \item React Native\cite{ReactNativeBook}
     \item Flutter\cite{Flutter}
     \item Kotlin Multiplatform Mobile (KMP)\cite{KMP}
@@ -156,9 +159,12 @@ The framework’s rich ecosystem of libraries and tools further accelerated our 
 Expo enhances React Native by offering a suite of tools and services that simplify development\cite{Expo}. With Expo, we benefit from an integrated environment for developing, building, and deploying React Native applications. The platform’s managed workflow handles many of the complexities of building and deploying mobile applications, allowing us to focus on developing features rather than dealing with infrastructure. Expo’s easy setup and configuration process streamlined our project initialization, while its over-the-air update capability enables us to push updates to users without requiring a full app store review process.
 
 The development workflow for DiGo Certify using React Native and Expo involves several key steps. Initially, we set up the project with Expo CLI, which provides a streamlined setup process and essential tools. We then focused on building the application UI using React Native’s component-based approach. This method allows us to create reusable UI elements that help maintain consistency and simplify development.
+The development workflow for DiGo Certify using React Native and Expo involves several key steps. Initially, we set up the project with Expo CLI, which provides a streamlined setup process and essential tools. We then focused on building the application UI using React Native’s component-based approach. This method allows us to create reusable UI elements that help maintain consistency and simplify development.
 
+For integrating blockchain functionality, we implemented smart contracts in Solidity and connected them with the React Native application through ethers.js. This integration enables secure interactions with the Ethereum blockchain, allowing for the storage and validation of academic certificates.
 For integrating blockchain functionality, we implemented smart contracts in Solidity and connected them with the React Native application through ethers.js. This integration enables secure interactions with the Ethereum blockchain, allowing for the storage and validation of academic certificates.
 
 Testing and debugging are facilitated by Expo’s built-in tools, which allow us to test the application on various devices and simulators. This ensures that our application performs well across different platforms and devices. Finally, Expo simplifies the deployment process with its build and publish services, allowing us to distribute the application through app stores seamlessly.
 
+In summary, the choice of React Native with Expo for DiGo Certify provides a robust, efficient, and scalable solution for developing a secure and user-friendly multiplatform application. This architecture leverages modern technologies to meet the needs of our diverse user base, ensuring a high-quality user experience across all supported devices.
 In summary, the choice of React Native with Expo for DiGo Certify provides a robust, efficient, and scalable solution for developing a secure and user-friendly multiplatform application. This architecture leverages modern technologies to meet the needs of our diverse user base, ensuring a high-quality user experience across all supported devices.
