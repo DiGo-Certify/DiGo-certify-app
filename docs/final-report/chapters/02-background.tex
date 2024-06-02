@@ -64,17 +64,23 @@ The key benefits of this approach in the education sector include improved secur
 \section{Blockchain}\label{sec:blockchain}
 \paragraph{}
 
-Recently, another solution that have being proposed is the adoption of blockchain technology for academic certificate registry. Beeing also a distributed system, this technology goes beyond by offering a fully decentralized solution.
+Recently, another solution that have being proposed is the adoption of blockchain technology for academic certificate registry. As we can see in Figure \ref{fig:blockchain-vs-database}, also being a distributed system, this technology goes beyond by offering a fully decentralized solution.
 Blockchain offers a decentralized, secure and \textit{tamper-proof ledger} where certificates can be stored and verified.
 Tamper-proof ledger is a system designed to maintain records where once information is added, it cannot be altered or deleted. This is achieved through a combination of cryptographic techniques and a distributed network of computers (nodes) that each hold a copy of the ledger.
 Every transaction or entry is verified by these nodes, and any attempt to change past records would require altering the data on a majority of these nodes simultaneously, which is virtually impossible. This ensures the integrity and authenticity of the stored certificates, making them highly resistant to fraud and manipulation.
+
+\begin{figure}[H]\label{fig:blockchain-vs-database}
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/blockchain-vs-database.png}
+    \caption{Centralized vs Blockchain Systems~\cite{blockchainDB}.}
+\end{figure}
 
 The use of blockchain technology ensures that certificates are immutable, transparent and accessible to all stakeholders~\cite{alammary2019blockchain}. Moreover, this technology enables the instant verification through cryptographic methods,
 eliminating the need for a central authority to manage the registry, thereby reducing the risk of fraud and manipulation.
 
 In contrast to the traditional centralized data-based system, in our opinion, blockchain emerges with a huge influence capable of revolutionizing academic certificate registry systems.
 The decision to use blockchain technology as the foundation of our solution on the fact that blockchain technology is a key enabler of the \textit{Web3} vision~\cite{buldas2022towards},
-which aims to create decentralized and fully distributed applications (\textit{dApps}) that are secure, transparent and trustless where users have full control over their data and digital assets without having a \textbf{single point of failure}.
+which aims to create decentralized and fully distributed applications (\textit{dApps}) that are secure, transparent and trust less where users have full control over their data and digital assets without having a \textbf{single point of failure}.
 For the implementation of a blockchain-based solution for our problem it is crucial to understand the foundational concepts that make this technology both revolutionary and reliable.
 Central to blockchain's efficacy is the principle of \textit{distributed consensus}~\cite{xiao2020survey}, which ensures the integrity, security and transparency of the ledger like mentioned before.
 
