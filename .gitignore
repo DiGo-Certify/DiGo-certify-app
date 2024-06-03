@@ -19,6 +19,7 @@
 *.acr
 *.glg
 *.glo
+*.synctex(busy)
 
 # Mac OS ignored files
 *.DS_Store

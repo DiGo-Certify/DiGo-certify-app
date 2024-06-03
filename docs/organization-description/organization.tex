@@ -1,0 +1,90 @@
+\documentclass[10pt]{report}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.2}
+
+%% Sets page size and margins
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm, marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{graphicx}
+\usepackage{makeidx}    % allowsindexgeneration
+\usepackage{float}
+\usepackage{acronym}
+\usepackage{hyperref}
+
+\pagenumbering{arabic}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{figure}[h]
+    \includegraphics[width=0.45\textwidth]{assets/logo.png}
+\end{figure}
+
+\begin{center}
+
+
+    \begin{Huge}
+        \textbf{SCAR\@: Smart Contract Academic \\ \vspace{.25cm}
+            Registry}
+    \end{Huge}
+
+    \vspace{.75cm}
+
+    \begin{LARGE}
+        \textbf{A Blockchain approach for Academic Registry}
+    \end{LARGE}
+
+    \vspace{1cm}
+
+    \vspace{.75cm}
+    \begin{large}
+        \begin{tabular}{ c c c }
+            Diogo Rodrigues               & Gonçalo Frutuoso              \\
+            \texttt{49513@alunos.isel.pt} & \texttt{49495@alunos.isel.pt} \\
+        \end{tabular}
+
+        \vspace{5.75cm} Supervisors \vspace{0.25cm}
+
+        \begin{tabular}{ c c }
+            Cátia Vaz, ISEL              & Alexandre Francisco, IST \\
+            \texttt{cvaz@cc.isel.ipl.pt} & \texttt{aplf@tecnico.pt}
+        \end{tabular}
+
+        \vspace{1.25cm}
+
+        \begin{Large}
+            Final Report written for Project and Seminary \\ \vspace{.25cm}
+            Licenciatura em Engenharia Informática e de Computadores
+        \end{Large}
+    \end{large}
+
+    \vspace{1.75cm} \today \vspace{.75cm}
+
+\end{center}
+
+\section{Project Repository}
+The entire implementation and documentation of SCAR project can be found at \href{https://github.com/DiGo-Certify/DiGo-certify-app}{SCAR}.
+
+\section{Resources}
+\begin{itemize}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/tree/main/docs/project-proposal}{Project Proposal}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/blob/report-features/docs/final-report/report.pdf}{Final Report}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app}{Github Repository}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/blob/report-features/docs/poster.pdf}{Poster}
+\end{itemize}
+
+
+\vspace{.75cm}
+
+%%%%% References %%%%%
+\bibliography{references}
+\bibliographystyle{abbrv}
+
+\end{document}
