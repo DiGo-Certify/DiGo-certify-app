@@ -16,6 +16,7 @@
 \usepackage{makeidx}    % allowsindexgeneration
 \usepackage{float}
 \usepackage{acronym}
+\usepackage{hyperref}
 
 \pagenumbering{arabic}
 
@@ -68,77 +69,17 @@
 
 \end{center}
 
-% Empty page before the abstract
-\newpage
-\thispagestyle{empty}
-\mbox{}
+\section{Project Repository}
+The entire implementation and documentation of SCAR project can be found at \href{https://github.com/DiGo-Certify/DiGo-certify-app}{SCAR}.
 
-%%%%% Abstract %%%%%
-\input{abstract/abstract.tex}
+\section{Resources}
+\begin{itemize}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/tree/main/docs/project-proposal}{Project Proposal}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/blob/report-features/docs/final-report/report.pdf}{Final Report}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app}{Github Repository}
+    \item \href{https://github.com/DiGo-Certify/DiGo-certify-app/blob/report-features/docs/poster.pdf}{Poster}
+\end{itemize}
 
-% Empty page before the resumo
-\newpage
-\thispagestyle{empty}
-\mbox{}
-
-%%%%% Resumo %%%%%
-\input{resume/resumo.tex}
-
-% Empty page before the acknowledgements
-\newpage
-\thispagestyle{empty}
-\mbox{}
-
-%%%%% Acknowledgements %%%%%
-% \input{acknowleggements/acknowledgements.tex}
-
-%%%%% Index %%%%%
-\renewcommand{\contentsname}{Index}
-\pagenumbering{arabic}
-\tableofcontents
-
-%%%%% List of figures %%%%%
-\listoffigures
-\addcontentsline{toc}{chapter}{List of Figures}
-
-%%%%% List of tables %%%%%
-\listoftables
-\addcontentsline{toc}{chapter}{List of Tables}
-
-%%%%% List of acronyms %%%%%
-\input{acronyms.tex}
-
-%%%%% CHAPTERS (with an empty page before each one) %%%%%
-\newpage
-\thispagestyle{empty}
-\mbox{}
-\input{chapters/01-introduction.tex}
-
-\newpage
-\thispagestyle{empty}
-\mbox{}
-\input{chapters/02-background.tex}
-
-\newpage
-\thispagestyle{empty}
-\mbox{}
-\input{chapters/03-requirements.tex}
-
-\thispagestyle{empty}
-\mbox{}
-\input{chapters/04-architecture.tex}
-
-% \newpage
-% \thispagestyle{empty}
-% \mbox{}
-% \input{chapters/05-implementation.tex}
-
-\newpage
-\thispagestyle{empty}
-\mbox{}
-\input{chapters/06-work-plan.tex}
-
-%%%%% Conclusion %%%%%
 
 \vspace{.75cm}
 
