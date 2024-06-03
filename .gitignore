@@ -10,6 +10,15 @@
 *.lof
 *.lot
 *.toc
+*.alg
+*.acr
+*.ist
+*.gls
+*.glsdefs
+*.acn
+*.acr
+*.glg
+*.glo
 
 # Mac OS ignored files
 *.DS_Store
