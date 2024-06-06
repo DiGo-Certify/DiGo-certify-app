@@ -10,6 +10,8 @@ const {
  * @returns
  */
 async function deployClaimIssuer(managementKey) {
+
+    console.log(`\n[!] Deploying ClaimIssuer contract ...`);
     const claimIssuerContract = await new ethers.ContractFactory(
         ClaimIssuer.abi,
         ClaimIssuer.bytecode,

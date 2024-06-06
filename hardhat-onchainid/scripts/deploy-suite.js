@@ -3,6 +3,7 @@ const { deployOnchainIdSuite } = require("./aux/deployOnchainIdSuite");
 const { createIdentity } = require("./aux/createOnchainIdIdentity");
 const { deployClaimIssuer } = require("./deploy-claimIssuer"); // It is necessary to deploy the ClaimIssuer contract?
 const { addClaimIssuer } = require("./aux/addClaimIssuer");
+const { addClaim } = require("./aux/addClaim");
 
 /**
  * Main function that serve as test for some operations between identities and ClaimIssuers
@@ -30,7 +31,6 @@ async function main() {
         "alice-salt"
     );
 
-    // Create an identity for bobWallet
     await createIdentity(
         identityFactory,
         bobWallet.address,
@@ -41,7 +41,8 @@ async function main() {
     // Add the aliceWallet as a ClaimIssuer for the bobWallet
     await addClaimIssuer(identityFactory, bobWallet, aliceWallet);
 
-    //TODO - Add a claim to the bobWallet.
+    // Alice adds a claim to Bob
+    await addClaim(identityFactory, aliceWallet, bobWallet);
 }
 
 main()

@@ -19,7 +19,8 @@ async function addClaimIssuer(identityFactory, entityWallet, managementKey) {
     // Get the identity of the entity that will add the key to the ClaimIssuer
     const identity = await getIdentity(identityFactory, entityWallet);
 
-    // Create a key for the entity that will be added to the ClaimIssuer - ERRADO, PENSAMENTO INVERSO!
+    // Add a ClaimIssuer to an identity
+    // The managementKey added is the one that will be able to sign claims for the entity
     const tx = await identity.connect(entityWallet).addKey(
         ethers.keccak256(abi.encode(["address"], [managementKey.address])),
         3, // Purpose - 3 is for Claim

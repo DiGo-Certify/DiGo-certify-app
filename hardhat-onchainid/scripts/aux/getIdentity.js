@@ -19,7 +19,7 @@ async function getIdentity(identityFactory, wallet) {
         await identityFactory.getIdentity(wallet.address)
     );
 
-    console.log(`\n[✓] Identity retrieved: ${identity.address}`);
+    console.log(`\n[✓] Identity retrieved: ${await identity.getAddress()}`);
 
     return identity;
 }
