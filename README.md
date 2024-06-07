@@ -86,12 +86,16 @@ The following instructions will guide you through the installation process.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+1. You need to have node do run the application.
 
 - npm
   ```sh
   npm install npm@latest -g
   ```
+2. Install Expo Go on your smart phone:
+  - **IOS**: https://apps.apple.com/us/app/expo-go/id982107779
+  - **Android**: https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en
+
 
 ### Installation
 
@@ -109,6 +113,7 @@ This is an example of how to list things you need to use the software and how to
    ```sh
     npx expo start
     ```
+5. Scan the QR Code provided on your smart phone to run the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
