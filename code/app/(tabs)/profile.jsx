@@ -5,6 +5,7 @@ import Images from '@/constants/images';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { List } from 'react-native-paper';
+import { router } from 'expo-router';
 
 const Profile = () => {
     // Mockup profile
@@ -18,7 +19,13 @@ const Profile = () => {
 
     // Handle wallet connect with metamask
     const handleWalletConnect = async () => {
-        console.log('Wallet connect');
+        router.push('/initial-screen/initial-screen')
+        
+    };
+
+    // Handle logout
+    const handleLogout = () => {
+       router.push('/sign-in'); 
     };
 
     return (
@@ -39,7 +46,7 @@ const Profile = () => {
                     icon={Icons.send}
                 />
                 <ListItem title="Settings" onPress={() => console.log('Settings')} icon={Icons.settings} />
-                <ListItem title="Log out" onPress={() => console.log('Log out')} icon={Icons.logOut} />
+                <ListItem title="Log out" onPress={handleLogout} icon={Icons.logOut} />
             </View>
         </SafeAreaView>
     );

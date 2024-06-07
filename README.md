@@ -71,11 +71,9 @@ SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform applic
 - [![Node][Node.js]][Node-url]
 - [![React Native][ReactNative.js]][ReactNative-url]
 - [![Expo React Native][Expo.js]][Expo-url]
-- [![FireBase][FireBase.js]][FireBase-url]
 - [![Smart Contract][Solidity.sol]][Solidity-url]
 - [![Hardhat][Hardhat.js]][Hardhat-url]
 - [![Ethereum][Ethereum.js]][Ethereum-url]
-- [![TypeScript][TypeScript.ts]][TypeScript-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -83,8 +81,8 @@ SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform applic
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+We need to install the DiGo Certify app on your device.
+The following instructions will guide you through the installation process.
 
 ### Prerequisites
 
@@ -100,28 +98,29 @@ This is an example of how to list things you need to use the software and how to
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/DiGo-Certify/DiGo-certify-app.git
    ```
 3. Install NPM packages
    ```sh
+   cd code
    npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = "ENTER YOUR API";
-   ```
+4. Run the app
+   ```sh
+    npx expo start
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 
-## Usage
+<!-- ## Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 <!-- LICENSE -->
 
@@ -147,11 +146,11 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- ACKNOWLEDGMENTS -->
 
-## Acknowledgments
+<!-- ## Acknowledgments
 
 - []()
 - []()
-- []()
+- []() -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
