@@ -11,9 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.2"
+    "hardhat": "^2.22.5"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
     "@onchain-id/identity-sdk": "^1.7.1"
   }
 }

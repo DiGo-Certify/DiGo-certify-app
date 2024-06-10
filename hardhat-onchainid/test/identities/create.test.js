@@ -72,4 +72,26 @@ describe('Identity Creation', () => {
             identityFactory.createIdentity(aliceWallet.address, salt)
         ).to.be.revertedWith('salt already taken');
     });
+
+    it('Should revert because salt can not be empty', async () => {
+        const { aliceWallet, identityFactory } = await loadFixture(
+            deployFactoryFixture
+        );
+
+        const salt = '';
+
+        await expect(
+            identityFactory.createIdentity(aliceWallet.address, salt)
+        ).to.be.revertedWith('invalid argument - empty string');
+    });
+
+    it('Should revert because wallet can not be Zero Address', async () => {
+        const { identityFactory } = await loadFixture(deployFactoryFixture);
+
+        const salt = 'alice-salt';
+
+        await expect(
+            identityFactory.createIdentity(ethers.ZeroAddress, salt)
+        ).to.be.revertedWith('invalid argument - zero address');
+    });
 });

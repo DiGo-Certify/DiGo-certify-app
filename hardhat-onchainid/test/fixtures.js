@@ -1,12 +1,10 @@
 const { ethers } = require('hardhat');
 const {
-    contracts: { Factory, Identity, ImplementationAuthority }
+    contracts: { Factory, Identity, ImplementationAuthority, ClaimIssuer }
 } = require('@onchain-id/solidity');
 
 async function deployFactoryFixture() {
     const [deployerWallet, aliceWallet, bobWallet] = await ethers.getSigners();
-
-    console.log(`\n[!] Deploying OnChainId Suite ...`);
 
     // On Chain Id implementation
     const IdentityContract = await new ethers.ContractFactory(
@@ -41,10 +39,6 @@ async function deployFactoryFixture() {
         await implementationAuthority.getAddress()
     );
 
-    console.log(
-        `\n[✓] Deployed OnChainId Factory Contract: ${await identityFactory.getAddress()}`
-    );
-
     return {
         deployerWallet,
         aliceWallet,
@@ -55,6 +49,72 @@ async function deployFactoryFixture() {
     };
 }
 
+async function deployIdentityFixture() {
+    const [deployerWallet, aliceWallet, bobWallet, claimIssuerWallet] =
+        await ethers.getSigners();
+
+    const { identityFactory, identityImplementation, implementationAuthority } =
+        await deployFactoryFixture();
+
+    // Add the ClaimIssuer as a ClaimIssuer
+    const claimIssuer = await new ethers.ContractFactory(
+        ClaimIssuer.abi,
+        ClaimIssuer.bytecode,
+        claimIssuerWallet
+    ).deploy(claimIssuerWallet.address);
+
+    // Add ClaimIssuer as self claim signer
+    await claimIssuer
+        .connect(claimIssuerWallet)
+        .addKey(
+            ethers.keccak256(
+                ethers.AbiCoder.defaultAbiCoder().encode(
+                    ['address'],
+                    [claimIssuerWallet.address]
+                )
+            ),
+            3,
+            1
+        );
+
+    // Create an identity for Alice
+    await identityFactory
+        .connect(deployerWallet)
+        .createIdentity(aliceWallet.address, 'alice-salt');
+
+    // Create an identity for Bob
+    await identityFactory
+        .connect(deployerWallet)
+        .createIdentity(bobWallet.address, 'bob-salt');
+
+    // Create an identity for ClaimIssuer
+    await identityFactory
+        .connect(deployerWallet)
+        .createIdentity(claimIssuerWallet.address, 'claim-issuer-salt');
+
+    // Get the identity address for Alice
+    const aliceIdentity = await identityFactory.getIdentity(
+        aliceWallet.address
+    );
+
+    // Get the identity address for Bob
+    const bobIdentity = await identityFactory.getIdentity(bobWallet.address);
+
+    return {
+        deployerWallet,
+        aliceWallet,
+        bobWallet,
+        identityFactory,
+        identityImplementation,
+        implementationAuthority,
+        aliceIdentity,
+        bobIdentity,
+        claimIssuerWallet,
+        claimIssuer
+    };
+}
+
 module.exports = {
-    deployFactoryFixture
+    deployFactoryFixture,
+    deployIdentityFixture
 };
