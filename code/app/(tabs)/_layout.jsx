@@ -8,12 +8,9 @@ import { BottomNavigation, Text } from 'react-native-paper';
 import ProfileScreen from './profile';
 import ValidationScreen from './validation';
 import EmissionScreen from './emission';
+import HomeScreen from './home';
 
-const HomeRoute = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home</Text>
-    </View>
-);
+const HomeRoute = () => <HomeScreen />; //! There must be another way to render the screens without calling them directly
 
 //! There must be another way to render the screens without calling them directly
 const ProfileRoute = () => <ProfileScreen />;
