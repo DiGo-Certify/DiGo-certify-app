@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 
 /**
  * Generic Background component for the app

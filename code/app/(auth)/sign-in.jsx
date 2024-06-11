@@ -3,7 +3,7 @@ import React, { useState, useReducer } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import Images from '@/constants/images';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import FormField from '@/components/FormField';
 import ClickableText from '@/components/ClickableText';
 import ActionButton from '@/components/ActionButton';

@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, Text, Dimensions, TouchableOpacity } from 'rea
 import Icons from '@/constants/icons';
 import Images from '@/constants/images';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { List } from 'react-native-paper';
 import { router } from 'expo-router';
 

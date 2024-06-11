@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Alert, Dimensions } from 'react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
 import ClickableText from '@/components/ClickableText';
