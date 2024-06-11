@@ -34,7 +34,7 @@ function InitialScreen() {
             >
                 <Text style={styles.buttonText}>Create Wallet</Text>
             </TouchableOpacity>
-            <Text style={styles.bottomText} onPress={() => router.replace('/sign-in')}>
+            <Text style={styles.bottomText} onPress={() => router.replace('/profile')}>
                 Already have a wallet
             </Text>
         </View>

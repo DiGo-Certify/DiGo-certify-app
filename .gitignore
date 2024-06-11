@@ -10,6 +10,16 @@
 *.lof
 *.lot
 *.toc
+*.alg
+*.acr
+*.ist
+*.gls
+*.glsdefs
+*.acn
+*.acr
+*.glg
+*.glo
+*.synctex(busy)
 
 # Mac OS ignored files
 *.DS_Store

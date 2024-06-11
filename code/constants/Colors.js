@@ -11,5 +11,5 @@ export default {
     black,
     white,
     grey,
-    sonicSilver
+    sonicSilver,
 };

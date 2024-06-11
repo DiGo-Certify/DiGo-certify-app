@@ -1,6 +1,8 @@
-import '@walletconnect/react-native-compat'
+import '@walletconnect/react-native-compat';
 import React, { useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import SignIn from './(auth)/sign-in';
+import Profile from './(tabs)/profile';
 import InitialScreen from './initial-screen/initial-screen';
 
 // A possibility of the decision to decide what the first screen should be
@@ -8,23 +10,18 @@ function App() {
     const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
-        getUserInfo().then(info => setUserInfo(info));
+        getValueFor('user_info').then(info => setUserInfo(info));
     }, []);
 
-    // For now will always go the Initial Screen
-    if (userInfo === null) {
-        return <InitialScreen />;
-    } else {
-        return; // <ProfileScreen />; or whatever the main screen will be
-    }
+    return userInfo ? <Profile /> : <SignIn />;
 }
 
-// async function saveUserInfo(userInfo) {
-//     await SecureStore.setItemAsync('userInfo', JSON.stringify(userInfo));
-// }
+async function save(key, value) {
+    await SecureStore.setItemAsync(key, value);
+}
 
-async function getUserInfo() {
-    let result = await SecureStore.getItemAsync('userInfo');
+async function getValueFor(key) {
+    let result = await SecureStore.getItemAsync(key);
     if (result) {
         return JSON.parse(result);
     } else {

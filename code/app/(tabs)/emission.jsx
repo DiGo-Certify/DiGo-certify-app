@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     upload: {
-        marginTop: 20
-    }
+        marginTop: 20,
+    },
 });
