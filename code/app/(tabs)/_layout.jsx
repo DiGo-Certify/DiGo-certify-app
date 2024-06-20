@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image, View } from 'react-native';
 import { Tabs } from 'expo-router';
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 import icons from '@/constants/icons';
 import { BottomNavigation, Text } from 'react-native-paper';

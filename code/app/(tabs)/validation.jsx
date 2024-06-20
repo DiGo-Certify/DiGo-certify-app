@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Images from '@/constants/images';
 import FormField from '@/components/FormField';
 import ActionButton from '@/components/ActionButton';
-import colors from '@/constants/Colors';
+import colors from '@/constants/colors';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';

@@ -3,7 +3,7 @@ import React, { useState, useReducer } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import Images from '@/constants/images';
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 import FormField from '@/components/FormField';
 import ClickableText from '@/components/ClickableText';
 import ActionButton from '@/components/ActionButton';
@@ -16,35 +16,56 @@ const ACTIONS = {
     SUCCESS: 'success',
 };
 
+const STATES = {
+    EDITING: 'editing',
+    SUBMITTING: 'submitting',
+    REDIRECT: 'redirect',
+};
+
 const initialState = {
-    tag: 'editing',
-    error: undefined,
+    tag: STATES.EDITING,
     inputs: {
         email: '',
         password: '',
     },
 };
 
-function reducer(state, action) {
-    switch (action.type) {
-        case ACTIONS.EDIT:
-            return {
-                ...state,
-                tag: 'editing',
-                inputs: {
-                    ...state.inputs,
-                    [action.inputName]: action.inputValue,
-                },
-            };
-        case ACTIONS.SUBMIT:
-            return { tag: 'submitting', email: state.inputs.email };
-        case ACTIONS.ERROR:
-            return { tag: 'editing', error: action.message, inputs: state.inputs };
-        case ACTIONS.SUCCESS:
-            return { tag: 'redirect' };
-        default:
+function reduce(state, action) {
+    switch (state.tag) {
+        case STATES.EDITING:
+            switch (action.type) {
+                case ACTIONS.EDIT:
+                    return {
+                        tag: STATES.EDITING,
+                        inputs: {
+                            ...state.inputs,
+                            [action.inputName]: action.inputValue,
+                        },
+                    };
+                case ACTIONS.SUBMIT:
+                    return { tag: STATES.SUBMITTING, email: state.inputs.email };
+                default:
+                    logUnexpectedAction(state, action);
+                    return state;
+            }
+        case STATES.SUBMITTING:
+            switch (action.type) {
+                case ACTIONS.ERROR:
+                    return { tag: STATES.EDITING, error: action.message, inputs: { email: state.email, password: '' } };
+                case ACTIONS.SUCCESS:
+                    return { tag: STATES.REDIRECT };
+                default:
+                    logUnexpectedAction(state, action);
+                    return state;
+            }
+        case STATES.REDIRECT:
+            logUnexpectedAction(state, action);
             return state;
     }
+}
+
+function logUnexpectedAction(state, action) {
+    console.log('Unexpected action', action, 'for state', state);
 }
 
 //Simulating function
@@ -57,6 +78,7 @@ function delay(delayInMs) {
 
 async function authenticate(email, password) {
     await delay(3000);
+    console.log('email', email, 'password', password);
     if (email === 'admin' && password === 'admin') {
         return { email: 'admin' };
     } else {
@@ -64,100 +86,18 @@ async function authenticate(email, password) {
     }
 }
 
-// const SignIn = () => {
-//     const [state, dispatch] = useReducer(reducer, initialState);
-//     const [isSubmitting, setSubmitting] = useState(false);
-//     const [form, setForm] = useState({
-//         email: '',
-//         password: '',
-//     });
-
-//     if (state.tag === 'redirect') {
-//         router.push('/profile');
-//     }
-
-//     const handleSubmit = async () => {
-//         if (form.email === '' || form.password === '') {
-//             Alert.alert('Error', 'Please fill in all fields');
-//             return;
-//         }
-
-//         setSubmitting(true);
-//         try {
-//             // const result = await createUser(form.email, form.password, form.username);
-//             // setUser(result);
-//             // setIsLogged(true);
-
-//             router.push('/profile');
-//         } catch (error) {
-//             Alert.alert('Error', error.message);
-//         } finally {
-//             setSubmitting(false);
-//         }
-//     };
-
-//     return (
-//         <Background
-//             header={
-//                 <View style={{ flex: 1, justifyContent: 'center' }}>
-//                     <HeaderImage imageSource={Images.splashScreenImage} />
-//                 </View>
-//             }
-//             body={
-//                 <View style={{ width: '100%', paddingHorizontal: 30 }}>
-//                     <Text style={styles.loginText}>Login</Text>
-//                     <FormField
-//                         label="Email"
-//                         icon="email"
-//                         onChange={text => setForm({ ...form, email: text })}
-//                         style={styles.inputField}
-//                     />
-//                     <FormField
-//                         label="Password"
-//                         icon="lock"
-//                         onChange={text => setForm({ ...form, password: text })}
-//                         secure={true}
-//                         style={styles.inputField}
-//                     />
-//                 </View>
-//             }
-//             footer={
-//                 <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200 }}>
-//                     <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-//                         <ClickableText
-//                             text="Create an account"
-//                             onPress={() => router.replace('/sign-up')}
-//                             style={styles.dontHaveAccountText}
-//                         />
-//                         <Text style={{ marginHorizontal: 3, fontSize: 20 }}> • </Text>
-//                         <ClickableText text="Can't Login?" onPress={() => {}} style={styles.forgotPasswordText} />
-//                     </View>
-//                     <ActionButton
-//                         text="Login"
-//                         onPress={handleSubmit}
-//                         buttonStyle={styles.loginButton}
-//                         textStyle={styles.loginButtonText}
-//                         isLoading={isSubmitting}
-//                         color={Colors.green}
-//                     />
-//                 </View>
-//             }
-//         />
-//     );
-// };
-
 const SignIn = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    if (state.tag === 'redirect') {
+    const [state, dispatch] = useReducer(reduce, initialState);
+    if (state.tag === STATES.REDIRECT) {
         router.push('/profile');
     }
-    console.log(state);
+
     function handleChange(name, value) {
         dispatch({ type: ACTIONS.EDIT, inputName: name, inputValue: value });
     }
 
     function handleSubmit() {
-        if (state.tag !== 'editing') {
+        if (state.tag !== STATES.EDITING) {
             return;
         }
         dispatch({ type: ACTIONS.SUBMIT });
@@ -170,7 +110,6 @@ const SignIn = () => {
                     //setUser(res);
                     dispatch({ type: ACTIONS.SUCCESS });
                 } else {
-                    console.log('Invalid credentials');
                     dispatch({ type: ACTIONS.ERROR, message: 'Invalid credentials' });
                 }
             })
@@ -179,17 +118,17 @@ const SignIn = () => {
             });
     }
 
-    const email = state.tag === 'submitting' ? state.email : state.inputs.email;
-    const password = state.tag === 'submitting' ? '' : state.inputs.password;
+    const email = state.tag === STATES.SUBMITTING ? state.email : state.inputs.email;
+    const password = state.tag === STATES.SUBMITTING ? '' : state.inputs.password;
     return (
         <Background
             header={
-                <View style={{ flex: 1, justifyContent: 'center' }}>
+                <View style={styles.header}>
                     <HeaderImage imageSource={Images.splashScreenImage} />
                 </View>
             }
             body={
-                <View style={{ width: '100%', paddingHorizontal: 30 }}>
+                <View style={styles.body}>
                     <Text style={styles.loginText}>Login</Text>
                     <FormField
                         label="Email"
@@ -210,14 +149,14 @@ const SignIn = () => {
                 </View>
             }
             footer={
-                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200 }}>
-                    <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                <View style={styles.footer}>
+                    {/* { width: '100%', flexDirection: 'row', justifyContent: 'center' } */}
+                    <View>
                         <ClickableText
                             text="Create an account"
                             onPress={() => router.replace('/sign-up')}
                             style={styles.dontHaveAccountText}
                         />
-                        <Text style={{ marginHorizontal: 3, fontSize: 20 }}> • </Text>
                         <ClickableText text="Can't Login?" onPress={() => {}} style={styles.forgotPasswordText} />
                     </View>
                     <ActionButton
@@ -237,6 +176,9 @@ const SignIn = () => {
 export default SignIn;
 
 const styles = StyleSheet.create({
+    header: { flex: 1, justifyContent: 'center' },
+    body: { width: '100%', paddingHorizontal: 30 },
+    footer: { width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200 },
     inputField: {
         justifyContent: 'center',
         marginTop: 20,

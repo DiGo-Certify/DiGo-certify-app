@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Images from '@/constants/images';
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import FormField from '@/components/FormField';

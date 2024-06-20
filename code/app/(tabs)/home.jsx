@@ -10,7 +10,7 @@ function delay(ms) {
 // Simulate fetching data from the blocchain
 async function getCertificates() {
     /*
-    On the future will probably be used, some async store aproach to store data after the first search or any update, because requests to the blockchain are expensive and slow
+    On the future 7will probably be used, some async store aproach to store data after the first search or any update, because requests to the blockchain are expensive and slow
     */
     //delay(1000);
     return [
