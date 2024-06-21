@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import React, { useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import Images from '@/constants/images';
@@ -78,7 +78,6 @@ function delay(delayInMs) {
 
 async function authenticate(email, password) {
     await delay(3000);
-    console.log('email', email, 'password', password);
     if (email === 'admin' && password === 'admin') {
         return { email: 'admin' };
     } else {
@@ -86,10 +85,11 @@ async function authenticate(email, password) {
     }
 }
 
+//! Review this code (Still has a Warning)
 const SignIn = () => {
     const [state, dispatch] = useReducer(reduce, initialState);
     if (state.tag === STATES.REDIRECT) {
-        router.push('/profile');
+        return router.push('/profile');
     }
 
     function handleChange(name, value) {
@@ -105,7 +105,6 @@ const SignIn = () => {
         const password = state.inputs.password;
         authenticate(email, password)
             .then(res => {
-                console.log('res', res);
                 if (res) {
                     //setUser(res);
                     dispatch({ type: ACTIONS.SUCCESS });
