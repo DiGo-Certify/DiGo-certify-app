@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import Images from '@/constants/images';
@@ -8,6 +8,7 @@ import FormField from '@/components/FormField';
 import ClickableText from '@/components/ClickableText';
 import ActionButton from '@/components/ActionButton';
 import { router } from 'expo-router';
+import { save } from '@/services/storage/storage';
 
 const ACTIONS = {
     EDIT: 'edit',
@@ -20,14 +21,6 @@ const STATES = {
     EDITING: 'editing',
     SUBMITTING: 'submitting',
     REDIRECT: 'redirect',
-};
-
-const initialState = {
-    tag: STATES.EDITING,
-    inputs: {
-        email: '',
-        password: '',
-    },
 };
 
 function reduce(state, action) {
@@ -53,7 +46,7 @@ function reduce(state, action) {
                 case ACTIONS.ERROR:
                     return { tag: STATES.EDITING, error: action.message, inputs: { email: state.email, password: '' } };
                 case ACTIONS.SUCCESS:
-                    return { tag: STATES.REDIRECT };
+                    return { tag: STATES.REDIRECT, email: state.email};
                 default:
                     logUnexpectedAction(state, action);
                     return state;
@@ -87,8 +80,16 @@ async function authenticate(email, password) {
 
 //! Review this code (Still has a Warning)
 const SignIn = () => {
-    const [state, dispatch] = useReducer(reduce, initialState);
+    const [state, dispatch] = useReducer(reduce, {
+        tag: STATES.EDITING,
+        inputs: {
+            email: '',
+            password: '',
+        },
+    });
     if (state.tag === STATES.REDIRECT) {
+        // router.setParams({ user: state.email });
+        save('user_info', JSON.stringify({ user: state.email }));
         return router.push('/profile');
     }
 
