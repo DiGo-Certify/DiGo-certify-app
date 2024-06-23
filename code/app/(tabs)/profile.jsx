@@ -6,56 +6,55 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { List } from 'react-native-paper';
 import { router, useGlobalSearchParams } from 'expo-router';
-import { getValueFor, removeValueFor } from '@/services/storage/storage';
+import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 
-// TODO: Save on Secure Store the wallet address, also todo the settings page
+// TODO: Settings Page
 const Profile = () => {
-    const params = useGlobalSearchParams();
-    // Mockup profile
     const [profile, setProfile] = useState({
-        username: 'User',
-        from: 'Lisbon',
+        username: '',
+        from: 'From Earth',
         image: Images.mockupProfileImage,
         wallet: 'Define your wallet',
-        since: '2021',
+        since: '2024',
     });
 
     const { isConnected, address, handlePress, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
-        try {
-            getValueFor('user_info').then(value => {
+        getValueFor('user_info')
+            .then(value => {
                 if (value) {
                     setProfile(prevProfile => ({
                         ...prevProfile,
-                        username: value.user || 'User',
+                        username: value.user,
                     }));
                 }
+            })
+            .catch(error => {
+                console.log('Error getting user info: ', error);
             });
-        } catch (error) {
-            console.log('Error getting profile: ', error);
-        }
     }, []);
 
     // Handle wallet connect with metamask
     const handleWalletConnect = async () => {
-        // router.push('/initial-screen/initial-screen');
         handlePress();
 
         if (isConnected) {
-            console.log('Connected with address: ', address);
-            setProfile(prevProfile => ({
-                ...prevProfile,
-                wallet: address,
-            }));
+            save('user_info', { user: profile.username, wallet: address }).then(() => {
+                setProfile(prevProfile => ({
+                    ...prevProfile,
+                    wallet: address,
+                }));
+            });
         }
     };
 
     // Handle logout
-    const handleLogout = async () => {
-        await removeValueFor('user_info');
-        router.push('/sign-in');
+    const handleLogout = () => {
+        removeValueFor('user_info').then(() => {
+            router.push('/sign-in');
+        });
     };
 
     return (

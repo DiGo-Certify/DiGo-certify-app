@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import Images from '@/constants/images';
@@ -46,7 +46,7 @@ function reduce(state, action) {
                 case ACTIONS.ERROR:
                     return { tag: STATES.EDITING, error: action.message, inputs: { email: state.email, password: '' } };
                 case ACTIONS.SUCCESS:
-                    return { tag: STATES.REDIRECT, email: state.email};
+                    return { tag: STATES.REDIRECT, email: state.email };
                 default:
                     logUnexpectedAction(state, action);
                     return state;
@@ -87,11 +87,12 @@ const SignIn = () => {
             password: '',
         },
     });
-    if (state.tag === STATES.REDIRECT) {
-        // router.setParams({ user: state.email });
-        save('user_info', JSON.stringify({ user: state.email }));
-        return router.push('/profile');
-    }
+
+    useEffect(() => {
+        if (state.tag === STATES.REDIRECT) {
+            save('user_info', JSON.stringify({ user: state.email })).then(() => router.push('/profile'));
+        }
+    }, [state.tag]);
 
     function handleChange(name, value) {
         dispatch({ type: ACTIONS.EDIT, inputName: name, inputValue: value });
