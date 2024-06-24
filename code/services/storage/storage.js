@@ -7,7 +7,7 @@ import * as SecureStore from 'expo-secure-store';
  * @returns {Promise<void>} - A promise that resolves when the value is saved.
  */
 async function save(key, value) {
-    await SecureStore.setItemAsync(key, value);
+    return await SecureStore.setItemAsync(key, value);
 }
 
 /**
@@ -24,6 +24,11 @@ async function getValueFor(key) {
     }
 }
 
+/**
+ * Removes the value associated with the given key from the storage.
+ * @param {string} key - The key of the value to be removed.
+ * @returns {Promise<void>} - A promise that resolves when the value is successfully removed.
+ */
 async function removeValueFor(key) {
     await SecureStore.deleteItemAsync(key);
 }

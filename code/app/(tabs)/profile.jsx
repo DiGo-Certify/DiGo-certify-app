@@ -4,10 +4,11 @@ import Icons from '@/constants/icons';
 import Images from '@/constants/images';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { List } from 'react-native-paper';
-import { router, useGlobalSearchParams } from 'expo-router';
+import { List, ActivityIndicator } from 'react-native-paper';
+import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
+import colors from '@/constants/colors';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -18,7 +19,7 @@ const Profile = () => {
         wallet: 'Define your wallet',
         since: '2024',
     });
-
+    const [isSaving, setIsSaving] = useState(false);
     const { isConnected, address, handlePress, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
@@ -28,32 +29,42 @@ const Profile = () => {
                     setProfile(prevProfile => ({
                         ...prevProfile,
                         username: value.user,
+                        address: value.wallet || profile.wallet,
                     }));
                 }
             })
-            .catch(error => {
-                console.log('Error getting user info: ', error);
-            });
+            .catch(error => console.log('Error getting user info: ', error));
     }, []);
 
-    // Handle wallet connect with metamask
-    const handleWalletConnect = async () => {
-        handlePress();
-
-        if (isConnected) {
-            save('user_info', { user: profile.username, wallet: address }).then(() => {
-                setProfile(prevProfile => ({
-                    ...prevProfile,
-                    wallet: address,
-                }));
-            });
+    useEffect(() => {
+        if (!isConnected) {
+            return;
         }
+        save('user_info', JSON.stringify({ user: profile.username, wallet: address })).then(() => {
+            setProfile(prevProfile => ({
+                ...prevProfile,
+                wallet: address,
+            }))
+                .catch(error => {
+                    console.log('Error saving user info: ', error);
+                })
+                .finally(() => setIsSaving(false));
+        });
+    }, [address]);
+
+    // Handle wallet connect with
+    const handleWalletConnect = async () => {
+        setIsSaving(true);
+        await handlePress();
     };
 
     // Handle logout
     const handleLogout = () => {
-        removeValueFor('user_info').then(() => {
-            router.push('/sign-in');
+        removeValueFor('user_info').then(async () => {
+            if (isConnected) {
+                await handlePress();
+            }
+            router.replace('/sign-in');
         });
     };
 
@@ -64,7 +75,13 @@ const Profile = () => {
                 <ProfileInfo username={profile.username} from={profile.from} since={profile.since} />
             </View>
             <View style={styles.walletAccount}>
-                <WalletInfo title="Wallet" info={profile.wallet} onPress={handleWalletConnect} />
+                <WalletInfo
+                    title="Wallet"
+                    info={profile.wallet}
+                    onPress={handleWalletConnect}
+                    disabled={isConnected}
+                    isLoading={isSaving}
+                />
                 <WalletInfo title="Account" info="Account information" />
             </View>
             <View style={styles.options}>
@@ -94,10 +111,10 @@ const ProfileInfo = ({ username, from, since }) => (
     </View>
 );
 
-const WalletInfo = ({ title, info, onPress }) => (
-    <TouchableOpacity onPress={onPress} style={styles.walletInfo}>
+const WalletInfo = ({ title, info, onPress, disabled = false, isLoading = false }) => (
+    <TouchableOpacity onPress={onPress} disabled={disabled} style={styles.walletInfo}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.info}>{info}</Text>
+        {isLoading ? <ActivityIndicator size="small" color={Colors.green} /> : <Text style={styles.info}>{info}</Text>}
     </TouchableOpacity>
 );
 
@@ -116,7 +133,7 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: colors.backgroundColor,
         padding: 20,
     },
     profile: {

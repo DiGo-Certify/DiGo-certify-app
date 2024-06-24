@@ -29,14 +29,14 @@ function reduce(state, action) {
             switch (action.type) {
                 case ACTIONS.EDIT:
                     return {
-                        tag: STATES.EDITING,
+                        ...state,
                         inputs: {
                             ...state.inputs,
                             [action.inputName]: action.inputValue,
                         },
                     };
                 case ACTIONS.SUBMIT:
-                    return { tag: STATES.SUBMITTING, email: state.inputs.email };
+                    return { ...state, tag: STATES.SUBMITTING, email: state.inputs.email };
                 default:
                     logUnexpectedAction(state, action);
                     return state;
@@ -44,9 +44,9 @@ function reduce(state, action) {
         case STATES.SUBMITTING:
             switch (action.type) {
                 case ACTIONS.ERROR:
-                    return { tag: STATES.EDITING, error: action.message, inputs: { email: state.email, password: '' } };
+                    return { ...state, tag: STATES.EDITING, error: action.message, inputs: { ...state.inputs, password: '' } };
                 case ACTIONS.SUCCESS:
-                    return { tag: STATES.REDIRECT, email: state.email };
+                    return { ...state, tag: STATES.REDIRECT, email: state.email };
                 default:
                     logUnexpectedAction(state, action);
                     return state;
@@ -54,14 +54,14 @@ function reduce(state, action) {
         case STATES.REDIRECT:
             logUnexpectedAction(state, action);
             return state;
+        default:
+            return state;
     }
 }
 
 function logUnexpectedAction(state, action) {
     console.log('Unexpected action', action, 'for state', state);
 }
-
-//Simulating function
 
 function delay(delayInMs) {
     return new Promise(resolve => {
@@ -78,7 +78,6 @@ async function authenticate(email, password) {
     }
 }
 
-//! Review this code (Still has a Warning)
 const SignIn = () => {
     const [state, dispatch] = useReducer(reduce, {
         tag: STATES.EDITING,
@@ -90,25 +89,25 @@ const SignIn = () => {
 
     useEffect(() => {
         if (state.tag === STATES.REDIRECT) {
-            save('user_info', JSON.stringify({ user: state.email })).then(() => router.push('/profile'));
+            save('user_info', JSON.stringify({ user: state.email })).then(() => {
+                router.push('/profile');
+            });
         }
     }, [state.tag]);
 
-    function handleChange(name, value) {
+    const handleChange = (name, value) => {
         dispatch({ type: ACTIONS.EDIT, inputName: name, inputValue: value });
-    }
+    };
 
-    function handleSubmit() {
+    const handleSubmit = () => {
         if (state.tag !== STATES.EDITING) {
             return;
         }
         dispatch({ type: ACTIONS.SUBMIT });
-        const email = state.inputs.email;
-        const password = state.inputs.password;
+        const { email, password } = state.inputs;
         authenticate(email, password)
             .then(res => {
                 if (res) {
-                    //setUser(res);
                     dispatch({ type: ACTIONS.SUCCESS });
                 } else {
                     dispatch({ type: ACTIONS.ERROR, message: 'Invalid credentials' });
@@ -117,10 +116,11 @@ const SignIn = () => {
             .catch(err => {
                 dispatch({ type: ACTIONS.ERROR, message: err.message });
             });
-    }
+    };
 
     const email = state.tag === STATES.SUBMITTING ? state.email : state.inputs.email;
     const password = state.tag === STATES.SUBMITTING ? '' : state.inputs.password;
+
     return (
         <Background
             header={
@@ -146,12 +146,11 @@ const SignIn = () => {
                         secure={true}
                         style={styles.inputField}
                     />
-                    {state.tag === 'editing' && <Text style={{ color: 'red' }}>{state.error}</Text>}
+                    {state.tag === STATES.EDITING && <Text style={{ color: 'red' }}>{state.error}</Text>}
                 </View>
             }
             footer={
                 <View style={styles.footer}>
-                    {/* { width: '100%', flexDirection: 'row', justifyContent: 'center' } */}
                     <View>
                         <ClickableText
                             text="Create an account"
@@ -165,7 +164,7 @@ const SignIn = () => {
                         onPress={handleSubmit}
                         buttonStyle={styles.loginButton}
                         textStyle={styles.loginButtonText}
-                        isLoading={state.tag === 'submitting'}
+                        isLoading={state.tag === STATES.SUBMITTING}
                         color={Colors.green}
                     />
                 </View>
@@ -202,7 +201,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         borderRadius: 10,
     },
-
     loginButtonText: {
         fontSize: 20,
         lineHeight: 50,

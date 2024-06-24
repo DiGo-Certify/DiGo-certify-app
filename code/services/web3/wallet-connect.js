@@ -22,10 +22,14 @@ const providerMetadata = {
 function useWalletConnect() {
     const { open, isConnected, address, provider } = useWalletConnectModal();
     const handlePress = async () => {
-        if (isConnected) {
-            return provider?.disconnect();
+        try {
+            if (isConnected) {
+                return await provider?.disconnect();
+            }
+            return await open();
+        } catch (error) {
+            console.log('WalletConnect error:', error);
         }
-        return open();
     };
     return {
         isConnected,
