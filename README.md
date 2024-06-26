@@ -103,7 +103,7 @@ The following instructions will guide you through the installation process.
 2. Clone the repo
    ```sh
    git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
-   cd DiGo-certify-app/
+   cd DiGo-certify-app/code/
    ```
 3. Install NPM packages
    ```sh
