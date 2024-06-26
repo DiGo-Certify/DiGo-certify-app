@@ -102,11 +102,11 @@ The following instructions will guide you through the installation process.
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/DiGo-Certify/DiGo-certify-app.git
+   git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
+   cd DiGo-certify-app/
    ```
 3. Install NPM packages
    ```sh
-   cd code
    npm install
    ```
 4. Run the app
