@@ -1,0 +1,12 @@
+{
+    "name": "hardhat-project",
+    "devDependencies": {
+        "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
+        "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+        "@onchain-id/identity-sdk": "^1.7.1",
+        "hardhat": "^2.22.5"
+    },
+    "dependencies": {
+        "ethers": "^6.13.1"
+    }
+}

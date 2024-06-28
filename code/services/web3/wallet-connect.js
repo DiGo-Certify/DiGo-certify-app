@@ -35,6 +35,7 @@ function useWalletConnect() {
         isConnected,
         address,
         handlePress,
+        provider,
         WalletConnectModal: <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />,
     };
 }

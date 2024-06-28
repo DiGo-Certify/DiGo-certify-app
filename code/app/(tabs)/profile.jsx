@@ -8,7 +8,8 @@ import { List, ActivityIndicator } from 'react-native-paper';
 import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
-import colors from '@/constants/colors';
+import { deployOnchainIdSuite } from '@/services/ethereum/ignition/modules/deploy-suite';
+import { ethers } from 'ethers';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -20,7 +21,8 @@ const Profile = () => {
         since: '2024',
     });
     const [isSaving, setIsSaving] = useState(false);
-    const { isConnected, address, handlePress, WalletConnectModal } = useWalletConnect();
+
+    const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
         getValueFor('user_info')
@@ -44,12 +46,12 @@ const Profile = () => {
             setProfile(prevProfile => ({
                 ...prevProfile,
                 wallet: address,
-            }))
-                .catch(error => {
-                    console.log('Error saving user info: ', error);
-                })
-                .finally(() => setIsSaving(false));
+            })).catch(error => {
+                console.log('Error saving user info: ', error);
+            });
         });
+        // Create 
+        setIsSaving(false);
     }, [address]);
 
     // Handle wallet connect with
@@ -133,7 +135,7 @@ const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: Colors.backgroundColor,
         padding: 20,
     },
     profile: {
