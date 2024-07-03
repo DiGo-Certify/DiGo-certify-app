@@ -15,16 +15,8 @@ function App() {
 
     useEffect(() => {
         // Connect to JSON-RPC Node
-        async function connectToNode() {
-            try {
-                const provider = new ethers.JsonRpcProvider(nodeAddress);
-                const network = await provider.getNetwork();
-                console.log('Connected to network:', network);
-            } catch (error) {
-                console.log('Error connecting to node:', error);
-            }
-        }
         connectToNode();
+
         getValueFor('user_info').then(info => {
             if (info) {
                 setUserInfo(info);
@@ -53,5 +45,15 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backgroundColor,
     },
 });
+
+async function connectToNode() {
+    try {
+        const provider = new ethers.JsonRpcProvider(nodeAddress);
+        const network = await provider.getNetwork();
+        console.log('[✓] Connected to network:', network);
+    } catch (error) {
+        console.log('[!] Error connecting to rpc:', error);
+    }
+}
 
 export default App;
