@@ -1,5 +1,10 @@
 {
     "name": "hardhat-project",
+    "scripts": {
+        "compile": "hardhat compile",
+        "node": "hardhat node",
+        "deploy": "hardhat run scripts/deploy-full-suite.js"
+    },
     "devDependencies": {
         "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
         "@nomicfoundation/hardhat-toolbox": "^5.0.0",

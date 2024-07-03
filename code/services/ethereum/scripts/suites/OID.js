@@ -3,9 +3,9 @@ const {
     contracts: { Identity, Factory, ImplementationAuthority }
 } = require('@onchain-id/solidity');
 
-async function deployOnchainIDProxy(deployer) {
+async function deployOnchainIDSuite(deployer) {
     // Deploy OnchainID proxy
-    console.log(`[!] Deploying OnchainID proxy...`);
+    console.log(`[!] Deploying OnchainID suite...`);
 
     const identityImplementation = await new ethers.ContractFactory(
         Identity.abi,
@@ -35,12 +35,14 @@ async function deployOnchainIDProxy(deployer) {
         deployer
     ).deploy(await identityImplementationAuthority.getAddress());
 
+    // Wait for factory transaction to be deployed
+    await identityFactory.waitForDeployment();
+
     const identityFactoryAddress = await identityFactory.getAddress();
-    const identityFactoryCode = await identityFactory.getDeployedCode();
 
     console.log(`[✓] Deployed OnchainID factory at ${identityFactoryAddress}`);
 
-    return { identityFactoryAddress, identityFactoryCode };
+    return { identityFactoryAddress };
 }
 
-module.exports = { deployOnchainIDProxy };
+module.exports = { deployOnchainIDSuite };
