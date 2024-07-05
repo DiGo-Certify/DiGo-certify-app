@@ -40,9 +40,17 @@ async function deployOnchainIDSuite(deployer) {
 
     const identityFactoryAddress = await identityFactory.getAddress();
 
+    // Obtain abi and bytecode for the factory
+    const identityFactoryAbi = Factory.abi;
+    const identityFactoryBytecode = Factory.bytecode;
+
     console.log(`[✓] Deployed OnchainID factory at ${identityFactoryAddress}`);
 
-    return { identityFactoryAddress };
+    return {
+        identityFactoryAbi,
+        identityFactoryBytecode,
+        identityFactoryAddress
+    };
 }
 
 module.exports = { deployOnchainIDSuite };

@@ -138,27 +138,40 @@ async function deployTrexSuite(deployer) {
     );
 
     return {
-        trexImplementationAuthority,
-        claimTopicsRegistryImplementation,
-        trustedIssuersRegistryImplementation,
-        identityRegistryStorageImplementation,
-        identityRegistryImplementation,
-        modularComplianceImplementation,
-        tokenImplementation,
-        addresses: {
-            trexImplementationAuthority:
-                await trexImplementationAuthority.getAddress(),
-            claimTopicsRegistryImplementation:
-                await claimTopicsRegistryImplementation.getAddress(),
-            trustedIssuersRegistryImplementation:
-                await trustedIssuersRegistryImplementation.getAddress(),
-            identityRegistryStorageImplementation:
-                await identityRegistryStorageImplementation.getAddress(),
-            identityRegistryImplementation:
-                await identityRegistryImplementation.getAddress(),
-            modularComplianceImplementation:
-                await modularComplianceImplementation.getAddress(),
-            tokenImplementation: await tokenImplementation.getAddress()
+        trexImplementationAuthority: {
+            address: await trexImplementationAuthority.getAddress(),
+            abi: trexImplementationAuthority.interface.fragments,
+            bytecode: trexImplementationAuthority.bytecode
+        },
+        claimTopicsRegistryImplementation: {
+            address: await claimTopicsRegistryImplementation.getAddress(),
+            abi: claimTopicsRegistryImplementation.interface.fragments,
+            bytecode: claimTopicsRegistryImplementation.bytecode
+        },
+        trustedIssuersRegistryImplementation: {
+            address: await trustedIssuersRegistryImplementation.getAddress(),
+            abi: trustedIssuersRegistryImplementation.interface.fragments,
+            bytecode: trustedIssuersRegistryImplementation.bytecode
+        },
+        identityRegistryImplementation: {
+            address: await identityRegistryImplementation.getAddress(),
+            abi: identityRegistryImplementation.interface.fragments,
+            bytecode: identityRegistryImplementation.bytecode
+        },
+        identityRegistryStorageImplementation: {
+            address: await identityRegistryStorageImplementation.getAddress(),
+            abi: identityRegistryStorageImplementation.interface.fragments,
+            bytecode: identityRegistryStorageImplementation.bytecode
+        },
+        modularComplianceImplementation: {
+            address: await modularComplianceImplementation.getAddress(),
+            abi: modularComplianceImplementation.interface.fragments,
+            bytecode: modularComplianceImplementation.bytecode
+        },
+        tokenImplementation: {
+            address: await tokenImplementation.getAddress(),
+            abi: tokenImplementation.interface.fragments,
+            bytecode: tokenImplementation.bytecode
         }
     };
 }

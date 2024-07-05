@@ -9,9 +9,21 @@ async function main() {
     const provider = new ethers.JsonRpcProvider(config.rpc);
     const deployer = new ethers.Wallet(config.ownerPrivateKey, provider);
 
-    const { identityFactoryAddress } = await deployOnchainIDSuite(deployer);
+    const {
+        identityFactoryAbi,
+        identityFactoryBytecode,
+        identityFactoryAddress
+    } = await deployOnchainIDSuite(deployer);
 
-    const { addresses } = await deployTrexSuite(deployer);
+    const {
+        trexImplementationAuthority,
+        claimTopicsRegistryImplementation,
+        trustedIssuersRegistryImplementation,
+        identityRegistryImplementation,
+        identityRegistryStorageImplementation,
+        modularComplianceImplementation,
+        tokenImplementation
+    } = await deployTrexSuite(deployer);
 
     // Update the configuration file with the address of the deployed factory
     const configFilePath = path.resolve(__dirname, '../../../config.json');
@@ -30,17 +42,31 @@ async function main() {
         }
     }
 
-    configuration.onchainid.address = identityFactoryAddress;
-    configuration.trex.implementationAuthority.address =
-        addresses.trexImplementationAuthority;
-    configuration.trex.claimsTopicRegistry.address =
-        addresses.claimTopicsRegistryImplementation;
-    configuration.trex.trustedIssuersRegistry.address =
-        addresses.trustedIssuersRegistryImplementation;
-    configuration.trex.identityRegistryStorage.address =
-        addresses.identityRegistryStorageImplementation;
-    configuration.trex.identityRegistry.address =
-        addresses.identityRegistryImplementation;
+    // Identity Factory configuration
+    configuration.identityFactory.address = identityFactoryAddress;
+    configuration.identityFactory.abi = identityFactoryAbi;
+    configuration.identityFactory.bytecode = identityFactoryBytecode;
+
+    // TREX configuration (implementation authority, claims topic registry, trusted issuers registry, identity registry storage, identity registry)
+    configuration.trex.implementationAuthority.address = trexImplementationAuthority.address;
+    configuration.trex.implementationAuthority.abi = trexImplementationAuthority.abi;
+    configuration.trex.implementationAuthority.bytecode = trexImplementationAuthority.bytecode;
+
+    configuration.trex.claimsTopicRegistry.address = claimTopicsRegistryImplementation.address;
+    configuration.trex.claimsTopicRegistry.abi = claimTopicsRegistryImplementation.abi;
+    configuration.trex.claimsTopicRegistry.bytecode = claimTopicsRegistryImplementation.bytecode;
+
+    configuration.trex.trustedIssuersRegistry.address = trustedIssuersRegistryImplementation.address;
+    configuration.trex.trustedIssuersRegistry.abi = trustedIssuersRegistryImplementation.abi;
+    configuration.trex.trustedIssuersRegistry.bytecode = trustedIssuersRegistryImplementation.bytecode;
+    
+    configuration.trex.identityRegistryStorage.address = identityRegistryStorageImplementation.address;
+    configuration.trex.identityRegistryStorage.abi = identityRegistryStorageImplementation.abi;
+    configuration.trex.identityRegistryStorage.bytecode = identityRegistryStorageImplementation.bytecode;
+
+    configuration.trex.identityRegistry.address = identityRegistryImplementation.address;
+    configuration.trex.identityRegistry.abi = identityRegistryImplementation.abi;
+    configuration.trex.identityRegistry.bytecode = identityRegistryImplementation.bytecode;
 
     // Write the updated config object to the file
     fs.writeFileSync(
