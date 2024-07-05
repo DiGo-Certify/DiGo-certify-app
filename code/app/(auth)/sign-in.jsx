@@ -44,7 +44,12 @@ function reduce(state, action) {
         case STATES.SUBMITTING:
             switch (action.type) {
                 case ACTIONS.ERROR:
-                    return { ...state, tag: STATES.EDITING, error: action.message, inputs: { ...state.inputs, password: '' } };
+                    return {
+                        ...state,
+                        tag: STATES.EDITING,
+                        error: action.message,
+                        inputs: { ...state.inputs, password: '' },
+                    };
                 case ACTIONS.SUCCESS:
                     return { ...state, tag: STATES.REDIRECT, email: state.email };
                 default:
@@ -151,12 +156,13 @@ const SignIn = () => {
             }
             footer={
                 <View style={styles.footer}>
-                    <View>
+                    <View style={{flexDirection:'row'}}>
                         <ClickableText
                             text="Create an account"
                             onPress={() => router.replace('/sign-up')}
                             style={styles.dontHaveAccountText}
                         />
+                        <Text style={{ marginHorizontal: 3, fontSize: 20 }}> • </Text>
                         <ClickableText text="Can't Login?" onPress={() => {}} style={styles.forgotPasswordText} />
                     </View>
                     <ActionButton
@@ -178,7 +184,7 @@ export default SignIn;
 const styles = StyleSheet.create({
     header: { flex: 1, justifyContent: 'center' },
     body: { width: '100%', paddingHorizontal: 30 },
-    footer: { width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -200 },
+    footer: { width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -230},
     inputField: {
         justifyContent: 'center',
         marginTop: 20,

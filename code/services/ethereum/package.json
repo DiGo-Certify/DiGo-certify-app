@@ -1,12 +1,20 @@
 {
     "name": "hardhat-project",
+    "scripts": {
+        "compile": "hardhat compile",
+        "node": "hardhat node",
+        "deploy": "hardhat run scripts/deploy-full-suite.js"
+    },
     "devDependencies": {
         "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
         "@nomicfoundation/hardhat-toolbox": "^5.0.0",
         "@onchain-id/identity-sdk": "^1.7.1",
+        "@openzeppelin/contracts": "^4.8.3",
+        "@openzeppelin/contracts-upgradeable": "^4.8.3",
         "hardhat": "^2.22.5"
     },
     "dependencies": {
-        "ethers": "^6.13.1"
+        "ethers": "^6.13.1",
+        "glob": "^10.2.6"
     }
 }
