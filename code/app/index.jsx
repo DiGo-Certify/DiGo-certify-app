@@ -4,7 +4,7 @@ import SignIn from './(auth)/sign-in';
 import { router } from 'expo-router';
 import { ActivityIndicator } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
-import colors from '@/constants/colors';
+import Colors from '@/constants/colors';
 import { ethers } from 'ethers';
 import { getValueFor } from '@/services/storage/storage';
 import config from '@/config.json';
