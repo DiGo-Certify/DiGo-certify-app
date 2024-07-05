@@ -13,8 +13,8 @@ describe('Identity Creation', () => {
 
         const salt = 'alice-salt';
 
-        await expect(
-            identityFactory.createIdentity(aliceWallet.address, salt)
+        expect(
+            await identityFactory.createIdentity(aliceWallet.address, salt)
         ).to.emit(identityFactory, 'Deployed');
     });
 

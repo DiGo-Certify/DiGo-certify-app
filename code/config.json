@@ -1,24 +1,24 @@
 {
-  "rpc": "http://localhost:8545",
-  "ownerPrivateKey": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-  "onchainid": {
-    "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-  },
-  "trex": {
-    "implementationAuthority": {
-      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"
+    "rpc": "https://9914-2001-818-dd0a-8c00-29c4-de49-b61e-f8ab.ngrok-free.app",
+    "ownerPrivateKey": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    "onchainid": {
+        "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
     },
-    "claimsTopicRegistry": {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-    },
-    "trustedIssuersRegistry": {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
-    },
-    "identityRegistry": {
-      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
-    },
-    "identityRegistryStorage": {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+    "trex": {
+        "implementationAuthority": {
+            "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"
+        },
+        "claimsTopicRegistry": {
+            "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+        },
+        "trustedIssuersRegistry": {
+            "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+        },
+        "identityRegistry": {
+            "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+        },
+        "identityRegistryStorage": {
+            "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+        }
     }
-  }
 }

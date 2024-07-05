@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput } from 'react-native-paper';
+import { Icon, TextInput } from 'react-native-paper';
 import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs([
@@ -13,7 +13,7 @@ const FormField = ({ label, mode = 'outlined', style, secure = false, value, onC
         secureTextEntry={secure}
         value={value}
         onChangeText={onChange}
-        right={icon ? <TextInput.Icon icon={icon} /> : null}
+        right={icon ? <Icon icon={icon} /> : null}
         style={style}
     />
 );

@@ -7,16 +7,30 @@ import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import { ethers } from 'ethers';
 import { getValueFor } from '@/services/storage/storage';
+import config from '@/config.json';
 
 function App() {
-    const nodeAddress = 'https://46af-2001-818-dd0a-8c00-7c9b-9ad5-a365-6bc2.ngrok-free.app';
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        // Connect to JSON-RPC Node
-        connectToNode();
+        let intervalId;
 
+        if (!isConnected) {
+            intervalId = setInterval(() => {
+                connectToNode(config.rpc);
+            }, 5000);
+        }
+
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [isConnected]);
+
+    useEffect(() => {
         getValueFor('user_info').then(info => {
             if (info) {
                 setUserInfo(info);
@@ -25,6 +39,17 @@ function App() {
             setLoading(false);
         });
     }, []);
+
+    const connectToNode = async nodeAddress => {
+        try {
+            const provider = new ethers.JsonRpcProvider(nodeAddress);
+            const network = await provider.getNetwork();
+            console.log(`Connected to network`);
+            setIsConnected(true);
+        } catch (error) {
+            console.log('[!] Error connecting to rpc:', error);
+        }
+    };
 
     if (loading) {
         return (
@@ -45,15 +70,5 @@ const styles = StyleSheet.create({
         backgroundColor: colors.backgroundColor,
     },
 });
-
-async function connectToNode() {
-    try {
-        const provider = new ethers.JsonRpcProvider(nodeAddress);
-        const network = await provider.getNetwork();
-        console.log('[✓] Connected to network:', network);
-    } catch (error) {
-        console.log('[!] Error connecting to rpc:', error);
-    }
-}
 
 export default App;

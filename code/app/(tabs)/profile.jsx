@@ -8,7 +8,6 @@ import { List, ActivityIndicator } from 'react-native-paper';
 import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
-import { deployOnchainIdSuite } from '@/services/ethereum/ignition/modules/deploy-suite';
 import { ethers } from 'ethers';
 
 // TODO: Settings Page
@@ -50,12 +49,13 @@ const Profile = () => {
                 console.log('Error saving user info: ', error);
             });
         });
-        // Create 
+        // Create
         setIsSaving(false);
     }, [address]);
 
     // Handle wallet connect with
     const handleWalletConnect = async () => {
+        console.log('Connecting wallet...');
         setIsSaving(true);
         await handlePress();
     };
