@@ -7,9 +7,17 @@ import colors from '@/constants/colors';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const Validation = () => {
     const [valid, setValid] = useState(false);
+    const [certificateLink, setCertificateLink] = useState('');
+
+    const handleQRCodeScan = event => {
+        // Process the scanned QR code (event.data) as needed
+        console.log('Scanned QR code:', event.data);
+        setCertificateLink(event.data);
+    };
 
     const handleValidate = () => {
         // validate certificate
@@ -38,8 +46,27 @@ const Validation = () => {
                     <View style={{ marginTop: -25 }}>
                         <Text style={styles.title}>Certificate Validation</Text>
                         <View style={{ marginTop: 16 }}>
-                            <FormField label="Insert Certificate Link" icon="certificate" />
+                            <FormField
+                                label="Insert Certificate Link"
+                                icon="certificate"
+                                value={certificateLink}
+                                onChange={link => setCertificateLink(link)}
+                            />
                             <Text style={styles.or}>OR</Text>
+                            {/* <QRCodeScanner
+                                onRead={handleQRCodeScan}
+                                showMarker={true}
+                                containerStyle={{ marginTop: 16 }}
+                                markerStyle={{ borderColor: 'red', borderRadius: 10 }}
+                                reactivate={true}
+                                permissionDialogMessage="Need permission to access camera"
+                                reactivateTimeout={2000}
+                                bottomContent={
+                                    <Text style={{ color: 'white', fontSize: 20, marginBottom: 50 }}>
+                                        Scan QR code to insert link
+                                    </Text>
+                                }
+                            /> */}
                             <ActionButton
                                 text="Scan QR Code"
                                 buttonStyle={styles.qrButton}

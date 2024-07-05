@@ -9,6 +9,7 @@ import ProfileScreen from './profile';
 import ValidationScreen from './validation';
 import EmissionScreen from './emission';
 import HomeScreen from './home';
+import AdminScreen from './admin';
 
 const HomeRoute = () => <HomeScreen />; //! There must be another way to render the screens without calling them directly
 
@@ -17,7 +18,9 @@ const ProfileRoute = () => <ProfileScreen />;
 
 const ValidationRoute = () => <ValidationScreen />;
 
-const AdminRoute = () => <EmissionScreen />; //!To be changed to Admin Route, only Emission for testing
+const AdminRoute = () => <AdminScreen />; //!To be changed to Admin Route, only Emission for testing
+
+const EmissionRoute = () => <EmissionScreen />;
 
 function TabLayout() {
     const [idx, setIdx] = useState(0);
@@ -25,6 +28,7 @@ function TabLayout() {
         { key: 'home', title: 'Home', focusedIcon: icons.home },
         { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
         { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+        { key: 'emission', title: 'Emission', focusedIcon: icons.editCertificate},
         { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
     ]);
 
@@ -32,6 +36,7 @@ function TabLayout() {
         home: HomeRoute,
         profile: ProfileRoute,
         validation: ValidationRoute,
+        emission : EmissionRoute,
         admin: AdminRoute,
     });
 

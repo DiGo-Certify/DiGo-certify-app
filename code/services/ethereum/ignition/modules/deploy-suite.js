@@ -1,7 +1,7 @@
-const { ethers } = require("ethers");
+const { ethers } = require('ethers');
 const {
     contracts: { Identity, Factory, ImplementationAuthority }
-} = require("@onchain-id/solidity");
+} = require('@onchain-id/solidity');
 
 async function deployOnchainIdSuite(deployer) {
     console.log(`\n[!] Deploying OnChainId Suite ...`);

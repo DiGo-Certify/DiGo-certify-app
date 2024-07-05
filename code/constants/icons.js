@@ -9,6 +9,11 @@ import email from '../assets/icons/email.png';
 import password from '../assets/icons/password.png';
 import fullName from '../assets/icons/register-profile.png';
 import admin from '../assets/icons/admin.png';
+import certificates from '../assets/icons/certificates.png';
+import certficateRequest from '../assets/icons/certificate-request.png';
+import newCertificate from '../assets/icons/new-certificate.png';
+import waitingList from '../assets/icons/waiting-list.png';
+import editCertificate from '../assets/icons/edit-certificate.png';
 
 export default {
     certificate,
@@ -22,4 +27,9 @@ export default {
     password,
     fullName,
     admin,
+    certificates,
+    certficateRequest,
+    newCertificate,
+    waitingList,
+    editCertificate,
 };

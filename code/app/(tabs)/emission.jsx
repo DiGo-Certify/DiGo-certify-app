@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Platform } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Images from '@/constants/images';
 import Colors from '@/constants/colors';
@@ -6,6 +6,7 @@ import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import FormField from '@/components/FormField';
 import Background from '@/components/Background';
+import * as FileSystem from 'expo-file-system';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -32,6 +33,10 @@ const Emission = () => {
             }, 2000);
         }
     }, [isSubmitting]);
+
+    const handleUpload = async () => {
+        let result = await FileSystem.uploadAsync()
+    };
 
     return (
         <Background
