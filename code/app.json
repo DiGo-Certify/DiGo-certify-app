@@ -25,7 +25,8 @@
           "rainbow",
           "uniswap"
         ]
-      }
+      },
+      "bundleIdentifier": "com.digocertify"
     },
     "android": {
       "adaptiveIcon": {
@@ -40,6 +41,14 @@
       "expo-router",
       "expo-secure-store",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3b944c88-11b9-40bd-b19e-5bbbf6a08700"
+      }
+    }
   }
 }

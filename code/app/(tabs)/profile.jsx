@@ -10,7 +10,7 @@ import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import { ethers } from 'ethers';
 import config from '@/config.json';
-import { deployIdentity } from '@/services/identities/create-identity';
+import { deployIdentity } from '@/services/ethereum/scripts/deploy-identity';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -55,8 +55,7 @@ const Profile = () => {
                 console.log('Error saving user info: ', error);
             }
         };
-        
-        // TODO: See why this is not working as expected (in tests it works fine)
+
         const deployUserIdentity = async () => {
             if (!address && !provider) {
                 return;
@@ -69,8 +68,7 @@ const Profile = () => {
                     provider
                 );
                 const user_salt = profile.username + '-' + 'salt';
-                const identity = await deployIdentity(identityFactory, address, user_salt);
-                console.log('Identity deployed: ', identity);
+                await deployIdentity(identityFactory, address, user_salt);
             } catch (error) {
                 console.log(error);
             }
