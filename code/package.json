@@ -29,6 +29,7 @@
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-dotenv": "^3.4.11",
+    "react-native-fs": "^2.20.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^5.12.3",
