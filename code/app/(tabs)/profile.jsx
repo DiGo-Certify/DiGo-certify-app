@@ -44,17 +44,14 @@ const Profile = () => {
             return;
         }
 
-        const saveUserAddress = async () => {
-            try {
-                await save('user_info', JSON.stringify({ user: profile.username, wallet: address }));
+        save('user_info', JSON.stringify({ user: profile.username, wallet: address }))
+            .then(() => {
                 setProfile(prevProfile => ({
                     ...prevProfile,
                     wallet: address,
                 }));
-            } catch (error) {
-                console.log('Error saving user info: ', error);
-            }
-        };
+            })
+            .catch(error => console.log('Error saving user info: ', error));
 
         const deployUserIdentity = async () => {
             if (!address && !provider) {
@@ -73,10 +70,8 @@ const Profile = () => {
                 console.log(error);
             }
         };
-
-        saveUserAddress();
         deployUserIdentity();
-    }, [address, isConnected]);
+    }, [address]);
 
     // Handle wallet connect with
     const handleWalletConnect = async () => {

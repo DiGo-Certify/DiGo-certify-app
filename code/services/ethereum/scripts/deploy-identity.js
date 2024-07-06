@@ -1,11 +1,14 @@
 const config = require('../../../config.json');
 const { ethers } = require('ethers');
 const {
-    IdentityDeploymentError
+    WalletAlreadyLinked,
+    SaltAlreadyTaken,
+    EmptyString,
+    IdentityDeploymentError,
 } = require('../../errors/deployment/identities');
 
 async function deployIdentity(identityFactory, address, salt) {
-    console.log('Deploying identity for wallet with address:', address);
+    console.log('[!] Deploying identity for wallet with address:', address);
     const provider = new ethers.JsonRpcProvider(config.rpc);
     const deployer = new ethers.Wallet(config.deployer.privateKey, provider);
 
@@ -14,12 +17,8 @@ async function deployIdentity(identityFactory, address, salt) {
             .connect(deployer)
             .getIdentity(address);
 
-        console.log('tx_verify:', tx_verify);
         if (tx_verify !== ethers.ZeroAddress) {
-            throw new IdentityDeploymentError(
-                'Wallet already linked to the identity with address: ' +
-                    tx_verify
-            );
+            throw new WalletAlreadyLinked(tx_verify);
         }
 
         const tx = await identityFactory
@@ -32,23 +31,17 @@ async function deployIdentity(identityFactory, address, salt) {
                 item.eventName !== undefined &&
                 item.eventName === 'WalletLinked'
             ) {
-                console.log('Identity deployed:', item.args.identity);
+                console.log('[✓] Identity deployed:', item.args.identity);
                 return item.args.identity;
             }
         });
     } catch (error) {
         if (error.reason === 'salt already taken') {
-            throw new IdentityDeploymentError(
-                'Salt already taken to wallet with address: ' + address
-            );
+            throw new SaltAlreadyTaken(error.address);
         } else if (error.reason === 'wallet already linked to an identity') {
-            throw new IdentityDeploymentError(
-                'Wallet already linked to an identity'
-            );
+            throw new WalletAlreadyLinked();
         } else if (error.reason === 'invalid argument - empty string') {
-            throw new IdentityDeploymentError(
-                'Address or salt cannot be empty'
-            );
+            throw new EmptyString();
         } else {
             throw new IdentityDeploymentError(
                 'Error deploying identity: ' + error
