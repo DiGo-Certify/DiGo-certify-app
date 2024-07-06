@@ -9,6 +9,8 @@ import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import { ethers } from 'ethers';
+import config from '@/config.json';
+import { deployIdentity } from '@/services/identities/create-identity';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -25,7 +27,7 @@ const Profile = () => {
 
     useEffect(() => {
         getValueFor('user_info')
-            .then(value => {
+            .then(async value => {
                 if (value) {
                     setProfile(prevProfile => ({
                         ...prevProfile,
@@ -41,17 +43,42 @@ const Profile = () => {
         if (!isConnected) {
             return;
         }
-        save('user_info', JSON.stringify({ user: profile.username, wallet: address })).then(() => {
-            setProfile(prevProfile => ({
-                ...prevProfile,
-                wallet: address,
-            })).catch(error => {
+
+        const saveUserAddress = async () => {
+            try {
+                await save('user_info', JSON.stringify({ user: profile.username, wallet: address }));
+                setProfile(prevProfile => ({
+                    ...prevProfile,
+                    wallet: address,
+                }));
+            } catch (error) {
                 console.log('Error saving user info: ', error);
-            });
-        });
-        // Create
-        setIsSaving(false);
-    }, [address]);
+            }
+        };
+        
+        // TODO: See why this is not working as expected (in tests it works fine)
+        const deployUserIdentity = async () => {
+            if (!address && !provider) {
+                return;
+            }
+
+            try {
+                const identityFactory = new ethers.Contract(
+                    config.identityFactory.address,
+                    config.identityFactory.abi,
+                    provider
+                );
+                const user_salt = profile.username + '-' + 'salt';
+                const identity = await deployIdentity(identityFactory, address, user_salt);
+                console.log('Identity deployed: ', identity);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        saveUserAddress();
+        deployUserIdentity();
+    }, [address, isConnected]);
 
     // Handle wallet connect with
     const handleWalletConnect = async () => {

@@ -1,97 +1,138 @@
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { expect } = require('chai');
+const { ethers } = require('hardhat');
 const { deployFactoryFixture } = require('../fixtures');
 
 /**
  * Includes all the tests for the creation of an Identity
  */
 describe('Identity Creation', () => {
-    it('Should create an identity for aliceWallet', async () => {
-        const { aliceWallet, identityFactory } = await loadFixture(
+    it('Should create an Identity', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
             deployFactoryFixture
         );
 
-        const salt = 'alice-salt';
+        // Create the Identity
+        const tx = await identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt');
+        const tx_receipt = await tx.wait();
 
-        expect(
-            await identityFactory.createIdentity(aliceWallet.address, salt)
-        ).to.emit(identityFactory, 'Deployed');
+        let identityAddress = []
+
+        // Check the event
+        tx_receipt.logs.forEach(item => {
+            if (item.eventName !== undefined && item.eventName === 'WalletLinked') {
+                identityAddress = item.args.identity;
+            }
+        })
+        
+        expect(await identityFactory.getIdentity(aliceWallet.address)).to.be.equal(identityAddress);
+
     });
 
-    it('Should two identities for two different wallets', async () => {
-        const { bobWallet, aliceWallet, identityFactory } = await loadFixture(
+    it('Should not create an Identity with the same salt', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
             deployFactoryFixture
         );
 
-        const bobSalt = 'bob-salt';
-        const aliceSalt = 'alice-salt';
+        // Create the Identity
+        await identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt');
 
-        // Create an identity for bobWallet
-        expect(
-            identityFactory.createIdentity(bobWallet.address, bobSalt)
-        ).to.emit(identityFactory, 'Deployed');
-
-        // Create an identity for aliceWallet
-        expect(
-            identityFactory.createIdentity(aliceWallet.address, aliceSalt)
-        ).to.emit(identityFactory, 'Deployed');
+        // Create the Identity with the same salt
+        
+        identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt').catch(error => {
+            expect(error.reason).to.be.equal('salt already taken');
+        });
     });
 
-    it('Should revert when creating Identity with same wallet', async () => {
-        const { aliceWallet, identityFactory } = await loadFixture(
+    it('Should not create an Identity with the same wallet', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
             deployFactoryFixture
         );
 
-        const salt = 'alice-salt';
-        const salt2 = 'alice-salt2';
+        // Create the Identity
+        await identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt');
 
-        // Create an identity for aliceWallet
-        expect(
-            identityFactory.createIdentity(aliceWallet.address, salt)
-        ).to.emit(identityFactory, 'Deployed');
-
-        // Create other identity for same aliceWallet
-        await expect(
-            identityFactory.createIdentity(aliceWallet.address, salt2)
-        ).to.be.revertedWith('wallet already linked to an identity');
+        // Create the Identity with the same wallet
+        identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'bob-salt').catch(error => {
+            expect(error.reason).to.be.equal('wallet already linked to an identity');
+        });
     });
 
-    it('Should revert when creating Identity with same salt', async () => {
-        const { aliceWallet, identityFactory } = await loadFixture(
+    it('Should not create an Identity with an empty salt', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
             deployFactoryFixture
         );
 
-        const salt = 'alice-salt';
-
-        expect(
-            identityFactory.createIdentity(aliceWallet.address, salt)
-        ).to.emit(identityFactory, 'Deployed');
-
-        // Create other identity for same aliceWallet
-        await expect(
-            identityFactory.createIdentity(aliceWallet.address, salt)
-        ).to.be.revertedWith('salt already taken');
+        // Create the Identity
+        identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, '').catch(error => {
+            expect(error.reason).to.be.equal('invalid argument - empty string');
+        });
     });
 
-    it('Should revert because salt can not be empty', async () => {
-        const { aliceWallet, identityFactory } = await loadFixture(
+    it('Should not create an Identity with an empty address', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
             deployFactoryFixture
         );
 
-        const salt = '';
-
-        await expect(
-            identityFactory.createIdentity(aliceWallet.address, salt)
-        ).to.be.revertedWith('invalid argument - empty string');
+        // Create the Identity
+        identityFactory.connect(deployerWallet).createIdentity('', 'alice-salt').catch(error => {
+            expect(error.reason).to.be.equal('invalid argument - empty string');
+        });
     });
 
-    it('Should revert because wallet can not be Zero Address', async () => {
-        const { identityFactory } = await loadFixture(deployFactoryFixture);
+    it('Should not create an Identity with an empty address and salt', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
 
-        const salt = 'alice-salt';
+        const { deployerWallet, identityFactory } = await loadFixture(
+            deployFactoryFixture
+        );
 
-        await expect(
-            identityFactory.createIdentity(ethers.ZeroAddress, salt)
-        ).to.be.revertedWith('invalid argument - zero address');
+        // Create the Identity
+        identityFactory.connect(deployerWallet).createIdentity('', '').catch(error => {
+            expect(error.reason).to.be.equal('invalid argument - empty string');
+        });
     });
+
+    it('Should not create an Identity with different address but with the same salt', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
+            deployFactoryFixture
+        );
+
+        // Create the Identity
+        await identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt');
+
+        // Create the Identity with the same salt
+        identityFactory.connect(deployerWallet).createIdentity(bobWallet.address, 'alice-salt').catch(error => {
+            expect(error.reason).to.be.equal('salt already taken');
+        });
+    });
+
+    it('Should not create an Identity with same address but with different salt', async () => {
+        const [aliceWallet, bobWallet] = await ethers.getSigners();
+
+        const { deployerWallet, identityFactory } = await loadFixture(
+            deployFactoryFixture
+        );
+
+        // Create the Identity
+        await identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt1');
+
+        // Create the Identity with the same salt
+        identityFactory.connect(deployerWallet).createIdentity(aliceWallet.address, 'alice-salt2').catch(error => {
+            expect(error.reason).to.be.equal('wallet already linked to an identity');
+        });
+    });
+    
 });

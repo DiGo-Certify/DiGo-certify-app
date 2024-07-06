@@ -21,10 +21,11 @@ const providerMetadata = {
  */
 function useWalletConnect() {
     const { open, isConnected, address, provider } = useWalletConnectModal();
-    
+
     const handlePress = async () => {
         try {
             if (isConnected) {
+                console.log('Disconnecting wallet...');
                 return await provider?.disconnect();
             }
             return await open();

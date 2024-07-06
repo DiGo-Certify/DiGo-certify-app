@@ -140,38 +140,31 @@ async function deployTrexSuite(deployer) {
     return {
         trexImplementationAuthority: {
             address: await trexImplementationAuthority.getAddress(),
-            abi: trexImplementationAuthority.interface.fragments,
-            bytecode: trexImplementationAuthority.bytecode
+            abi: trexImplementationAuthority.interface.fragments
         },
         claimTopicsRegistryImplementation: {
             address: await claimTopicsRegistryImplementation.getAddress(),
-            abi: claimTopicsRegistryImplementation.interface.fragments,
-            bytecode: claimTopicsRegistryImplementation.bytecode
+            abi: claimTopicsRegistryImplementation.interface.fragments
         },
         trustedIssuersRegistryImplementation: {
             address: await trustedIssuersRegistryImplementation.getAddress(),
-            abi: trustedIssuersRegistryImplementation.interface.fragments,
-            bytecode: trustedIssuersRegistryImplementation.bytecode
+            abi: trustedIssuersRegistryImplementation.interface.fragments
         },
         identityRegistryImplementation: {
             address: await identityRegistryImplementation.getAddress(),
-            abi: identityRegistryImplementation.interface.fragments,
-            bytecode: identityRegistryImplementation.bytecode
+            abi: identityRegistryImplementation.interface.fragments
         },
         identityRegistryStorageImplementation: {
             address: await identityRegistryStorageImplementation.getAddress(),
-            abi: identityRegistryStorageImplementation.interface.fragments,
-            bytecode: identityRegistryStorageImplementation.bytecode
+            abi: identityRegistryStorageImplementation.interface.fragments
         },
         modularComplianceImplementation: {
             address: await modularComplianceImplementation.getAddress(),
-            abi: modularComplianceImplementation.interface.fragments,
-            bytecode: modularComplianceImplementation.bytecode
+            abi: modularComplianceImplementation.interface.fragments
         },
         tokenImplementation: {
             address: await tokenImplementation.getAddress(),
-            abi: tokenImplementation.interface.fragments,
-            bytecode: tokenImplementation.bytecode
+            abi: tokenImplementation.interface.fragments
         }
     };
 }

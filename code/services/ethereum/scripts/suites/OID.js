@@ -48,7 +48,6 @@ async function deployOnchainIDSuite(deployer) {
 
     return {
         identityFactoryAbi,
-        identityFactoryBytecode,
         identityFactoryAddress
     };
 }

@@ -54,7 +54,7 @@ function App() {
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator animating={true} size={'large'} color={colors.green} />
+                <ActivityIndicator animating={true} size={'large'} color={Colors.green} />
             </View>
         );
     }
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.backgroundColor,
+        backgroundColor: Colors.backgroundColor,
     },
 });
 
