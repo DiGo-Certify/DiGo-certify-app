@@ -1,39 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Alert, Dimensions } from 'react-native';
 import Colors from '@/constants/colors';
 import { router } from 'expo-router';
 import FormField from '@/components/FormField';
-import ClickableText from '@/components/ClickableText';
 import ActionButton from '@/components/ActionButton';
 import Background from '@/components/Background';
 import Images from '@/constants/images';
 import HeaderImage from '@/components/HeaderImage';
+import { save } from '@/services/storage/storage';
 
 function SignUp() {
     const [isSubmitting, setSubmitting] = useState(false);
     const [form, setForm] = useState({
         username: '',
         email: '',
-        password: '',
-        confirmPassword: '',
     });
 
     const handleSubmit = async () => {
-        if (form.username === '' || form.email === '' || form.password === '' || form.confirmPassword === '') {
+        if (form.username === '' || form.email === '') {
             Alert.alert('Error', 'Please fill in all fields');
-            return;
-        }
-        if (form.password !== form.confirmPassword) {
-            Alert.alert('Error', 'Passwords do not match');
             return;
         }
 
         setSubmitting(true);
         try {
-            // const result = await createUser(form.email, form.password, form.username);
-            // setUser(result);
-            // setIsLogged(true);
-
+            const year = new Date().getFullYear();
+            const data = { ...form, year };
+            await save('user_info', JSON.stringify(data));
             router.replace('/profile');
         } catch (error) {
             Alert.alert('Error', error.message);
@@ -53,7 +46,7 @@ function SignUp() {
                 <View style={{ width: '100%', paddingHorizontal: 30, marginTop: -35 }}>
                     <Text style={styles.registerText}>Register</Text>
                     <FormField
-                        label="Full Name"
+                        label="Username"
                         icon="account"
                         onChange={text => setForm({ ...form, username: text })}
                         style={styles.inputField}
@@ -64,29 +57,10 @@ function SignUp() {
                         onChange={text => setForm({ ...form, email: text })}
                         style={styles.inputField}
                     />
-                    <FormField
-                        label="Password"
-                        icon="lock"
-                        onChange={text => setForm({ ...form, password: text })}
-                        secure={true}
-                        style={styles.inputField}
-                    />
-                    <FormField
-                        label="Confirm Password"
-                        icon="lock"
-                        onChange={text => setForm({ ...form, confirmPassword: text })}
-                        secure={true}
-                        style={styles.inputField}
-                    />
                 </View>
             }
             footer={
-                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -98 }}>
-                    <ClickableText
-                        text="Already have an Account?"
-                        onPress={() => router.replace('/sign-in')}
-                        style={styles.forgotPasswordText}
-                    />
+                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -150 }}>
                     <ActionButton
                         text="Register"
                         onPress={handleSubmit}

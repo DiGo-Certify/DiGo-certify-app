@@ -19,11 +19,6 @@ const Admin = () => {
             body={
                 <View style={styles.options}>
                     <ListItem
-                        title="Waiting List"
-                        onPress={() => console.log('Waiting List')}
-                        icon={Icons.waitingList}
-                    />
-                    <ListItem
                         title="Register A New Certificate"
                         onPress={() => console.log('New Certificate')}
                         icon={Icons.newCertificate}
@@ -32,11 +27,6 @@ const Admin = () => {
                         title="View All Certificates"
                         onPress={() => console.log('Certificates')}
                         icon={Icons.certificates}
-                    />
-                    <ListItem
-                        title="Certificate Requests"
-                        onPress={() => console.log('Certificate Request')}
-                        icon={Icons.certficateRequest}
                     />
                     <ListItem
                         title="Edit A Existinng Certificate"

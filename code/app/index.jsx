@@ -1,25 +1,26 @@
 import '@walletconnect/react-native-compat';
 import React, { useState, useEffect } from 'react';
-import SignIn from './(auth)/sign-in';
-import { router } from 'expo-router';
-import { ActivityIndicator } from 'react-native-paper';
+import { Redirect, router } from 'expo-router';
+import { ActivityIndicator, Alert } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import Colors from '@/constants/colors';
 import { ethers } from 'ethers';
-import { getValueFor } from '@/services/storage/storage';
+import { getValueFor, save } from '@/services/storage/storage';
 import config from '@/config.json';
+import InitialScreen from './initial-screen/initial-screen';
+import useWalletConnect from '@/services/web3/wallet-connect.js';
 
 function App() {
-    const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isConnectedToNode, setIsConnectedToNode] = useState(false);
+    const { isConnected, address, handlePress, error, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
         let intervalId;
 
-        if (!isConnected) {
+        if (!isConnectedToNode) {
             intervalId = setInterval(() => {
-                connectToNode(config.rpc);
+                connectToNode(config.rpc); //? Não deveria ter await?
             }, 5000);
         }
 
@@ -28,38 +29,64 @@ function App() {
                 clearInterval(intervalId);
             }
         };
-    }, [isConnected]);
+    }, [isConnectedToNode]);
 
     useEffect(() => {
-        getValueFor('user_info').then(info => {
-            if (info) {
-                setUserInfo(info);
-                router.push('/(tabs)/profile');
+        const checkWalletConnection = async () => {
+            const userInfo = await getValueFor('user_info');
+            const walletAddress = await getValueFor('wallet_address');
+            if (userInfo && walletAddress) {
+                <Redirect to="/profile" />;
             }
             setLoading(false);
-        });
+        };
+        checkWalletConnection();
     }, []);
 
     const connectToNode = async nodeAddress => {
         try {
             const provider = new ethers.JsonRpcProvider(nodeAddress);
             const network = await provider.getNetwork();
-            console.log(`Connected to network`);
-            setIsConnected(true);
+            console.log(`Connected to network: ${network.name}`);
+            setIsConnectedToNode(true);
         } catch (error) {
             console.log('[!] Error connecting to rpc:', error);
         }
     };
 
-    if (loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator animating={true} size={'large'} color={Colors.green} />
-            </View>
-        );
-    }
+    useEffect(() => {
+        if (isConnected && address) {
+            save('wallet_address', JSON.stringify({ address: address }));
+            const checkUserInfo = async () => {
+                const userInfo = await getValueFor('user_info');
+                if (userInfo) {
+                    return router.replace('/profile');
+                } else {
+                    console.log('User not found, redirecting to sign-up');
+                    return router.replace('/sign-up');
+                }
+            };
+            checkUserInfo();
+        }
+    }, [isConnected, address]);
 
-    return userInfo ? <View /> : <SignIn />;
+    useEffect(() => {
+        if (error) {
+            Alert.alert('Wallet Connection Error', error);
+        }
+    }, [error]);
+
+    return (
+        <>
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator animating={true} size={'large'} color={Colors.green} />
+                </View>
+            ) : (
+                !isConnected && <InitialScreen handlePress={handlePress} WalletConnectModal={WalletConnectModal} />
+            )}
+        </>
+    );
 }
 
 const styles = StyleSheet.create({

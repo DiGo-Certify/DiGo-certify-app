@@ -95,7 +95,7 @@ const SignIn = () => {
     useEffect(() => {
         if (state.tag === STATES.REDIRECT) {
             save('user_info', JSON.stringify({ user: state.email })).then(() => {
-                router.push('/profile');
+                router.replace('/profile');
             });
         }
     }, [state.tag]);

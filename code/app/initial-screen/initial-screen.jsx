@@ -1,21 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, Text } from 'react-native';
+import { Button } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import Colors from '@/constants/colors.js';
 import Images from '../../constants/images.js';
-import { router } from 'expo-router';
 
-function InitialScreen() {
+function InitialScreen({ handlePress, WalletConnectModal }) {
     return (
         <View style={styles.container}>
             <View style={styles.swiperContainer}>
-                <Swiper
-                    showsButtons={false}
-                    dotColor={Colors.grey}
-                    activeDotColor={Colors.black}
-                    loop={false}
-                    index={0}
-                >
+                <Swiper showsButtons={false} dotColor={Colors.grey} activeDotColor={Colors.black} loop={false} index={0}>
                     <View style={styles.slide}>
                         <Image source={Images.wallet} style={styles.image} />
                         <Text style={styles.sliderText}>Private & Secure</Text>
@@ -26,17 +20,10 @@ function InitialScreen() {
                     </View>
                 </Swiper>
             </View>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                    router.replace('/sign-up');
-                }}
-            >
-                <Text style={styles.buttonText}>Create Wallet</Text>
-            </TouchableOpacity>
-            <Text style={styles.bottomText} onPress={() => router.replace('/profile')}>
-                Already have a wallet
-            </Text>
+            <Button mode="contained" onPress={handlePress} style={styles.button} labelStyle={styles.buttonText}>
+                Connect Your Wallet
+            </Button>
+            {WalletConnectModal}
         </View>
     );
 }
@@ -62,28 +49,20 @@ const styles = StyleSheet.create({
         height: 150,
         resizeMode: 'contain',
     },
-    text: {
-        color: '#000',
-        fontSize: 20,
-        marginTop: 20,
-    },
     sliderText: {
         color: '#000',
         fontSize: 22,
         fontWeight: 'bold',
         marginVertical: 20,
     },
-    bottomText: {
-        color: Colors.green,
-        fontSize: 20,
-        marginTop: 20,
-    },
     button: {
         backgroundColor: Colors.green,
-        padding: 10,
+        paddingVertical: 6,
+        paddingHorizontal: 10,
         borderRadius: 5,
         width: 300,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     buttonText: {
         color: '#fff',

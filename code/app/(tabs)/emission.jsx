@@ -6,7 +6,6 @@ import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import FormField from '@/components/FormField';
 import Background from '@/components/Background';
-import * as FileSystem from 'expo-file-system';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -25,6 +24,10 @@ const Emission = () => {
         setSubmitting(true);
     };
 
+    const handleUpload = () => {
+        // Upload certificate
+    };
+
     useEffect(() => {
         if (isSubmitting) {
             // Simulate certificate emission
@@ -33,10 +36,6 @@ const Emission = () => {
             }, 2000);
         }
     }, [isSubmitting]);
-
-    const handleUpload = async () => {
-        let result = await FileSystem.uploadAsync()
-    };
 
     return (
         <Background
@@ -58,7 +57,6 @@ const Emission = () => {
                         label="Register Number"
                         icon="registered-trademark"
                         onChange={text => setForm({ ...form, registerNumber: text })}
-                        secure={true}
                         style={styles.inputField}
                     />
                     <FormField

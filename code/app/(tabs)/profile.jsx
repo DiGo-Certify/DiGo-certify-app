@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
 import Icons from '@/constants/icons';
 import Images from '@/constants/images';
+import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { List, ActivityIndicator } from 'react-native-paper';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import { ethers } from 'ethers';
@@ -16,48 +17,40 @@ import { deployIdentity } from '@/services/ethereum/scripts/deploy-identity';
 const Profile = () => {
     const [profile, setProfile] = useState({
         username: '',
-        from: 'From Earth',
         image: Images.mockupProfileImage,
-        wallet: 'Define your wallet',
+        wallet: 'Not connected',
         since: '2024',
     });
+
     const [isSaving, setIsSaving] = useState(false);
 
     const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
-        getValueFor('user_info')
-            .then(async value => {
-                if (value) {
-                    setProfile(prevProfile => ({
-                        ...prevProfile,
-                        username: value.user,
-                        address: value.wallet || profile.wallet,
-                    }));
-                }
-            })
-            .catch(error => console.log('Error getting user info: ', error));
+        const fetchUserInfo = async () => {
+            const userInfo = await getValueFor('user_info');
+            const profileImage = await getValueFor('profile_image');
+            const walletAddress = await getValueFor('wallet_address');
+            if (userInfo && walletAddress) {
+                setProfile(() => ({
+                    username: userInfo.username,
+                    since: userInfo.year,
+                    image: profileImage || Images.mockupProfileImage,
+                    wallet: walletAddress.address,
+                }));
+            }
+        };
+        fetchUserInfo();
     }, []);
 
     useEffect(() => {
         if (!isConnected) {
             return;
         }
-
-        save('user_info', JSON.stringify({ user: profile.username, wallet: address }))
-            .then(() => {
-                setProfile(prevProfile => ({
-                    ...prevProfile,
-                    wallet: address,
-                }));
-            })
-            .catch(error => console.log('Error saving user info: ', error));
-
         const deployUserIdentity = async () => {
             if (!address && !provider) {
                 return;
             }
-
             try {
                 const identityFactory = new ethers.Contract(
                     config.identityFactory.address,
@@ -73,7 +66,7 @@ const Profile = () => {
         deployUserIdentity();
     }, [address]);
 
-    // Handle wallet connect with
+    //! Handle wallet connect with (To be used on settings)
     const handleWalletConnect = async () => {
         console.log('Connecting wallet...');
         setIsSaving(true);
@@ -86,25 +79,48 @@ const Profile = () => {
             if (isConnected) {
                 await handlePress();
             }
-            router.replace('/sign-in');
+            return router.replace('/');
         });
+    };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (result.granted === false) {
+            Alert.alert('Permission to access camera roll is required!');
+            return;
+        }
+
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!pickerResult.canceled) {
+            setProfile(prevProfile => ({
+                ...prevProfile,
+                image: { uri: pickerResult.assets[0].uri },
+            }));
+            await save('profile_image', JSON.stringify({ uri: pickerResult.assets[0].uri }));
+        }
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.profile}>
-                <ProfileImage source={profile.image} />
-                <ProfileInfo username={profile.username} from={profile.from} since={profile.since} />
+                <ProfileImage source={profile.image} pickImage={pickImage} />
+                <ProfileInfo username={profile.username} since={profile.since} />
             </View>
             <View style={styles.walletAccount}>
                 <WalletInfo
-                    title="Wallet"
+                    title="Your Wallet Address"
                     info={profile.wallet}
-                    onPress={handleWalletConnect}
                     disabled={isConnected}
                     isLoading={isSaving}
                 />
-                <WalletInfo title="Account" info="Account information" />
+                {/* Revise the need of this button */}
+                {/* <WalletInfo title="Account" info="Account information" /> */}
             </View>
             <View style={styles.options}>
                 <ListItem title="Your favorite" onPress={() => console.log('Favorite')} icon={Icons.favorite} />
@@ -123,18 +139,22 @@ const Profile = () => {
 
 export default Profile;
 
-const ProfileImage = ({ source }) => <Image source={source} style={styles.profileImage} />;
+const ProfileImage = ({ source, pickImage }) => (
+    <TouchableOpacity onPress={pickImage}>
+        <Image source={{ uri: source?.uri || source }} style={styles.profileImage} />
+    </TouchableOpacity>
+);
 
 const ProfileInfo = ({ username, from, since }) => (
     <View style={styles.profileInfo}>
         <Text style={styles.username}>{username}</Text>
-        <Text style={styles.info}>{from}</Text>
+        {/* <Text style={styles.info}>{from}</Text> */}
         <Text style={styles.info}>{'Since ' + since}</Text>
     </View>
 );
 
-const WalletInfo = ({ title, info, onPress, disabled = false, isLoading = false }) => (
-    <TouchableOpacity onPress={onPress} disabled={disabled} style={styles.walletInfo}>
+const WalletInfo = ({ title, info, isLoading = false }) => (
+    <TouchableOpacity disabled={true} style={styles.walletInfo}>
         <Text style={styles.title}>{title}</Text>
         {isLoading ? <ActivityIndicator size="small" color={Colors.green} /> : <Text style={styles.info}>{info}</Text>}
     </TouchableOpacity>

@@ -17,27 +17,71 @@ const providerMetadata = {
 
 /**
  * Custom hook for WalletConnect that uses WalletConnectModal
- * @returns {Object} { isConnected, address, handleButtonPress, WalletConnectModal }
+ * @returns {Object} WalletConnectModal, isOpen, open, close, provider, isConnected, address, handlePress, error }
  */
 function useWalletConnect() {
-    const { open, isConnected, address, provider } = useWalletConnectModal();
+    const { isOpen, open, close, provider, isConnected, address } = useWalletConnectModal();
+    const [error, setError] = React.useState(null);
+
+    React.useEffect(() => {
+        if (provider) {
+            provider.on('session_update', (error, payload) => {
+                if (error) {
+                    setError(error);
+                }
+            });
+
+            provider.on('disconnect', (error, payload) => {
+                if (error) {
+                    setError(error);
+                } else {
+                    setError('Disconnected');
+                }
+            });
+
+            provider.on('error', error => {
+                console.error('Provider error:', error);
+                setError(error.message);
+            });
+
+            provider.on('pairing_proposal', proposal => {
+                console.log('Pairing proposal:', proposal);
+            });
+
+            provider.on('pairing_created', pairing => {
+                console.log('Pairing created:', pairing);
+            });
+
+            provider.on('pairing_deleted', pairing => {
+                console.log('Pairing deleted:', pairing);
+            });
+        }
+    }, [provider]);
 
     const handlePress = async () => {
         try {
+            setError(null); // Clear previous errors
             if (isConnected) {
                 console.log('Disconnecting wallet...');
                 return await provider?.disconnect();
             }
-            return await open();
+            open().catch(err => {
+                console.error('Open modal error:', err);
+                setError(err.message);
+            });
         } catch (error) {
             console.log('WalletConnect error:', error);
         }
     };
     return {
+        isOpen,
+        open,
+        close,
+        provider,
         isConnected,
         address,
         handlePress,
-        provider,
+        error,
         WalletConnectModal: <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />,
     };
 }

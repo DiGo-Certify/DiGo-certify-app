@@ -4,21 +4,20 @@ import { Tabs } from 'expo-router';
 import Colors from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 import icons from '@/constants/icons';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { BottomNavigation } from 'react-native-paper';
 import ProfileScreen from './profile';
 import ValidationScreen from './validation';
 import EmissionScreen from './emission';
 import HomeScreen from './home';
 import AdminScreen from './admin';
 
-const HomeRoute = () => <HomeScreen />; //! There must be another way to render the screens without calling them directly
+const HomeRoute = () => <HomeScreen />;
 
-//! There must be another way to render the screens without calling them directly
 const ProfileRoute = () => <ProfileScreen />;
 
 const ValidationRoute = () => <ValidationScreen />;
 
-const AdminRoute = () => <AdminScreen />; //!To be changed to Admin Route, only Emission for testing
+const AdminRoute = () => <AdminScreen />; 
 
 const EmissionRoute = () => <EmissionScreen />;
 

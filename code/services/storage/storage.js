@@ -17,6 +17,7 @@ async function save(key, value) {
  */
 async function getValueFor(key) {
     let result = await SecureStore.getItemAsync(key);
+    console.log('result:', result);
     if (result) {
         return JSON.parse(result);
     } else {

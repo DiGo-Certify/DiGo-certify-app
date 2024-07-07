@@ -46,7 +46,6 @@ const HomeScreen = () => {
             header={
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
-                        {/* <Appbar.BackAction onPress={() => {}} /> */}
                         <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
                         <Appbar.Action icon="plus" onPress={() => {}} />
                     </Appbar.Header>
@@ -74,7 +73,7 @@ const HomeScreen = () => {
                                             <View style={styles.certificateActions}>
                                                 <IconButton icon="pencil" onPress={() => {}} />
                                                 <IconButton
-                                                    icon="arrow-up-circle"
+                                                    icon="share"
                                                     onPress={() => {}}
                                                     style={{ alignItems: 'flex-end' }}
                                                 />
@@ -97,19 +96,13 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    searchBarContainer: {
-        borderRadius: 10,
-        display: 'flex',
-        alignItems: 'center',
-        padding: 16,
-    },
     topHeader: {
         backgroundColor: colors.solitudeGrey,
     },
     header: {
         flex: 1,
         width: '100%',
-        marginTop: -150,
+        marginTop: -180,
         justifyContent: 'center',
     },
     body: {
@@ -120,6 +113,11 @@ const styles = StyleSheet.create({
     searchBar: {
         elevation: 2,
         backgroundColor: colors.solitudeGrey,
+    },
+    searchBarContainer: {
+        borderRadius: 10,
+        display: 'flex',
+        padding: 16,
     },
     certificateList: {
         padding: 16,
