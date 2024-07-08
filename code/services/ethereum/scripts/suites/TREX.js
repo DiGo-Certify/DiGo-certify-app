@@ -44,26 +44,6 @@ async function deployTrexLogicSuite(deployer) {
 
     await tokenImplementation.waitForDeployment();
 
-    console.log(
-        `[+] Deployed Claim Topic Registry at ${await claimTopicsRegistryImplementation.getAddress()}`
-    );
-
-    console.log(
-        `[+] Deployed Trusted Issuers Registry at ${await trustedIssuersRegistryImplementation.getAddress()}`
-    );
-    console.log(
-        `[+] Deployed Identity Registry Storage at ${await identityRegistryStorageImplementation.getAddress()}`
-    );
-    console.log(
-        `[+] Deployed Identity Registry at ${await identityRegistryImplementation.getAddress()}`
-    );
-    console.log(
-        `[+] Deployed Modular Compliance at ${await modularComplianceImplementation.getAddress()}`
-    );
-    console.log(
-        `[+] Deployed Token at ${await tokenImplementation.getAddress()}`
-    );
-
     return {
         claimTopicsRegistryImplementation,
         trustedIssuersRegistryImplementation,
@@ -137,34 +117,136 @@ async function deployTrexSuite(deployer) {
         tokenImplementation
     );
 
+    // Deploy registries using the proxy pattern
+    const claimTopicsRegistry = await ethers
+        .deployContract(
+            'ClaimTopicsRegistryProxy',
+            [await trexImplementationAuthority.getAddress()],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt(
+                'ClaimTopicsRegistry',
+                await proxy.getAddress()
+            )
+        );
+
+    const trustedIssuersRegistry = await ethers
+        .deployContract(
+            'TrustedIssuersRegistryProxy',
+            [await trexImplementationAuthority.getAddress()],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt(
+                'TrustedIssuersRegistry',
+                await proxy.getAddress()
+            )
+        );
+
+    const identityRegistryStorage = await ethers
+        .deployContract(
+            'IdentityRegistryStorageProxy',
+            [await trexImplementationAuthority.getAddress()],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt(
+                'IdentityRegistryStorage',
+                await proxy.getAddress()
+            )
+        );
+
+    const identityRegistry = await ethers
+        .deployContract(
+            'IdentityRegistryProxy',
+            [
+                await trexImplementationAuthority.getAddress(),
+                await trustedIssuersRegistry.getAddress(),
+                await claimTopicsRegistry.getAddress(),
+                await identityRegistryStorage.getAddress()
+            ],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt('IdentityRegistry', await proxy.getAddress())
+        );
+
+    const modularCompliance = await ethers
+        .deployContract(
+            'ModularComplianceProxy',
+            [await trexImplementationAuthority.getAddress()],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt('ModularCompliance', await proxy.getAddress())
+        );
+
+    // Need to initialize the OID later
+    const token = await ethers
+        .deployContract(
+            'TokenProxy',
+            [
+                await trexImplementationAuthority.getAddress(),
+                await identityRegistry.getAddress(),
+                await modularCompliance.getAddress(),
+                'TREX-TOKEN',
+                'TREX',
+                0n,
+                ethers.ZeroAddress
+            ],
+            deployer
+        )
+        .then(async proxy =>
+            ethers.getContractAt('Token', await proxy.getAddress())
+        );
+
+    console.log(
+        `[+] Deployed Claim Topic Registry at ${await claimTopicsRegistry.getAddress()}`
+    );
+
+    console.log(
+        `[+] Deployed Trusted Issuers Registry at ${await trustedIssuersRegistry.getAddress()}`
+    );
+    console.log(
+        `[+] Deployed Identity Registry Storage at ${await identityRegistryStorage.getAddress()}`
+    );
+    console.log(
+        `[+] Deployed Identity Registry at ${await identityRegistry.getAddress()}`
+    );
+    console.log(
+        `[+] Deployed Modular Compliance at ${await modularCompliance.getAddress()}`
+    );
+    console.log(`[+] Deployed Token at ${await token.getAddress()}`);
+
     return {
         trexImplementationAuthority: {
             address: await trexImplementationAuthority.getAddress(),
             abi: trexImplementationAuthority.interface.fragments
         },
-        claimTopicsRegistryImplementation: {
-            address: await claimTopicsRegistryImplementation.getAddress(),
-            abi: claimTopicsRegistryImplementation.interface.fragments
+        claimTopicsRegistry: {
+            address: await claimTopicsRegistry.getAddress(),
+            abi: claimTopicsRegistry.interface.fragments
         },
-        trustedIssuersRegistryImplementation: {
-            address: await trustedIssuersRegistryImplementation.getAddress(),
-            abi: trustedIssuersRegistryImplementation.interface.fragments
+        trustedIssuersRegistry: {
+            address: await trustedIssuersRegistry.getAddress(),
+            abi: trustedIssuersRegistry.interface.fragments
         },
-        identityRegistryImplementation: {
-            address: await identityRegistryImplementation.getAddress(),
-            abi: identityRegistryImplementation.interface.fragments
+        identityRegistry: {
+            address: await identityRegistry.getAddress(),
+            abi: identityRegistry.interface.fragments
         },
-        identityRegistryStorageImplementation: {
-            address: await identityRegistryStorageImplementation.getAddress(),
-            abi: identityRegistryStorageImplementation.interface.fragments
+        identityRegistryStorage: {
+            address: await identityRegistryStorage.getAddress(),
+            abi: identityRegistryStorage.interface.fragments
         },
-        modularComplianceImplementation: {
-            address: await modularComplianceImplementation.getAddress(),
-            abi: modularComplianceImplementation.interface.fragments
+        modularCompliance: {
+            address: await modularCompliance.getAddress(),
+            abi: modularCompliance.interface.fragments
         },
-        tokenImplementation: {
-            address: await tokenImplementation.getAddress(),
-            abi: tokenImplementation.interface.fragments
+        token: {
+            address: await token.getAddress(),
+            abi: token.interface.fragments
         }
     };
 }

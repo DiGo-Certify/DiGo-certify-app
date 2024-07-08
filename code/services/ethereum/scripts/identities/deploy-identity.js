@@ -1,16 +1,28 @@
-const config = require('../../../config.json');
+const config = require('../../../../config.json');
 const { ethers } = require('ethers');
 const {
     WalletAlreadyLinked,
     SaltAlreadyTaken,
     EmptyString,
-    IdentityDeploymentError,
-} = require('../../errors/deployment/identities');
+    IdentityDeploymentError
+} = require('../../../errors/deployment/identities');
+const {
+    contracts: { Identity }
+} = require('@onchain-id/solidity');
 
-async function deployIdentity(identityFactory, address, salt) {
+async function deployIdentity(
+    identityFactory,
+    address,
+    salt,
+    deployer = undefined
+) {
     console.log('[!] Deploying identity for wallet with address:', address);
-    const provider = new ethers.JsonRpcProvider(config.rpc);
-    const deployer = new ethers.Wallet(config.deployer.privateKey, provider);
+    const logs = [];
+
+    if (deployer === undefined) {
+        const provider = new ethers.JsonRpcProvider(config.rpc);
+        deployer = new ethers.Wallet(config.deployer.privateKey, provider);
+    }
 
     try {
         const tx_verify = await identityFactory
@@ -32,9 +44,22 @@ async function deployIdentity(identityFactory, address, salt) {
                 item.eventName === 'WalletLinked'
             ) {
                 console.log('[✓] Identity deployed:', item.args.identity);
-                return item.args.identity;
+                logs.push(item.args.identity);
             }
         });
+
+        const identityContract = new ethers.ContractFactory(
+            Identity.abi,
+            Identity.bytecode,
+            deployer
+        );
+
+        return new ethers.Contract(
+                logs[0],
+                identityContract.interface.fragments,
+                deployer
+            )
+        
     } catch (error) {
         if (error.reason === 'salt already taken') {
             throw new SaltAlreadyTaken(error.address);
