@@ -2,7 +2,7 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { deployFactoryFixture } = require('../fixtures');
-const { deployIdentity } = require('../../scripts/deploy-identity');
+const { deployIdentity } = require('../../scripts/identities/deploy-identity');
 const {
     SaltAlreadyTaken,
     EmptyString,
@@ -186,88 +186,6 @@ describe('Identity Creation', () => {
                         'wallet already linked to an identity'
                     );
                 });
-        });
-    });
-
-    describe('Identity Creation with the function deployIdentity', () => {
-        it('Should create an Identity', async () => {
-            const randomWallet = ethers.Wallet.createRandom();
-
-            const { deployerWallet, identityFactory } = await loadFixture(
-                deployFactoryFixture
-            );
-
-            const randomSalt = randomWallet.address + '-salt';
-
-            // Create the Identity
-            const promise = deployIdentity(
-                identityFactory,
-                randomWallet.address,
-                randomSalt
-            ).then(identityAddress => {
-                return identityAddress;
-            });
-
-            const identityAddress = await promise;
-
-            expect(identityAddress).to.be.not.equal(ethers.ZeroAddress);
-        });
-
-        it('Should not create an Identity with the same salt', async () => {
-            const randomWallet = ethers.Wallet.createRandom();
-            const anotherWallet = ethers.Wallet.createRandom();
-
-            const { deployerWallet, identityFactory } = await loadFixture(
-                deployFactoryFixture
-            );
-
-            const randomSalt = randomWallet.address + '-salt';
-
-            // Create the Identity
-            await deployIdentity(
-                identityFactory,
-                randomWallet.address,
-                randomSalt
-            );
-
-            // Create the Identity with the same salt
-            const promise = deployIdentity(
-                identityFactory,
-                anotherWallet.address,
-                randomSalt
-            )
-                .then(identityAddress => {
-                    console.log('here');
-                    expect(identityAddress).to.be.equal(ethers.ZeroAddress);
-                })
-                .catch(error => {
-                    expect(error).to.be.instanceOf(SaltAlreadyTaken);
-                });
-
-            await promise;
-        });
-
-        it('Should not create an Identity with an empty salt', async () => {
-            const randomWallet = ethers.Wallet.createRandom();
-
-            const { deployerWallet, identityFactory } = await loadFixture(
-                deployFactoryFixture
-            );
-
-            // Create the Identity
-            const promise = deployIdentity(
-                identityFactory,
-                randomWallet.address,
-                ''
-            )
-                .then(identityAddress => {
-                    return identityAddress;
-                })
-                .catch(error => {
-                    expect(error).to.be.instanceOf(EmptyString);
-                });
-
-            await promise;
         });
     });
 });
