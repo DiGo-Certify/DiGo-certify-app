@@ -261,7 +261,7 @@ async function deployFullTREXSuiteFixture() {
 
 
     return {
-        deployer: deployerWallet,
+        deployerWallet,
         agentWallet,
         trexImplementationAuthority,
         claimTopicsRegistry,

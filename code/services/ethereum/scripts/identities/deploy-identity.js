@@ -9,6 +9,7 @@ const {
 const {
     contracts: { Identity }
 } = require('@onchain-id/solidity');
+const { useRpcProvider } = require('../utils/useRpcProvider');
 
 async function deployIdentity(
     identityFactory,
@@ -20,8 +21,7 @@ async function deployIdentity(
     const logs = [];
 
     if (deployer === undefined) {
-        const provider = new ethers.JsonRpcProvider(config.rpc);
-        deployer = new ethers.Wallet(config.deployer.privateKey, provider);
+        deployer = useRpcProvider(config.rpc, config.deployer.privateKey);
     }
 
     try {
@@ -55,11 +55,10 @@ async function deployIdentity(
         );
 
         return new ethers.Contract(
-                logs[0],
-                identityContract.interface.fragments,
-                deployer
-            )
-        
+            logs[0],
+            identityContract.interface.fragments,
+            deployer
+        );
     } catch (error) {
         if (error.reason === 'salt already taken') {
             throw new SaltAlreadyTaken(error.address);
