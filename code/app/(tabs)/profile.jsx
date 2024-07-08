@@ -11,7 +11,7 @@ import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import { ethers } from 'ethers';
 import config from '@/config.json';
-import { deployIdentity } from '@/services/ethereum/scripts/deploy-identity';
+import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
 
 // TODO: Settings Page
 const Profile = () => {
