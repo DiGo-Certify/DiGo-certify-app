@@ -4,12 +4,19 @@ import { Button } from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import Colors from '@/constants/colors.js';
 import Images from '../../constants/images.js';
+import ClickableText from '@/components/ClickableText.jsx';
 
-function InitialScreen({ handlePress, WalletConnectModal }) {
+function InitialScreen({ handleConnectPress, handleGuestPress, WalletConnectModal }) {
     return (
         <View style={styles.container}>
             <View style={styles.swiperContainer}>
-                <Swiper showsButtons={false} dotColor={Colors.grey} activeDotColor={Colors.black} loop={false} index={0}>
+                <Swiper
+                    showsButtons={false}
+                    dotColor={Colors.grey}
+                    activeDotColor={Colors.black}
+                    loop={false}
+                    index={0}
+                >
                     <View style={styles.slide}>
                         <Image source={Images.wallet} style={styles.image} />
                         <Text style={styles.sliderText}>Private & Secure</Text>
@@ -20,9 +27,10 @@ function InitialScreen({ handlePress, WalletConnectModal }) {
                     </View>
                 </Swiper>
             </View>
-            <Button mode="contained" onPress={handlePress} style={styles.button} labelStyle={styles.buttonText}>
+            <Button mode="contained" onPress={handleConnectPress} style={styles.button} labelStyle={styles.buttonText}>
                 Connect Your Wallet
             </Button>
+            <ClickableText text="Join as a guest" onPress={handleGuestPress} style={styles.guestText} />
             {WalletConnectModal}
         </View>
     );
@@ -68,6 +76,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    guestText: {
+        color: Colors.black,
+        fontSize: 16,
+        fontFamily: 'Poppins-Regular',
+        textDecorationLine: 'underline',
+        marginTop: 20,
     },
 });
 

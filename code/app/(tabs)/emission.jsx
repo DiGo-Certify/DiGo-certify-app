@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Images from '@/constants/images';
 import Colors from '@/constants/colors';
@@ -12,11 +12,13 @@ const Emission = () => {
     const [form, setForm] = useState({
         studentNumber: '',
         registerNumber: '',
+        courseID: '',
+        institutionID: '',
         walletID: '',
     });
 
     const handleEmit = () => {
-        if (form.studentNumber === '' || form.registerNumber === '' || form.walletID === '') {
+        if (!Object.values(form).every(field => field !== '')) {
             Alert.alert('Warning', 'Please fill in all fields');
             return;
         }
@@ -45,38 +47,52 @@ const Emission = () => {
                 </View>
             }
             body={
-                <View style={styles.body}>
+                <View style={{ marginTop: -25, marginBottom: 20 }}>
                     <Text style={styles.title}>Certificate Emission</Text>
-                    <FormField
-                        label="Student Number"
-                        icon="account-check"
-                        onChange={text => setForm({ ...form, studentNumber: text })}
-                        style={styles.inputField}
-                    />
-                    <FormField
-                        label="Register Number"
-                        icon="registered-trademark"
-                        onChange={text => setForm({ ...form, registerNumber: text })}
-                        style={styles.inputField}
-                    />
-                    <FormField
-                        label="Wallet ID"
-                        icon="wallet"
-                        onChange={text => setForm({ ...form, walletID: text })}
-                        style={styles.inputField}
-                    />
+                    <ScrollView contentContainerStyle={styles.body}>
+                        <FormField
+                            label="Student Number"
+                            icon="account-check"
+                            onChange={text => setForm({ ...form, studentNumber: text })}
+                            style={styles.inputField}
+                        />
+                        <FormField
+                            label="Register Number"
+                            icon="registered-trademark"
+                            onChange={text => setForm({ ...form, registerNumber: text })}
+                            style={styles.inputField}
+                        />
+                        <FormField
+                            label="Course ID"
+                            icon="book"
+                            onChange={text => setForm({ ...form, courseID: text })}
+                            style={styles.inputField}
+                        />
+                        <FormField
+                            label="Institution ID"
+                            icon="school"
+                            onChange={text => setForm({ ...form, institutionID: text })}
+                            style={styles.inputField}
+                        />
+                        <FormField
+                            label="Wallet ID"
+                            icon="wallet"
+                            onChange={text => setForm({ ...form, walletID: text })}
+                            style={styles.inputField}
+                        />
+                        <ActionButton
+                            text="Upload Certificate"
+                            mode="contained"
+                            icon={'file-upload'}
+                            onPress={handleUpload}
+                            color={Colors.green}
+                            buttonStyle={styles.upload}
+                        />
+                    </ScrollView>
                 </View>
             }
             footer={
-                <View style={{ width: '100%', alignItems: 'center', paddingHorizontal: 30, marginTop: -120 }}>
-                    <ActionButton
-                        text="Upload Certificate"
-                        mode="contained"
-                        icon={'file-upload'}
-                        onPress={() => {}}
-                        color={Colors.green}
-                        buttonStyle={styles.upload}
-                    />
+                <View style={styles.footer}>
                     <ActionButton
                         text="Emit Certificate"
                         onPress={handleEmit}
@@ -118,8 +134,8 @@ const styles = StyleSheet.create({
     },
     body: {
         width: '100%',
-        paddingHorizontal: 30,
-        marginTop: -25,
+        paddingBottom: 20,
+        marginBottom: 20,
     },
     title: {
         fontSize: 30,
@@ -128,5 +144,12 @@ const styles = StyleSheet.create({
     },
     upload: {
         marginTop: 20,
+    },
+    footer: {
+        width: '100%',
+        alignItems: 'center',
+        paddingHorizontal: 30,
+        marginTop: -86,
+        paddingTop: 20,
     },
 });

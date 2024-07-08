@@ -57,6 +57,7 @@ function App() {
     useEffect(() => {
         if (isConnected && address) {
             save('wallet_address', JSON.stringify({ address: address }));
+            save('user_type', JSON.stringify({ type: 'Default' }));
             const checkUserInfo = async () => {
                 const userInfo = await getValueFor('user_info');
                 if (userInfo) {
@@ -76,6 +77,11 @@ function App() {
         }
     }, [error]);
 
+    const handleGuestPress = () => {
+        save('user_type', JSON.stringify({ type: 'Admin' }));
+        return router.replace('/(tabs)/validation');
+    };
+
     return (
         <>
             {loading ? (
@@ -83,7 +89,13 @@ function App() {
                     <ActivityIndicator animating={true} size={'large'} color={Colors.green} />
                 </View>
             ) : (
-                !isConnected && <InitialScreen handlePress={handlePress} WalletConnectModal={WalletConnectModal} />
+                !isConnected && (
+                    <InitialScreen
+                        handleConnectPress={handlePress}
+                        handleGuestPress={handleGuestPress}
+                        WalletConnectModal={WalletConnectModal}
+                    />
+                )
             )}
         </>
     );

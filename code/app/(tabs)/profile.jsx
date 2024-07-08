@@ -75,12 +75,14 @@ const Profile = () => {
 
     // Handle logout
     const handleLogout = () => {
-        removeValueFor('user_info').then(async () => {
-            if (isConnected) {
-                await handlePress();
-            }
-            return router.replace('/');
-        });
+        removeValueFor('user_info').then(() =>
+            removeValueFor('wallet_adress').then(async () => {
+                if (isConnected) {
+                    await handlePress();
+                }
+                return router.replace('/');
+            })
+        );
     };
 
     const pickImage = async () => {

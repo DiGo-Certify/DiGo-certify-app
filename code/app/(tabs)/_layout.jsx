@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { Image, View } from 'react-native';
-import { Tabs } from 'expo-router';
+import React, { useState, useEffect } from 'react';
 import Colors from '@/constants/colors';
 import { StatusBar } from 'expo-status-bar';
 import icons from '@/constants/icons';
@@ -10,32 +8,71 @@ import ValidationScreen from './validation';
 import EmissionScreen from './emission';
 import HomeScreen from './home';
 import AdminScreen from './admin';
+import * as SecureStore from 'expo-secure-store';
 
 const HomeRoute = () => <HomeScreen />;
-
 const ProfileRoute = () => <ProfileScreen />;
-
 const ValidationRoute = () => <ValidationScreen />;
-
-const AdminRoute = () => <AdminScreen />; 
-
+const AdminRoute = () => <AdminScreen />;
 const EmissionRoute = () => <EmissionScreen />;
+
+const USER_TYPES = {
+    Admin: 'Admin',
+    Guest: 'Guest',
+    Default: 'Default',
+};
 
 function TabLayout() {
     const [idx, setIdx] = useState(0);
-    const [routes] = useState([
-        { key: 'home', title: 'Home', focusedIcon: icons.home },
-        { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
-        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
-        { key: 'emission', title: 'Emission', focusedIcon: icons.editCertificate},
-        { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
-    ]);
+    const [routes, setRoutes] = useState([{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }]);
+    const [userType, setUserType] = useState(null);
+
+    useEffect(() => {
+        const getUserType = async () => {
+            const userType = await SecureStore.getItemAsync('user_type');
+            setUserType(JSON.parse(userType));
+        };
+        getUserType();
+    }, []);
+
+    useEffect(() => {
+        if (!userType) return;
+        const getRoutesForUserType = async () => {
+            let availableRoutes;
+            switch (userType.type) {
+                case USER_TYPES.Admin:
+                    availableRoutes = [
+                        { key: 'home', title: 'Home', focusedIcon: icons.home },
+                        { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
+                        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+                        { key: 'emission', title: 'Emission', focusedIcon: icons.editCertificate },
+                        { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
+                    ];
+                    break;
+                case USER_TYPES.Guest:
+                    availableRoutes = [{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }];
+                    break;
+                case USER_TYPES.Default:
+                    availableRoutes = [
+                        { key: 'home', title: 'Home', focusedIcon: icons.home },
+                        { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
+                        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+                    ];
+                    break;
+            }
+            if (availableRoutes) {
+                setRoutes(availableRoutes);
+            }
+        };
+
+        getRoutesForUserType();
+    }, [userType]);
 
     const renderScene = BottomNavigation.SceneMap({
         home: HomeRoute,
         profile: ProfileRoute,
         validation: ValidationRoute,
-        emission : EmissionRoute,
+        emission: EmissionRoute,
         admin: AdminRoute,
     });
 
@@ -56,52 +93,3 @@ function TabLayout() {
 }
 
 export default TabLayout;
-
-//? Alternative way
-
-// const TabIcon = ({ icon, color, name, focused }) => {
-//     return (
-//         <>
-//             <Image source={icon} resizeMode="contain" tintColor={color} className="w-6 h-6" />
-//             <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
-//                 {name}
-//             </Text>
-//         </>
-//     );
-// };
-
-// function TabLayout() {
-//     // const { loading, isLogged} = useGlobalContext();
-//     // if (!loading && !isLogged) return <Redirect href="/initial-screen" />;
-
-//     return (
-//         <>
-//             <Tabs
-//                 screenOptions={{
-//                     tabBarShowLabel: false,
-//                     tabBarStyle: {
-//                         backgroundColor: 'transparent',
-//                         borderTopWidth: 0,
-//                         elevation: 0,
-//                     },
-//                     tabBarActiveTintColor: '#000',
-//                     tabBarInactiveTintColor: '#ccc',
-//                 }}
-//             >
-//                 <Tabs.Screen
-//                     name="profile"
-//                     options={{
-//                         title: 'Profile',
-//                         headerShown: false,
-//                         tabBarIcon: ({ color, focused }) => (
-//                             <TabIcon icon={icons.profile} color={color} name="Profile" focused={focused} />
-//                         ),
-//                     }}
-//                 />
-//             </Tabs>
-
-//             {/* <Loader isLoading={loading} /> */}
-//             <StatusBar backgroundColor={Colors.grey} style="light" />
-//         </>
-//     );
-// }
