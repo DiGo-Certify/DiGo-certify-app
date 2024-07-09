@@ -62,11 +62,6 @@ async function uploadConfig(
     configuration.trex.token.address = token.address;
     configuration.trex.token.abi = token.abi;
 
-    // console.log(initialTrddustedIssuers);
-    console.log(initialTrustedIssuers[0].claimIssuerContract);
-    console.log(initialTrustedIssuers[0].claimIssuerContract.target);
-    console.log(initialTrustedIssuers[0].claimIssuerContract.interface.fragments);
-
     // Add the initial trusted issuers to the configuration
 
     // ISEL 

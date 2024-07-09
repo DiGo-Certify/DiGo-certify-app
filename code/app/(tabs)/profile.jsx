@@ -12,6 +12,7 @@ import useWalletConnect from '@/services/web3/wallet-connect';
 import { ethers } from 'ethers';
 import config from '@/config.json';
 import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
+import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -20,6 +21,7 @@ const Profile = () => {
         image: Images.mockupProfileImage,
         wallet: 'Not connected',
         since: '2024',
+        OID: '',
     });
 
     const [isSaving, setIsSaving] = useState(false);
@@ -52,13 +54,22 @@ const Profile = () => {
                 return;
             }
             try {
+                const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
                 const identityFactory = new ethers.Contract(
                     config.identityFactory.address,
                     config.identityFactory.abi,
-                    provider
+                    signer
                 );
                 const user_salt = profile.username + '-' + 'salt';
-                await deployIdentity(identityFactory, address, user_salt);
+                const idContract = await deployIdentity(identityFactory, address, user_salt, signer);
+                if (idContract) {
+                    const idAddress = await idContract.getAddress();
+                    await save('OID', JSON.stringify({ OID: idAddress }));
+                    setProfile(currentProfile => ({
+                        ...currentProfile,
+                        OID: idAddress,
+                    }));
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -75,13 +86,15 @@ const Profile = () => {
 
     // Handle logout
     const handleLogout = () => {
-        removeValueFor('user_info').then(() =>
-            removeValueFor('wallet_adress').then(async () => {
-                if (isConnected) {
-                    await handlePress();
-                }
-                return router.replace('/');
-            })
+        removeValueFor('OID').then(() =>
+            removeValueFor('user_info').then(() =>
+                removeValueFor('wallet_adress').then(async () => {
+                    if (isConnected) {
+                        await handlePress();
+                    }
+                    return router.replace('/');
+                })
+            )
         );
     };
 

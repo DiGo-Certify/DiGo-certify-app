@@ -9,6 +9,7 @@ import { getValueFor, save } from '@/services/storage/storage';
 import config from '@/config.json';
 import InitialScreen from './initial-screen/initial-screen';
 import useWalletConnect from '@/services/web3/wallet-connect.js';
+import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -19,8 +20,8 @@ function App() {
         let intervalId;
 
         if (!isConnectedToNode) {
-            intervalId = setInterval(() => {
-                connectToNode(config.rpc); //? Não deveria ter await?
+            intervalId = setInterval(async () => {
+                await connectToNode(config.rpc); //? Não deveria ter await?
             }, 5000);
         }
 
@@ -57,7 +58,12 @@ function App() {
     useEffect(() => {
         if (isConnected && address) {
             save('wallet_address', JSON.stringify({ address: address }));
-            save('user_type', JSON.stringify({ type: 'Default' }));
+            // Verify if the wallet is an admin wallet (searching in the config file)
+            if (isAdminWallet(address)) {
+                save('user_type', JSON.stringify({ type: 'Admin' }));
+            } else {
+                save('user_type', JSON.stringify({ type: 'Default' }));
+            }
             const checkUserInfo = async () => {
                 const userInfo = await getValueFor('user_info');
                 if (userInfo) {
