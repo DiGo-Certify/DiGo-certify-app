@@ -64,11 +64,11 @@ async function uploadConfig(
 
     // Add the initial trusted issuers to the configuration
 
-    // ISEL 
+    // ISEL
     configuration.institutions[0].address =
         initialTrustedIssuers[0].claimIssuerContract.target;
-    configuration.institutions[0].abi =
-        await initialTrustedIssuers[0].claimIssuerContract.interface.fragments;
+    configuration.institutions[0].abi = await initialTrustedIssuers[0]
+        .claimIssuerContract.interface.fragments;
 
     // IST
     configuration.institutions[1].address =
@@ -79,7 +79,7 @@ async function uploadConfig(
     // UL
     configuration.institutions[2].address =
         initialTrustedIssuers[2].claimIssuerContract.target;
-    configuration.institutions[2].abi=
+    configuration.institutions[2].abi =
         initialTrustedIssuers[2].claimIssuerContract.interface.fragments;
 
     // Write the updated config object to the file
