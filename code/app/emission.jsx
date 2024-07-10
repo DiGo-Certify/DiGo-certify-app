@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { Appbar, Title } from 'react-native-paper';
+import { router } from 'expo-router';
 import Images from '@/constants/images';
 import Colors from '@/constants/colors';
 import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import FormField from '@/components/FormField';
 import Background from '@/components/Background';
+import App from '.';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -43,12 +46,18 @@ const Emission = () => {
         <Background
             header={
                 <View style={styles.header}>
-                    <HeaderImage imageSource={Images.splashScreenImage} />
+                    <Appbar.Header style={styles.topHeader}>
+                        <Appbar.BackAction onPress={() => router.back()} />
+                        <Appbar.Content title="Certificate Emission" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
+                    </Appbar.Header>
+                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                        <HeaderImage imageSource={Images.splashScreenImage} />
+                    </View>
                 </View>
             }
             body={
-                <View style={{ marginTop: -25, marginBottom: 20 }}>
-                    <Text style={styles.title}>Certificate Emission</Text>
+                <View style={styles.body}>
+                    <Title style={styles.title}>Send Certificate</Title>
                     <ScrollView contentContainerStyle={styles.body}>
                         <FormField
                             label="Student Number"
@@ -111,7 +120,11 @@ const Emission = () => {
 export default Emission;
 
 const styles = StyleSheet.create({
-    header: { flex: 1, justifyContent: 'center' },
+    topHeader: {
+        widht: '100%',
+        backgroundColor: Colors.solitudeGrey,
+    },
+    header: { flex: 1, width: '100%', justifyContent: 'center', marginBottom: 20 },
     inputField: {
         justifyContent: 'center',
         marginTop: 20,
@@ -133,11 +146,12 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     body: {
-        width: '100%',
+        justifyContent: 'center',
         paddingBottom: 20,
         marginBottom: 20,
     },
     title: {
+        paddingTop: 5,
         fontSize: 30,
         fontFamily: 'Poppins-ExtraBold',
         color: Colors.black,

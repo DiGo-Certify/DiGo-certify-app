@@ -5,7 +5,7 @@
     "privateKey": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
   },
   "identityFactory": {
-    "address": "0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f",
+    "address": "0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E",
     "abi": [
       {
         "inputs": [
@@ -413,7 +413,7 @@
   },
   "trex": {
     "implementationAuthority": {
-      "address": "0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43",
+      "address": "0x4631BCAbD6dF18D94796344963cB60d44a4136b6",
       "abi": [
         {
           "type": "constructor",
@@ -1515,7 +1515,7 @@
       ]
     },
     "claimsTopicRegistry": {
-      "address": "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+      "address": "0xA4899D35897033b927acFCf422bc745916139776",
       "abi": [
         {
           "type": "event",
@@ -1715,7 +1715,7 @@
       ]
     },
     "trustedIssuersRegistry": {
-      "address": "0x36b58F5C1969B7b6591D752ea6F5486D069010AB",
+      "address": "0xf953b3A269d80e3eB0F2947630Da976B896A8C5b",
       "abi": [
         {
           "type": "event",
@@ -2146,7 +2146,7 @@
       ]
     },
     "identityRegistry": {
-      "address": "0x0355B7B8cb128fA5692729Ab3AAa199C1753f726",
+      "address": "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
       "abi": [
         {
           "type": "event",
@@ -2911,7 +2911,7 @@
       ]
     },
     "identityRegistryStorage": {
-      "address": "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7",
+      "address": "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
       "abi": [
         {
           "type": "event",
@@ -3473,7 +3473,7 @@
       ]
     },
     "modularCompliance": {
-      "address": "0x202CCe504e04bEd6fC0521238dDf04Bc9E8E15aB",
+      "address": "0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3",
       "abi": [
         {
           "type": "event",
@@ -3975,7 +3975,7 @@
       ]
     },
     "token": {
-      "address": "0xf4B146FbA71F41E0592668ffbF264F1D186b2Ca8",
+      "address": "0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d",
       "abi": [
         {
           "type": "event",
@@ -5654,7 +5654,7 @@
         "address": "0xBcd4042DE499D14e55001CcbB24a551F3b954096",
         "privateKey": "0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897"
       },
-      "address": "0x749d20D85555330d20862770b58a72939285c42a",
+      "address": "0xcA88B57549db9f89C1f9D3603b4e04A15242e100",
       "abi": [
         {
           "type": "constructor",
@@ -6880,7 +6880,7 @@
         "address": "0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
         "privateKey": "0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82"
       },
-      "address": "0x63e0e8Cd1618d51d07E645d9E34326cA5fF714af",
+      "address": "0x937Cf819746221324b7FFd131b4920234B9EDe53",
       "abi": [
         {
           "type": "constructor",
@@ -8106,7 +8106,7 @@
         "address": "0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
         "privateKey": "0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1"
       },
-      "address": "0x7C775702e27ee32D52a0c95a7E1a9031d7F6fddB",
+      "address": "0x1A4964Fcf18b115A0A85Eef817bFDef13d1607DE",
       "abi": [
         {
           "type": "constructor",

@@ -2,6 +2,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { PaperProvider } from 'react-native-paper';
+import colors from '@/constants/colors';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,6 +42,7 @@ const RootLayout = () => {
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen name="initial-screen/initial-screen" options={{ headerShown: false }} />
                 <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="emission" options={{ headerShown: false }} />
             </Stack>
         </PaperProvider>
     );

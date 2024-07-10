@@ -5,7 +5,6 @@ import icons from '@/constants/icons';
 import { BottomNavigation } from 'react-native-paper';
 import ProfileScreen from './profile';
 import ValidationScreen from './validation';
-import EmissionScreen from './emission';
 import HomeScreen from './home';
 import AdminScreen from './admin';
 import * as SecureStore from 'expo-secure-store';
@@ -14,7 +13,6 @@ const HomeRoute = () => <HomeScreen />;
 const ProfileRoute = () => <ProfileScreen />;
 const ValidationRoute = () => <ValidationScreen />;
 const AdminRoute = () => <AdminScreen />;
-const EmissionRoute = () => <EmissionScreen />;
 
 const USER_TYPES = {
     Admin: 'Admin',
@@ -45,7 +43,6 @@ function TabLayout() {
                         { key: 'home', title: 'Home', focusedIcon: icons.home },
                         { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
                         { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
-                        { key: 'emission', title: 'Emission', focusedIcon: icons.editCertificate },
                         { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
                     ];
                     break;
@@ -72,7 +69,6 @@ function TabLayout() {
         home: HomeRoute,
         profile: ProfileRoute,
         validation: ValidationRoute,
-        emission: EmissionRoute,
         admin: AdminRoute,
     });
 
