@@ -10,6 +10,7 @@ const {
     contracts: { Identity }
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
+const getIdentity = require('./getIdentity');
 
 async function deployIdentity(
     identityFactory,
@@ -17,6 +18,10 @@ async function deployIdentity(
     salt,
     deployer = undefined
 ) {
+    if (address === '') {
+        throw new EmptyString();
+    }
+
     console.log('[!] Deploying identity for wallet with address:', address);
     const logs = [];
 
@@ -31,11 +36,11 @@ async function deployIdentity(
     }
 
     try {
-        const tx_verify = await identityFactory.getIdentity(address);
+        const identity = await getIdentity(address, identityFactory);
 
-        if (tx_verify !== ethers.ZeroAddress) {
+        if (identity !== null) {
             return new ethers.Contract(
-                tx_verify,
+                identity,
                 identityContract.interface.fragments,
                 deployer
             );
@@ -69,9 +74,7 @@ async function deployIdentity(
         } else if (error.reason === 'invalid argument - empty string') {
             throw new EmptyString();
         } else {
-            throw new IdentityDeploymentError(
-                'Error deploying identity: ' + error
-            );
+            throw new IdentityDeploymentError(error);
         }
     }
 }
