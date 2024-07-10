@@ -13,7 +13,7 @@ const FormField = ({ label, mode = 'outlined', style, secure = false, value, onC
         secureTextEntry={secure}
         value={value}
         onChangeText={onChange}
-        right={icon ? <Icon icon={icon} /> : null}
+        right={icon ? <Icon source={icon} color="black" size={20} /> : null}
         style={style}
     />
 );
