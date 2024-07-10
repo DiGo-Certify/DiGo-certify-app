@@ -124,7 +124,7 @@ The following instructions will guide you through the installation process.
    ```sh
    npm install 
    ```
-3. Deploy the initial smart contract onto the blockchain
+📦 Deploy the initial smart contract onto the blockchain
    ```sh
    npm run deploy
    ```
