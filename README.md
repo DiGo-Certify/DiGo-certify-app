@@ -1,4 +1,4 @@
-# DiGo Certify
+# `DiGo Certify`
 
 <a name="readme-top"></a>
 
@@ -66,56 +66,72 @@ SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform applic
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Built With
+# 🧰 `Built With`
 
-- [![Node][Node.js]][Node-url]
-- [![React Native][ReactNative.js]][ReactNative-url]
-- [![Expo React Native][Expo.js]][Expo-url]
-- [![Smart Contract][Solidity.sol]][Solidity-url]
-- [![Hardhat][Hardhat.js]][Hardhat-url]
-- [![Ethereum][Ethereum.js]][Ethereum-url]
+  [![Node][Node.js]][Node-url]
+
+  [![React Native][ReactNative.js]][ReactNative-url]
+
+  [![Expo React Native][Expo.js]][Expo-url]
+
+  [![Smart Contract][Solidity.sol]][Solidity-url]
+
+  [![Hardhat][Hardhat.js]][Hardhat-url]
+
+  [![Ethereum][Ethereum.js]][Ethereum-url]
+
+  [![Javasript][Javascript.js]][Javascript-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Star Us -->
+# ⭐️ `Star us`
+
+If you like this project, don't forget to give it a star on GitHub! Every star make us very happy and we will be very grateful to you!
+
 <!-- GETTING STARTED -->
 
-## Getting Started
+# 🚀 `Getting Started`
 
 We need to install the DiGo Certify app on your device.
 The following instructions will guide you through the installation process.
 
-### Prerequisites
+## 📋 Prerequisites
 
-1. You need to have node do run the application.
+1. You need to have node to run the application.
 
-- npm
+    [![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en)
+
+2. Install npm globally on your machine:
   ```sh
   npm install npm@latest -g
   ```
-2. Install Expo Go on your smart phone:
-  - **IOS**: https://apps.apple.com/us/app/expo-go/id982107779
-  - **Android**: https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en
 
+3. Install Expo Go on your smart phone:
 
-### Installation
+    [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/expo-go/id982107779)
+    [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en)
 
-1. Clone the repo
+## 🛠️ Installation
+
+📄 Clone or fork `DiGo Certify App`:
    ```sh
    git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
    cd DiGo-certify-app/code/
    ```
-2. Install NPM packages
+💿 Install All Dependencies:
    ```sh
-   npm install
+   npm install 
    ```
 3. Deploy the initial smart contract onto the blockchain
    ```sh
    npm run deploy
    ```
-4. Run the app
+🚴‍♂️ Run the app
    ```sh
     npx expo start
-    ```
+   ```
 5. Scan the QR Code provided on your smart phone to run the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -132,7 +148,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <!-- LICENSE -->
 
-## License
+## 📜 `License`
 
 Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for more information.
 
@@ -140,7 +156,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- CONTACT -->
 
-## Contact
+## 📬 Contact
 
 :inbox_tray: Diogo Rodrigues(developer) - [a49513@alunos.isel.pt](mailto:a49513@alunos.isel.pt)
 
@@ -177,9 +193,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 [Hardhat-url]: https://hardhat.org/
 [Ethereum.js]: https://img.shields.io/badge/ethereum-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white
 [Ethereum-url]: https://ethereum.org/en/
-[FireBase.js]: https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black
-[FireBase-url]: https://firebase.google.com/
-[TypeScript.ts]: https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
-[TypeScript-url]: https://www.typescriptlang.org/
-[ReactNative.js]: https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB
+[Javascript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+[Javascript.js]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&Color=yellow
+[ReactNative.js]: https://img.shields.io/badge/react_native-%2320232a.svg?style=for-the-badge&logo=react&logoColor=#fddb3c
 [ReactNative-url]: https://reactnative.dev/
