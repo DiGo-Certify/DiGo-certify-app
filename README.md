@@ -122,7 +122,10 @@ The following instructions will guide you through the installation process.
    ```
 💿 Install All Dependencies:
    ```sh
-   npm install 
+    npm install && \
+    cd services/ethereum && \
+    npm install && \
+    cd ../../
    ```
 📦 Deploy the initial smart contract onto the blockchain
    ```sh
@@ -132,7 +135,7 @@ The following instructions will guide you through the installation process.
    ```sh
     npx expo start
    ```
-5. Scan the QR Code provided on your smart phone to run the app
+📱 Scan the QR Code provided on your smart phone to run the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
