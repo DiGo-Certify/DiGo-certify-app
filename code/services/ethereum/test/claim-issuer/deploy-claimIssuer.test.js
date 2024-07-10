@@ -12,7 +12,7 @@ describe('ClaimIssuer Creation', () => {
             deployFullTREXSuiteFixture
         );
 
-        const claimTopics = [ethers.id('EXAMPLE')];
+        const claimTopics = ['EXAMPLE'];
 
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
@@ -51,7 +51,7 @@ describe('ClaimIssuer Creation', () => {
         const [tirDeployer, claimIssuerDeployer1, claimIssuerDeployer2] =
             await ethers.getSigners();
 
-        const claimTopics = [ethers.id('EXAMPLE')];
+        const claimTopics = ['EXAMPLE'];
 
         const cicAndTir1 = await deployClaimIssuer(
             trustedIssuersRegistry,

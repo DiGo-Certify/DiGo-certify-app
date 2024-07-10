@@ -9,6 +9,7 @@ const {
 } = require('../../scripts/claimIssuer/deploy-claim-issuer');
 const addKeyToIdentity = require('../../scripts/claimIssuer/addKeyToIdentity');
 const hash = require('../../scripts/utils/hash');
+const { CLAIM_TOPICS, CLAIM_TOPICS_OBJ } = require('../../scripts/claims/claimTopics');
 
 describe('Add claims', () => {
     it('should add a claim to an identity', async () => {
@@ -36,12 +37,10 @@ describe('Add claims', () => {
             )[0]
         ).to.be.equal(aliceWallet.address);
 
-        const claimTopics = [ethers.id('EXAMPLE')];
-
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
+            CLAIM_TOPICS,
             claimIssuerWallet,
             deployerWallet
         );
@@ -97,7 +96,7 @@ describe('Add claims', () => {
 
         // Claim issuer adds a claim to Alice's identity
         const claimData = 'example-claim-data';
-        const claimTopic = claimTopics[0];
+        const claimTopic = CLAIM_TOPICS_OBJ.INSTITUTION; // INSTITUTION
         const claimScheme = 1; // ECDSA
         const uri = '';
 
@@ -117,8 +116,11 @@ describe('Add claims', () => {
         expect(claim.issuer).to.be.equal(
             await cicAndTir.claimIssuerContract.getAddress()
         );
-        expect(ethers.toQuantity(claim.topic)).to.be.equal(claimTopic);
-        expect(parseInt(ethers.toQuantity(claim.scheme), 16)).to.be.equal(claimScheme);
-
+        expect(ethers.toQuantity(claim.topic)).to.be.equal(
+            ethers.id(claimTopic)
+        );
+        expect(parseInt(ethers.toQuantity(claim.scheme), 16)).to.be.equal(
+            claimScheme
+        );
     });
 });

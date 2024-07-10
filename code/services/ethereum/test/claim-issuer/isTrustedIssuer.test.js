@@ -13,7 +13,7 @@ describe('Verification of Trusted Issuer', () => {
             deployFullTREXSuiteFixture
         );
 
-        const claimTopics = [ethers.id('EXAMPLE')];
+        const claimTopics = ['EXAMPLE'];
 
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
@@ -37,7 +37,7 @@ describe('Verification of Trusted Issuer', () => {
             deployFullTREXSuiteFixture
         );
 
-        const claimTopics = [ethers.id('EXAMPLE')];
+        const claimTopics = ['EXAMPLE'];
 
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
