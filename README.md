@@ -148,7 +148,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <!-- LICENSE -->
 
-## 📜 `License`
+# 📜 `License`
 
 Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for more information.
 
@@ -156,7 +156,7 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- CONTACT -->
 
-## 📬 Contact
+# 📬 `Contact Us`
 
 :inbox_tray: Diogo Rodrigues(developer) - [a49513@alunos.isel.pt](mailto:a49513@alunos.isel.pt)
 
