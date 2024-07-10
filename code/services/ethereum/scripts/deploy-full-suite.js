@@ -3,7 +3,7 @@ const { deployOnchainIDSuite } = require('./suites/OID');
 const { deployTrexSuite } = require('./suites/TREX');
 const { uploadConfig } = require('./utils/uploadConfiguration');
 const config = require('../../../config.json');
-const { deployClaimIssuer } = require('./claimIssuer/deploy-claimIssuer');
+const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
 
 const APP_TOPICS = [
     ethers.id('INSTITUTION'),
