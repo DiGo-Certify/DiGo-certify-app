@@ -99,15 +99,18 @@ The following instructions will guide you through the installation process.
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
    cd DiGo-certify-app/code/
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
+   ```
+3. Deploy the initial smart contract onto the blockchain
+   ```sh
+   npm run deploy
    ```
 4. Run the app
    ```sh
