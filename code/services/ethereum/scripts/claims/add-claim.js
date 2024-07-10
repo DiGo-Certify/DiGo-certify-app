@@ -1,6 +1,4 @@
 const { ethers } = require('ethers');
-const config = require('../../../../config.json');
-const useRpcProvider = require('../utils/useRpcProvider');
 const isTrustedIssuer = require('../claimIssuer/isTrustedIssuer');
 const hash = require('../utils/hash');
 
@@ -24,7 +22,7 @@ async function addClaim(
     claimIssuerWallet,
     claimTopic,
     claimData,
-    claimScheme,
+    claimScheme = 1,
     uri = '',
 ) {
     try {
@@ -42,14 +40,14 @@ async function addClaim(
             const claim = {
                 data: hash(claimData),
                 issuer: await claimIssuerContract.getAddress(),
-                topic: claimTopic,
+                topic: ethers.id(claimTopic),
                 scheme: claimScheme,
                 identity: await receiverIdentity.getAddress(),
                 signature: '',
                 claimId: ethers.keccak256(
                     ethers.AbiCoder.defaultAbiCoder().encode(
                         ['address', 'uint'],
-                        [await claimIssuerContract.getAddress(), claimTopic]
+                        [await claimIssuerContract.getAddress(), ethers.id(claimTopic)]
                     )
                 ),
                 uri: hash(uri)
