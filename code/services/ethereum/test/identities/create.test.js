@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { deployFactoryFixture } = require('../fixtures');
 const { deployIdentity } = require('../../scripts/identities/deploy-identity');
+const { deployFullTREXSuiteFixture } = require('../fixtures');
 const {
     SaltAlreadyTaken,
     EmptyString,
@@ -186,6 +187,149 @@ describe('Identity Creation', () => {
                         'wallet already linked to an identity'
                     );
                 });
+        });
+    });
+    describe('Test creating an identity using the deployIdentity script', () => {
+        it('should add a claim to an identity', async () => {
+            const { deployerWallet, identityFactory } = await loadFixture(
+                deployFullTREXSuiteFixture
+            );
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            // Create Identity for Alice
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            );
+            expect(aliceIdentity).to.exist;
+            expect(
+                await identityFactory.getIdentity(aliceWallet.address)
+            ).to.be.equal(await aliceIdentity.getAddress());
+            expect(
+                (
+                    await identityFactory.getWallets(
+                        await aliceIdentity.getAddress()
+                    )
+                )[0]
+            ).to.be.equal(aliceWallet.address);
+        });
+
+        it('should not create an identity with an empty salt', async () => {
+            const { deployerWallet, identityFactory } = await loadFixture(
+                deployFullTREXSuiteFixture
+            );
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            // Create Identity for Alice
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                '',
+                deployerWallet
+            ).catch(error => {
+                expect(error).to.be.instanceOf(IdentityDeploymentError);
+            });
+        });
+
+        it('should not create an identity with an empty address', async () => {
+            const { deployerWallet, identityFactory } = await loadFixture(
+                deployFullTREXSuiteFixture
+            );
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            // Create Identity for Alice
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                '',
+                'alice-salt',
+                deployerWallet
+            ).catch(error => {
+                expect(error).to.be.instanceOf(IdentityDeploymentError);
+            });
+        });
+
+        it('Should not create an identity already linked to an address', async () => {
+            const { deployerWallet, identityFactory } = await loadFixture(
+                deployFullTREXSuiteFixture
+            );
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            // Create Identity for Alice
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            );
+            expect(aliceIdentity).to.exist;
+            expect(
+                await identityFactory.getIdentity(aliceWallet.address)
+            ).to.be.equal(await aliceIdentity.getAddress());
+            expect(
+                (
+                    await identityFactory.getWallets(
+                        await aliceIdentity.getAddress()
+                    )
+                )[0]
+            ).to.be.equal(aliceWallet.address);
+
+            // Create Identity for Alice
+            const aliceIdentity2 = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt2',
+                deployerWallet
+            );
+
+            expect(aliceIdentity2).to.exist;
+            expect(
+                await identityFactory.getWallets(
+                    await aliceIdentity2.getAddress()
+                )
+            ).to.be.lengthOf(1);
+        });
+
+        it('Should not create an identity with the same salt', async () => {
+            const { deployerWallet, identityFactory } = await loadFixture(
+                deployFullTREXSuiteFixture
+            );
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            // Create Identity for Alice
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            );
+            expect(aliceIdentity).to.exist;
+            expect(
+                await identityFactory.getIdentity(aliceWallet.address)
+            ).to.be.equal(await aliceIdentity.getAddress());
+            expect(
+                (
+                    await identityFactory.getWallets(
+                        await aliceIdentity.getAddress()
+                    )
+                )[0]
+            ).to.be.equal(aliceWallet.address);
+
+            // Create Identity for Alice
+            const aliceIdentity2 = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            ).catch(error => {
+                expect(error).to.be.instanceOf(SaltAlreadyTaken);
+            });
         });
     });
 });

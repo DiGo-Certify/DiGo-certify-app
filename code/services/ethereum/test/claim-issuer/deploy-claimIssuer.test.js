@@ -3,7 +3,7 @@ const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { deployFullTREXSuiteFixture } = require('../fixtures');
 const {
     deployClaimIssuer
-} = require('../../scripts/claimIssuer/deploy-claimIssuer');
+} = require('../../scripts/claimIssuer/deploy-claim-issuer');
 const { ethers } = require('hardhat');
 
 describe('ClaimIssuer Creation', () => {
@@ -17,6 +17,7 @@ describe('ClaimIssuer Creation', () => {
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
             claimTopics,
+            deployerWallet,
             deployerWallet
         );
 
@@ -47,7 +48,8 @@ describe('ClaimIssuer Creation', () => {
             deployFullTREXSuiteFixture
         );
 
-        const [tirDeployer, claimIssuerDeployer1, claimIssuerDeployer2] = await ethers.getSigners();
+        const [tirDeployer, claimIssuerDeployer1, claimIssuerDeployer2] =
+            await ethers.getSigners();
 
         const claimTopics = [ethers.id('EXAMPLE')];
 
@@ -65,10 +67,10 @@ describe('ClaimIssuer Creation', () => {
             tirDeployer
         );
 
-        expect((await cicAndTir1.TIR.getTrustedIssuers())).to.have.lengthOf(2);
-        expect((await cicAndTir2.TIR.getTrustedIssuers())).to.have.lengthOf(2);
-        expect((await cicAndTir1.TIR.getTrustedIssuers())).to.be.deep.equal(await cicAndTir2.TIR.getTrustedIssuers());
-
+        expect(await cicAndTir1.TIR.getTrustedIssuers()).to.have.lengthOf(2);
+        expect(await cicAndTir2.TIR.getTrustedIssuers()).to.have.lengthOf(2);
+        expect(await cicAndTir1.TIR.getTrustedIssuers()).to.be.deep.equal(
+            await cicAndTir2.TIR.getTrustedIssuers()
+        );
     });
-
 });

@@ -249,9 +249,7 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     header: {
-        flex: 1,
         width: '100%',
-        marginTop: -180,
         justifyContent: 'center',
     },
     body: {

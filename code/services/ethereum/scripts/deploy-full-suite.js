@@ -3,16 +3,20 @@ const { deployOnchainIDSuite } = require('./suites/OID');
 const { deployTrexSuite } = require('./suites/TREX');
 const { uploadConfig } = require('./utils/uploadConfiguration');
 const config = require('../../../config.json');
-const { deployClaimIssuer } = require('./claimIssuer/deploy-claimIssuer');
+const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
 
-const INSTITUTION_TOPIC = [ethers.id('INSTITUTION')];
+const APP_TOPICS = [
+    ethers.id('INSTITUTION'),
+    ethers.id('CERTIFICATE'),
+    ethers.id('STUDENT')
+];
 
 /**
  * Responsible for deploying into the Ethereum network the following contracts(addresses and ABIs):
  * - IdentityFactory contract (OID suite)
  * - TREX implementation authority contract (TREX suite)
  * - ClaimTopicsRegistry contract (TREX suite)
- *    - With the claim topics:
+ *    - With the claim topics:      //TODO
  *      - INSTITUTION
  *      - CERTIFICATE
  *      - STUDENT
@@ -51,20 +55,29 @@ async function main() {
     const initialTrustedIssuers = [
         await deployClaimIssuer(
             trustedIR,
-            INSTITUTION_TOPIC,
-            new ethers.Wallet(config.institutions[0].wallet.privateKey, provider),
+            APP_TOPICS,
+            new ethers.Wallet(
+                config.institutions[0].wallet.privateKey,
+                provider
+            ),
             deployer
         ),
         await deployClaimIssuer(
             trustedIR,
-            INSTITUTION_TOPIC,
-            new ethers.Wallet(config.institutions[1].wallet.privateKey, provider),
+            APP_TOPICS,
+            new ethers.Wallet(
+                config.institutions[1].wallet.privateKey,
+                provider
+            ),
             deployer
         ),
         await deployClaimIssuer(
             trustedIR,
-            INSTITUTION_TOPIC,
-            new ethers.Wallet(config.institutions[2].wallet.privateKey, provider),
+            APP_TOPICS,
+            new ethers.Wallet(
+                config.institutions[2].wallet.privateKey,
+                provider
+            ),
             deployer
         )
     ];

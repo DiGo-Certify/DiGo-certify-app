@@ -7,6 +7,7 @@ import HeaderImage from '@/components/HeaderImage';
 import Icons from '@/constants/icons';
 import Background from '@/components/Background';
 import { List } from 'react-native-paper';
+import { router } from 'expo-router';
 
 const Admin = () => {
     return (
@@ -19,8 +20,8 @@ const Admin = () => {
             body={
                 <View style={styles.options}>
                     <ListItem
-                        title="Register A New Certificate"
-                        onPress={() => console.log('New Certificate')}
+                        title="Send a New Certificate"
+                        onPress={() => router.push('/emission')}
                         icon={Icons.newCertificate}
                     />
                     <ListItem

@@ -15,41 +15,38 @@ const ECDSA_KEY_TYPE = 1;
  * The ClaimIssuer will be able to sign claims for the specified claim topics
  *
  * @param {*} TIR - The Trusted Issuers Registry contract
- * @param {*} deployerTIR - The deployer signer for the Trusted Issuers Registry
+ * @param {*} deployerTIR - [Optional] The deployer signer for the Trusted Issuers Registry if different from the app owner
  * @param {*} claimTopics - The list of claims topics that the ClaimIssuer will be able to sign
- * @param {*} address - The wallet address for which to deploy the ClaimIssuer
- * @param {*} deployer - [Optional] The deployer signer if different from the app owner
+ * @param {*} issuerWallet - The wallet address for which to deploy the ClaimIssuer
  */
-async function deployClaimIssuer(TIR, claimTopics, deployer = undefined, deployerTIR = undefined) {
+async function deployClaimIssuer(TIR, claimTopics, issuerWallet, deployerTIR = undefined) {
     try {
-        if (deployer === undefined) {
-            deployer = useRpcProvider(config.rpc, config.deployer.privateKey); // app owner
-        } else if (deployerTIR === undefined) {
-            deployerTIR = deployer;
+        if (deployerTIR === undefined) {
+            deployerTIR = useRpcProvider(config.rpc, config.deployer.privateKey); // app owner
         }
         
         console.log(
             '[!] Deploying ClaimIssuer for wallet with address:',
-            deployer.address
+            issuerWallet.address
         );
 
         const claimIssuerContract = await new ethers.ContractFactory(
             ClaimIssuer.abi,
             ClaimIssuer.bytecode,
-            deployer
-        ).deploy(deployer.address);
+            issuerWallet
+        ).deploy(issuerWallet.address);
 
         // Wait for contract to be deployed
         await claimIssuerContract.waitForDeployment();
 
         // Add keys for signing claims to the ClaimIssuer
         await claimIssuerContract
-            .connect(deployer)
+            .connect(issuerWallet)
             .addKey(
                 ethers.keccak256(
                     ethers.AbiCoder.defaultAbiCoder().encode(
                         ['address'],
-                        [deployer.address]
+                        [issuerWallet.address]
                     )
                 ),
                 SIGN_CLAIM_PURPOSE,

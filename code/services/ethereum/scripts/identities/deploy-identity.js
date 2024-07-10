@@ -20,17 +20,25 @@ async function deployIdentity(
     console.log('[!] Deploying identity for wallet with address:', address);
     const logs = [];
 
+    const identityContract = new ethers.ContractFactory(
+        Identity.abi,
+        Identity.bytecode,
+        deployer
+    );
+
     if (deployer === undefined) {
         deployer = useRpcProvider(config.rpc, config.deployer.privateKey);
     }
 
     try {
-        const tx_verify = await identityFactory
-            .connect(deployer)
-            .getIdentity(address);
+        const tx_verify = await identityFactory.getIdentity(address);
 
         if (tx_verify !== ethers.ZeroAddress) {
-            throw new WalletAlreadyLinked(tx_verify);
+            return new ethers.Contract(
+                tx_verify,
+                identityContract.interface.fragments,
+                deployer
+            );
         }
 
         const tx = await identityFactory
@@ -47,12 +55,6 @@ async function deployIdentity(
                 logs.push(item.args.identity);
             }
         });
-
-        const identityContract = new ethers.ContractFactory(
-            Identity.abi,
-            Identity.bytecode,
-            deployer
-        );
 
         return new ethers.Contract(
             logs[0],

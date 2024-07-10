@@ -38,7 +38,7 @@ const Validation = () => {
         <>
             <Background
                 header={
-                    <View style={{ marginTop: 65, height: '100%' }}>
+                    <View style={styles.header}>
                         <HeaderImage imageSource={Images.splashScreenImage} />
                     </View>
                 }
@@ -96,6 +96,10 @@ const Validation = () => {
 export default Validation;
 
 const styles = StyleSheet.create({
+    header: {
+        flex: 1,
+        justifyContent: 'center',
+    },
     title: {
         fontSize: 30,
         fontFamily: 'Poppins-ExtraBold',
