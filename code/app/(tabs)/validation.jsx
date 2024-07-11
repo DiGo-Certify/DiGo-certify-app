@@ -28,12 +28,6 @@ const Validation = () => {
         setValid(true);
     };
 
-    useEffect(() => {
-        if (valid) {
-            ValidatedModal({ visible: true, onDismiss: () => setValid(false), valid });
-        }
-    }, [valid]);
-
     return (
         <>
             <Background

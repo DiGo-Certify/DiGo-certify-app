@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, Linking, Modal, TextInput } from 'react-native';
-import { Appbar, Searchbar, List, IconButton, Card, Button, Text, Portal } from 'react-native-paper';
+import { View, StyleSheet, FlatList, Linking } from 'react-native';
+import { Appbar, Searchbar, List, IconButton, Card, Button, Text, Portal, Modal } from 'react-native-paper';
 import Background from '@/components/Background';
 import colors from '@/constants/colors';
 import FormField from '@/components/FormField';
@@ -43,12 +43,16 @@ const HomeScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [certificates, setCertificates] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [formData, setFormData] = useState({
+    const [form, setForm] = useState({
         name: '',
         studentNumber: '',
         institutionCode: '',
         OID: '',
     });
+
+    const onChangeForm = useCallback((newFormState) => {
+        setForm(newFormState);
+    }, []);
 
     useEffect(() => {
         async function fetchData() {
@@ -66,7 +70,7 @@ const HomeScreen = () => {
     );
 
     const handleFormSubmit = () => {
-        const { name, studentNumber, institutionCode, OID } = formData;
+        const { name, studentNumber, institutionCode, OID } = form;
         const emailBody = emailRequest(name, studentNumber, institutionCode, OID);
         const subject = encodeURIComponent('Pedido de Certificado');
         const body = encodeURIComponent(emailBody);
@@ -87,18 +91,16 @@ const HomeScreen = () => {
                         />
                     </Appbar.Header>
                 </View>
+
             }
             body={
                 <>
-                    <CertificateFormModal onDismiss={() => setModalVisible(false)}
-                                          visible={modalVisible}
-                                          onRequestClose={() => setModalVisible(!modalVisible)}
-                                          formData={formData}
-                                          onChangeText={text => setFormData({ ...formData, name: text })}
-                                          onChangeText1={text => setFormData({ ...formData, studentNumber: text })}
-                                          onChangeText2={text => setFormData({ ...formData, institutionCode: text })}
-                                          onChangeText3={text => setFormData({ ...formData, OID: text })}
-                                          onPress={handleFormSubmit}
+                    <CertificateFormModal
+                        onDismiss={() => setModalVisible(false)}
+                        visible={modalVisible}
+                        formData={form}
+                        onChangeForm={setForm}
+                        onPress={handleFormSubmit}
                     />
                     <View style={styles.body}>
                         <View style={styles.searchBarContainer}>
@@ -149,55 +151,60 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-function CertificateFormModal(props) {
+function CertificateFormModal({
+                                  visible,
+                                  onDismiss,
+                                  formData,
+                                  onChangeForm,
+                                  onPress,
+                              }) {
+    const handleChangeForm = (name, value) => {
+        onChangeForm(prevForm => ({
+            ...prevForm,
+            [name]: value,
+        }));
+    };
+
     return <Portal>
         <Modal
             animationType="slide"
-            onDismiss={props.onDismiss}
-            visible={props.visible}
-            onRequestClose={props.onRequestClose}
+            onDismiss={onDismiss}
+            visible={visible}
+            contentContainerStyle={styles.modalView}
         >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalTitle}>Request Certificate</Text>
-                    <FormField
-                        label="Name"
-                        value={props.formData.name}
-                        onChangeText={props.onChangeText}
-                        style={styles.modalInput}
-                    >
-                    </FormField>
-                    <FormField
-                        label="Student Number"
-                        value={props.formData.studentNumber}
-                        onChangeText={props.onChangeText1}
-                        style={styles.modalInput}
-                    >
-                    </FormField>
-                    <FormField
-                        label="Institution Code"
-                        value={props.formData.institutionCode}
-                        onChangeText={props.onChangeText2}
-                        style={styles.modalInput}
-                    >
-                    </FormField>
-                    <FormField
-                        label="OID"
-                        value={props.formData.OID}
-                        onChangeText={props.onChangeText3}
-                        style={styles.modalInput}
-                    >
-                    </FormField>
-                    <ActionButton
-                        text="Submit"
-                        onPress={props.onPress}
-                        textStyle={styles.modalButtonText}
-                        buttonStyle={styles.modalSubmitButton}
-                        mode={'elevated'}
-                        color={Colors.backgroundColor}
-                    />
-                </View>
-            </View>
+            <Text style={styles.modalTitle}>Request Certificate</Text>
+            <FormField
+                label="Name"
+                value={formData.name}
+                onChangeText={text => handleChangeForm('name', text)}
+                style={styles.modalInput}
+            />
+            <FormField
+                label="Student Number"
+                value={formData.studentNumber}
+                onChangeText={text => handleChangeForm('studentNumber', text)}
+                style={styles.modalInput}
+            />
+            <FormField
+                label="Institution Code"
+                value={formData.institutionCode}
+                onChangeText={text => handleChangeForm('institutionCode', text)}
+                style={styles.modalInput}
+            />
+            <FormField
+                label="OID"
+                value={formData.OID}
+                onChangeText={text => handleChangeForm('OID', text)}
+                style={styles.modalInput}
+            />
+            <ActionButton
+                text="Submit"
+                onPress={onPress}
+                textStyle={styles.modalButtonText}
+                buttonStyle={styles.modalSubmitButton}
+                mode={'elevated'}
+                color={Colors.backgroundColor}
+            />
         </Modal>
     </Portal>;
 }
@@ -205,12 +212,6 @@ function CertificateFormModal(props) {
 const styles = StyleSheet.create({
     topHeader: {
         backgroundColor: colors.solitudeGrey,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
     },
     modalView: {
         backgroundColor: colors.solitudeGrey,
