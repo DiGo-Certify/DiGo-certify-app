@@ -1,17 +1,18 @@
 const { ethers } = require('ethers');
 const { deployOnchainIDSuite } = require('./suites/OID');
 const { deployTrexSuite } = require('./suites/TREX');
-const { uploadConfig } = require('./utils/uploadConfiguration');
+const { uploadConfig } = require('../../config/uploadConfiguration');
 const config = require('../../../config.json');
 const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
 const { CLAIM_TOPICS } = require('./claims/claimTopics');
+const { useRpcProvider } = require('./utils/useRpcProvider');
+const { getContractAt, getWallet } = require('./utils/ethers');
 
 /**
  * Responsible for deploying into the Ethereum network the following contracts(addresses and ABIs):
  * - IdentityFactory contract (OID suite)
  * - TREX implementation authority contract (TREX suite)
- * - ClaimTopicsRegistry contract (TREX suite)
- *    - With the claim topics:      //TODO
+ *    claim topics:
  *      - INSTITUTION
  *      - CERTIFICATE
  *      - STUDENT
@@ -25,7 +26,7 @@ const { CLAIM_TOPICS } = require('./claims/claimTopics');
  */
 async function main() {
     const provider = new ethers.JsonRpcProvider(config.rpc);
-    const deployer = new ethers.Wallet(config.deployer.privateKey, provider);
+    const deployer = getWallet(config.deployer.privateKey, provider); // app owner private key
 
     const { identityFactoryAbi, identityFactoryAddress } =
         await deployOnchainIDSuite(deployer);
@@ -40,7 +41,7 @@ async function main() {
         token
     } = await deployTrexSuite(deployer);
 
-    const trustedIR = new ethers.Contract(
+    const trustedIR = getContractAt(
         trustedIssuersRegistry.address,
         trustedIssuersRegistry.abi,
         deployer
@@ -51,28 +52,19 @@ async function main() {
         await deployClaimIssuer(
             trustedIR,
             CLAIM_TOPICS,
-            new ethers.Wallet(
-                config.institutions[0].wallet.privateKey,
-                provider
-            ),
+            getWallet(config.institutions[0].wallet.privateKey, provider),
             deployer
         ),
         await deployClaimIssuer(
             trustedIR,
             CLAIM_TOPICS,
-            new ethers.Wallet(
-                config.institutions[1].wallet.privateKey,
-                provider
-            ),
+            getWallet(config.institutions[1].wallet.privateKey, provider),
             deployer
         ),
         await deployClaimIssuer(
             trustedIR,
             CLAIM_TOPICS,
-            new ethers.Wallet(
-                config.institutions[2].wallet.privateKey,
-                provider
-            ),
+            getWallet(config.institutions[2].wallet.privateKey, provider),
             deployer
         )
     ];

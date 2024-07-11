@@ -1,5 +1,4 @@
 const config = require('../../../../config.json');
-const { ethers } = require('ethers');
 const {
     WalletAlreadyLinked,
     SaltAlreadyTaken,
@@ -11,6 +10,7 @@ const {
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const getIdentity = require('./getIdentity');
+const { getContractAt } = require('../utils/ethers');
 
 async function deployIdentity(
     identityFactory,
@@ -39,7 +39,7 @@ async function deployIdentity(
         const identity = await getIdentity(address, identityFactory);
 
         if (identity !== null) {
-            return new ethers.Contract(
+            return getContractAt(
                 identity,
                 identityContract.interface.fragments,
                 deployer
@@ -61,7 +61,7 @@ async function deployIdentity(
             }
         });
 
-        return new ethers.Contract(
+        return getContractAt(
             logs[0],
             identityContract.interface.fragments,
             deployer

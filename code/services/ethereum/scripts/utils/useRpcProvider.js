@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const { getWallet } = require('../utils/ethers');
 
 /**
  * Auxiliary function that connects to the RPC provider
@@ -7,7 +8,7 @@ const ethers = require('ethers');
  */
 function useRpcProvider(url, signerPrivateKey) {
     const provider = new ethers.JsonRpcProvider(url);
-    signer = new ethers.Wallet(signerPrivateKey, provider); // app owner private key
+    signer = getWallet(signerPrivateKey, provider); // app owner private key
     return signer;
 }
 
