@@ -24,7 +24,8 @@
           "safe",
           "rainbow",
           "uniswap"
-        ]
+        ],
+        "CFBundleAllowMixedLocalizations": true
       },
       "bundleIdentifier": "com.digocertify"
     },
@@ -33,6 +34,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
+    },
+    "locales": {
+      "pt": "./languages/pt.json",
+      "en": "./languages/en.json",
+      "fr": "./languages/fr.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -4,12 +4,12 @@ import { Redirect, router } from 'expo-router';
 import { ActivityIndicator, Alert } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import Colors from '@/constants/colors';
-import { ethers } from 'ethers';
 import { getValueFor, save } from '@/services/storage/storage';
 import config from '@/config.json';
 import InitialScreen from './initial-screen/initial-screen';
 import useWalletConnect from '@/services/web3/wallet-connect.js';
 import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
+import { jsonRpcProvider } from '@/services/ethereum/scripts/utils/ethers';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ function App() {
 
     const connectToNode = async nodeAddress => {
         try {
-            const provider = new ethers.JsonRpcProvider(nodeAddress);
+            const provider = jsonRpcProvider(nodeAddress);
             const network = await provider.getNetwork();
             console.log(`Connected to network: ${network.name}`);
             setIsConnectedToNode(true);

@@ -9,10 +9,10 @@ import { List, ActivityIndicator } from 'react-native-paper';
 import { Redirect, router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
-import { ethers } from 'ethers';
 import config from '@/config.json';
 import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
+import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -55,7 +55,7 @@ const Profile = () => {
             }
             try {
                 const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-                const identityFactory = new ethers.Contract(
+                const identityFactory = getContractAt(
                     config.identityFactory.address,
                     config.identityFactory.abi,
                     signer

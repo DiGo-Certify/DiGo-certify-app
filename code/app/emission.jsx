@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
+import React, { useState } from 'react';
 import { Appbar, Title } from 'react-native-paper';
 import { router } from 'expo-router';
 import Images from '@/constants/images';
@@ -10,12 +10,12 @@ import FormField from '@/components/FormField';
 import Background from '@/components/Background';
 import addClaim from '@/services/ethereum/scripts/claims/add-claim';
 import config from '@/config.json';
-import { ethers } from 'ethers';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 import getIdentity from '@/services/ethereum/scripts/identities/getIdentity';
 import { getValueFor } from '@/services/storage/storage';
 import searchInstitution from '@/services/ethereum/scripts/utils/searchInstitution';
 import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
+import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethers';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -28,77 +28,83 @@ const Emission = () => {
     });
 
     const handleEmit = async () => {
-        setSubmitting(true);
-        if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
-            Alert.alert('Warning', 'Please fill the required fields.');
-            return;
-        }
+        try {
+            setSubmitting(true);
+            if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
+                Alert.alert('Warning', 'Please fill the required fields.');
+                return;
+            }
 
-        const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
+            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
-        // Get the identity of the student
-        const identityFactory = new ethers.Contract(config.identityFactory.address, config.identityFactory.abi, signer);
-        const identity = await getIdentity(form.walletAddr, identityFactory);
-        if (!identity) {
-            Alert.alert('Warning', 'Identity not found.');
+            // Get the identity of the student
+            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
+            const identity = await getIdentity(form.walletAddr, identityFactory);
+            if (!identity) {
+                Alert.alert('Warning', 'Identity not found.');
+                setSubmitting(false);
+                return;
+            }
+
+            // Check if the logged wallet is an admin
+            const walletAddr = await getValueFor('wallet_address');
+            const institution = searchInstitution(walletAddr.address);
+            if (institution.wallet.address === undefined) {
+                setSubmitting(false);
+                Alert.alert('Warning', 'You are not allowed to emit certificates.');
+                return;
+            }
+
+            const claimIssuerContract = getContractAt(institution.address, institution.abi, signer);
+
+            // Get the trusted issuers registry contract
+            const trustedIR = getContractAt(
+                config.trex.trustedIssuersRegistry.address,
+                config.trex.trustedIssuersRegistry.abi,
+                signer
+            );
+
+            const claimIssuerWallet = getWallet(institution.wallet.privateKey, signer.provider);
+
+            // Add claims
+            await addClaim(
+                trustedIR,
+                identity,
+                claimIssuerContract,
+                claimIssuerWallet,
+                CLAIM_TOPICS_OBJ.INSTITUTION,
+                form.courseID
+            ); // Course ID
+            await addClaim(
+                trustedIR,
+                identity,
+                claimIssuerContract,
+                claimIssuerWallet,
+                CLAIM_TOPICS_OBJ.INSTITUTION,
+                form.institutionID
+            ); // Institution ID
+            await addClaim(
+                trustedIR,
+                identity,
+                claimIssuerContract,
+                claimIssuerWallet,
+                CLAIM_TOPICS_OBJ.CERTIFICATE,
+                form.registrationCode
+            ); // Registration Code
+            await addClaim(
+                trustedIR,
+                identity,
+                claimIssuerContract,
+                claimIssuerWallet,
+                CLAIM_TOPICS_OBJ.CERTIFICATE,
+                form.certificateUri
+            ); // Certificate URI
             setSubmitting(false);
-            return;
-        }
-
-        // Check if the logged wallet is an admin
-        const walletAddr = await getValueFor('wallet_address');
-        const institution = searchInstitution(walletAddr.address);
-        if (institution.wallet.address === undefined) {
+        } catch (error) {
             setSubmitting(false);
-            Alert.alert('Warning', 'You are not allowed to emit certificates.');
-            return;
+            console.error(error);
+            Alert.alert('Unexpected error', 'An unexpected error occurred. Please try again.');
         }
-
-        const claimIssuerContract = new ethers.Contract(institution.address, institution.abi, signer);
-
-        // Get the trusted issuers registry contract
-        const trustedIR = new ethers.Contract(
-            config.trex.trustedIssuersRegistry.address,
-            config.trex.trustedIssuersRegistry.abi,
-            signer
-        );
-
-        const claimIssuerWallet = new ethers.Wallet(institution.wallet.privateKey, signer.provider);
-
-        // Add claims
-        await addClaim(
-            trustedIR,
-            identity,
-            claimIssuerContract,
-            claimIssuerWallet,
-            CLAIM_TOPICS_OBJ.INSTITUTION,
-            form.courseID
-        ); // Course ID
-        await addClaim(
-            trustedIR,
-            identity,
-            claimIssuerContract,
-            claimIssuerWallet,
-            CLAIM_TOPICS_OBJ.INSTITUTION,
-            form.institutionID
-        ); // Institution ID
-        await addClaim(
-            trustedIR,
-            identity,
-            claimIssuerContract,
-            claimIssuerWallet,
-            CLAIM_TOPICS_OBJ.CERTIFICATE,
-            form.registrationCode
-        ); // Registration Code
-        await addClaim(
-            trustedIR,
-            identity,
-            claimIssuerContract,
-            claimIssuerWallet,
-            CLAIM_TOPICS_OBJ.CERTIFICATE,
-            form.certificateUri
-        ); // Certificate URI
-        setSubmitting(false);
     };
 
     const handleUpload = () => {
