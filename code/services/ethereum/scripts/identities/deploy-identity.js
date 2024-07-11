@@ -11,6 +11,7 @@ const {
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const getIdentity = require('./getIdentity');
 const { getContractAt } = require('../utils/ethers');
+const { ethers } = require('ethers');
 
 async function deployIdentity(
     identityFactory,

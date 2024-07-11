@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Linking } from 'react-native';
 import { Appbar, Searchbar, List, IconButton, Card, Button, Text, Portal, Modal } from 'react-native-paper';
 import Background from '@/components/Background';
@@ -20,7 +20,6 @@ async function getCertificates() {
         { id: 5, title: 'Certificate 5' },
     ];
 }
-
 
 // Função modificada para usar os valores do estado do formulário
 const emailRequest = (name, studentNumber, institutionCode, OID) => {
@@ -50,10 +49,6 @@ const HomeScreen = () => {
         OID: '',
     });
 
-    const onChangeForm = useCallback((newFormState) => {
-        setForm(newFormState);
-    }, []);
-
     useEffect(() => {
         async function fetchData() {
             const data = await getCertificates();
@@ -63,10 +58,14 @@ const HomeScreen = () => {
         fetchData();
     }, []);
 
+    const handleChangeForm = (field, value) => {
+        setForm({ ...form, [field]: value });
+    };
+
     const handleSearch = query => setSearchQuery(query);
 
     const filteredCertificates = certificates.filter(certificate =>
-        certificate.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const handleFormSubmit = () => {
@@ -85,13 +84,9 @@ const HomeScreen = () => {
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
                         <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
-                        <Appbar.Action
-                            icon="plus"
-                            onPress={() => setModalVisible(true)}
-                        />
+                        <Appbar.Action icon="plus" onPress={() => setModalVisible(true)} />
                     </Appbar.Header>
                 </View>
-
             }
             body={
                 <>
@@ -99,7 +94,7 @@ const HomeScreen = () => {
                         onDismiss={() => setModalVisible(false)}
                         visible={modalVisible}
                         formData={form}
-                        onChangeForm={setForm}
+                        onChangeForm={handleChangeForm}
                         onPress={handleFormSubmit}
                     />
                     <View style={styles.body}>
@@ -121,18 +116,15 @@ const HomeScreen = () => {
                                             title={item.title}
                                             right={() => (
                                                 <View style={styles.certificateActions}>
-                                                    <IconButton icon="pencil" onPress={() => {
-                                                    }} />
+                                                    <IconButton icon="pencil" onPress={() => {}} />
                                                     <IconButton
                                                         icon="share"
-                                                        onPress={() => {
-                                                        }}
+                                                        onPress={() => {}}
                                                         style={{ alignItems: 'flex-end' }}
                                                     />
                                                     <IconButton
                                                         icon="arrow-down-circle"
-                                                        onPress={() => {
-                                                        }}
+                                                        onPress={() => {}}
                                                         style={{ alignItems: 'flex-end' }}
                                                     />
                                                 </View>
@@ -151,62 +143,51 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
-function CertificateFormModal({
-                                  visible,
-                                  onDismiss,
-                                  formData,
-                                  onChangeForm,
-                                  onPress,
-                              }) {
-    const handleChangeForm = (name, value) => {
-        onChangeForm(prevForm => ({
-            ...prevForm,
-            [name]: value,
-        }));
-    };
-
-    return <Portal>
-        <Modal
-            animationType="slide"
-            onDismiss={onDismiss}
-            visible={visible}
-            contentContainerStyle={styles.modalView}
-        >
-            <Text style={styles.modalTitle}>Request Certificate</Text>
-            <FormField
-                label="Name"
-                value={formData.name}
-                onChangeText={text => handleChangeForm('name', text)}
-                style={styles.modalInput}
-            />
-            <FormField
-                label="Student Number"
-                value={formData.studentNumber}
-                onChangeText={text => handleChangeForm('studentNumber', text)}
-                style={styles.modalInput}
-            />
-            <FormField
-                label="Institution Code"
-                value={formData.institutionCode}
-                onChangeText={text => handleChangeForm('institutionCode', text)}
-                style={styles.modalInput}
-            />
-            <FormField
-                label="OID"
-                value={formData.OID}
-                onChangeText={text => handleChangeForm('OID', text)}
-                style={styles.modalInput}
-            />
-            <ActionButton
-                text="Submit"
-                onPress={onPress}
-                textStyle={styles.modalButtonText}
-                buttonStyle={styles.modalSubmitButton}
-                mode={'elevated'}
-                color={Colors.backgroundColor}
-            />
-        </Modal>
-    </Portal>;
+function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPress }) {
+    return (
+        <Portal>
+            <Modal
+                animationType="slide"
+                onDismiss={onDismiss}
+                visible={visible}
+                contentContainerStyle={styles.modalView}
+            >
+                <Text style={styles.modalTitle}>Request Certificate</Text>
+                <FormField
+                    label="Name"
+                    value={formData.name}
+                    onChange={text => onChangeForm('name', text)}
+                    style={styles.modalInput}
+                />
+                <FormField
+                    label="Student Number"
+                    value={formData.studentNumber}
+                    onChangeText={text => onChangeForm('studentNumber', text)}
+                    style={styles.modalInput}
+                />
+                <FormField
+                    label="Institution Code"
+                    value={formData.institutionCode}
+                    onChange={text => onChangeForm('institutionCode', text)}
+                    style={styles.modalInput}
+                />
+                <FormField
+                    label="OID"
+                    value={formData.OID}
+                    onChange={text => onChangeForm('OID', text)}
+                    style={styles.modalInput}
+                />
+                <ActionButton
+                    text="Submit"
+                    onPress={onPress}
+                    textStyle={styles.modalButtonText}
+                    buttonStyle={styles.modalSubmitButton}
+                    mode={'elevated'}
+                    color={Colors.backgroundColor}
+                />
+            </Modal>
+        </Portal>
+    );
 }
 
 const styles = StyleSheet.create({
