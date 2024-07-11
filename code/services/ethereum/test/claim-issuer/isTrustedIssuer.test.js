@@ -5,7 +5,9 @@ const { ethers } = require('hardhat');
 const {
     deployClaimIssuer
 } = require('../../scripts/claimIssuer/deploy-claim-issuer');
-const isTrustedIssuer = require('../../scripts/claimIssuer/isTrustedIssuer');
+const {
+    isTrustedIssuer
+} = require('../../scripts/claimIssuer/isTrustedIssuer');
 
 describe('Verification of Trusted Issuer', () => {
     it('Should verify if claim issuer is trusted', async () => {

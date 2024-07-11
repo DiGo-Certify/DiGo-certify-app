@@ -1,6 +1,7 @@
 import '@walletconnect/react-native-compat';
 import React from 'react';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { save } from '@/services/storage/storage';
 
 const projectId = 'b57487c51107cc8b2509a12a8d028338';
 

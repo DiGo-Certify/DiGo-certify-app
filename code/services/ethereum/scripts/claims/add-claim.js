@@ -1,5 +1,6 @@
 const { ethers } = require('ethers');
-const isTrustedIssuer = require('../claimIssuer/isTrustedIssuer');
+const { isTrustedIssuer } = require('../claimIssuer/isTrustedIssuer');
+const { isSelfSigner } = require('../claimIssuer/isSelfSigner');
 const hash = require('../utils/hash');
 
 /**
@@ -23,7 +24,7 @@ async function addClaim(
     claimTopic,
     claimData,
     claimScheme = 1,
-    uri = '',
+    uri = ''
 ) {
     try {
         console.log(
@@ -31,10 +32,15 @@ async function addClaim(
             await receiverIdentity.getAddress()
         );
 
-        if (!(await isTrustedIssuer(TIR, claimIssuerContract))) {
-            throw new Error('[x] Claim issuer is not trusted');
+        if (
+            !(await isTrustedIssuer(TIR, claimIssuerContract)) &&
+            !(await isSelfSigner(claimIssuerContract, receiverIdentity))
+        ) {
+            throw new Error(
+                '[x] Claim issuer is not trusted neither self-signer'
+            );
         } else {
-            console.log('[✓] Claim issuer is trusted');
+            console.log('[✓] Claim issuer is trusted or self-signer');
 
             // Create the claim (see https://github.com/ethereum/EIPs/issues/735)
             const claim = {
@@ -47,7 +53,10 @@ async function addClaim(
                 claimId: ethers.keccak256(
                     ethers.AbiCoder.defaultAbiCoder().encode(
                         ['address', 'uint'],
-                        [await claimIssuerContract.getAddress(), ethers.id(claimTopic)]
+                        [
+                            await claimIssuerContract.getAddress(),
+                            ethers.id(claimTopic)
+                        ]
                     )
                 ),
                 uri: hash(uri)
@@ -65,6 +74,10 @@ async function addClaim(
                 )
             );
 
+            console.log('Claim signature:', claim.signature);
+            console.log('Claim Topic:', claim.topic);
+            console.log('Claim Data:', claim.data);
+
             // Verify the claim status
             const claimStatus = await claimIssuerContract.isClaimValid(
                 await receiverIdentity.getAddress(),
@@ -72,6 +85,8 @@ async function addClaim(
                 claim.signature,
                 claim.data
             );
+
+            console.log('Claim status:', claimStatus);
 
             if (!claimStatus) {
                 throw new Error('[x] Claim is not valid');
@@ -105,8 +120,6 @@ async function addClaim(
                 }
             });
 
-            
-
             return claimAdded;
         }
     } catch (err) {
@@ -115,4 +128,4 @@ async function addClaim(
     }
 }
 
-module.exports = addClaim;
+module.exports = { addClaim };

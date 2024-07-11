@@ -13,6 +13,7 @@ import config from '@/config.json';
 import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
+import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Settings Page
 const Profile = () => {
@@ -32,7 +33,7 @@ const Profile = () => {
         const fetchUserInfo = async () => {
             const userInfo = await getValueFor('user_info');
             const profileImage = await getValueFor('profile_image');
-            const walletAddress = await getValueFor('wallet_address');
+            const walletAddress = await getValueFor('wallet');
             if (userInfo && walletAddress) {
                 setProfile(() => ({
                     username: userInfo.username,
@@ -60,7 +61,7 @@ const Profile = () => {
                     config.identityFactory.abi,
                     signer
                 );
-                const user_salt = profile.username + '-' + 'salt';
+                const user_salt = uuidv4();
                 const idContract = await deployIdentity(identityFactory, address, user_salt, signer);
                 if (idContract) {
                     const idAddress = await idContract.getAddress();

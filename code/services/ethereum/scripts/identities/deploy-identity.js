@@ -9,7 +9,7 @@ const {
     contracts: { Identity }
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
-const getIdentity = require('./getIdentity');
+const { getIdentity } = require('./getIdentity');
 const { getContractAt } = require('../utils/ethers');
 const { ethers } = require('ethers');
 

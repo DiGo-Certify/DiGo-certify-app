@@ -9,7 +9,7 @@ import config from '@/config.json';
 import InitialScreen from './initial-screen/initial-screen';
 import useWalletConnect from '@/services/web3/wallet-connect.js';
 import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
-import { jsonRpcProvider } from '@/services/ethereum/scripts/utils/ethers';
+import { ethers } from 'ethers';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -17,36 +17,20 @@ function App() {
     const { isConnected, address, handlePress, error, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
-        let intervalId;
-
-        if (!isConnectedToNode) {
-            intervalId = setInterval(async () => {
-                await connectToNode(config.rpc); //? Não deveria ter await?
-            }, 5000);
-        }
-
-        return () => {
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
-        };
-    }, [isConnectedToNode]);
-
-    useEffect(() => {
         const checkWalletConnection = async () => {
             const userInfo = await getValueFor('user_info');
-            const walletAddress = await getValueFor('wallet_address');
+            const walletAddress = await getValueFor('wallet');
             if (userInfo && walletAddress) {
                 <Redirect to="/profile" />;
             }
             setLoading(false);
         };
         checkWalletConnection();
-    }, []);
+    }, [isConnectedToNode]);
 
     const connectToNode = async nodeAddress => {
         try {
-            const provider = jsonRpcProvider(nodeAddress);
+            const provider = new ethers.JsonRpcProvider(nodeAddress);
             const network = await provider.getNetwork();
             console.log(`Connected to network: ${network.name}`);
             setIsConnectedToNode(true);
@@ -57,7 +41,7 @@ function App() {
 
     useEffect(() => {
         if (isConnected && address) {
-            save('wallet_address', JSON.stringify({ address: address }));
+            save('wallet', JSON.stringify({ address: address }));
             // Verify if the wallet is an admin wallet (searching in the config file)
             if (isAdminWallet(address)) {
                 save('user_type', JSON.stringify({ type: 'Admin' }));

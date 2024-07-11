@@ -9,24 +9,39 @@ const { ethers } = require('ethers');
  * @returns
  */
 function getContractAt(address, abi, signer) {
-    return new ethers.Contract(address, abi, signer);
+    try {
+        return new ethers.Contract(address, abi, signer);
+    } catch (error) {
+        console.error('Error getting contract at address: ', address);
+        return null;
+    }
 }
 
 /**
  * Auxiliary function to get a wallet instance
  * @param {*} privateKey - The private key of the wallet
  * @param {*} provider - The provider associated to the wallet
- * @returns 
+ * @returns
  */
 function getWallet(privateKey, provider) {
-    return new ethers.Wallet(privateKey, provider);
+    try {
+        return new ethers.Wallet(privateKey, provider);
+    } catch (error) {
+        console.error('Error getting wallet with private key: ', privateKey);
+        return null;
+    }
 }
 
 /**
- * Auxiliary function to get a provider instance for a given node address 
+ * Auxiliary function to get a provider instance for a given node address
  */
 function jsonRpcProvider(nodeAddress) {
-    return new ethers.JsonRpcProvider(nodeAddress);
+    try {
+        return new ethers.JsonRpcProvider(nodeAddress);
+    } catch (error) {
+        console.error('Error getting provider for node address: ', nodeAddress);
+        throw error;
+    }
 }
 
 module.exports = { getContractAt, getWallet, jsonRpcProvider };

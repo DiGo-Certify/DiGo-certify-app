@@ -11,7 +11,7 @@ import { Button } from 'react-native-paper';
 // };
 
 //Using button from rn-paper
-const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color, mode }) => {
+const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color, mode, disabled }) => {
     return (
         <Button
             icon={icon}
@@ -21,6 +21,7 @@ const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, 
             style={buttonStyle}
             labelStyle={textStyle}
             buttonColor={color}
+            disabled={disabled}
         >
             {text}
         </Button>

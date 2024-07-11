@@ -5,6 +5,7 @@ const white = '#FFFFFF';
 const grey = '#A9A9A9';
 const sonicSilver = '#787D8C';
 const solitudeGrey = '#F2F5FC';
+const caution = '#FFA500';
 
 export default {
     backgroundColor,
@@ -14,4 +15,5 @@ export default {
     grey,
     sonicSilver,
     solitudeGrey,
+    caution,
 };

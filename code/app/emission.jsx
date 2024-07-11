@@ -8,14 +8,15 @@ import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import FormField from '@/components/FormField';
 import Background from '@/components/Background';
-import addClaim from '@/services/ethereum/scripts/claims/add-claim';
+import { addClaim } from '@/services/ethereum/scripts/claims/add-claim';
 import config from '@/config.json';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
-import getIdentity from '@/services/ethereum/scripts/identities/getIdentity';
+import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
 import { getValueFor } from '@/services/storage/storage';
 import searchInstitution from '@/services/ethereum/scripts/utils/searchInstitution';
 import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
 import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethers';
+import { ethers } from 'ethers';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -47,7 +48,7 @@ const Emission = () => {
             }
 
             // Check if the logged wallet is an admin
-            const walletAddr = await getValueFor('wallet_address');
+            const walletAddr = await getValueFor('wallet');
             const institution = searchInstitution(walletAddr.address);
             if (institution.wallet.address === undefined) {
                 setSubmitting(false);
@@ -64,7 +65,8 @@ const Emission = () => {
                 signer
             );
 
-            const claimIssuerWallet = getWallet(institution.wallet.privateKey, signer.provider);
+            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const claimIssuerWallet = getWallet(institution.wallet.privateKey, provider);
 
             // Add claims
             await addClaim(
@@ -180,6 +182,7 @@ const Emission = () => {
                         isLoading={isSubmitting}
                         mode={'elevated'}
                         color={Colors.backgroundColor}
+                        disabled={isSubmitting}
                     />
                 </View>
             }

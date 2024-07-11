@@ -37,4 +37,4 @@ async function getIdentity(address, identityFactory, signer = undefined) {
     }
 }
 
-module.exports = getIdentity;
+module.exports = { getIdentity };

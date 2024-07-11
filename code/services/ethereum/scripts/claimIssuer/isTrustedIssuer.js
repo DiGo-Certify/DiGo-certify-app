@@ -1,13 +1,13 @@
 const { ethers } = require('ethers');
 const config = require('../../../../config.json');
 const { useRpcProvider } = require('../utils/useRpcProvider');
- 
+
 /**
  * Verifies if a claim issuer is trusted by the Trusted Issuers Registry (TIR)
  * so it can send and sign claims
- * 
- * @param {*} TIR 
- * @param {*} claimIssuer 
+ *
+ * @param {*} TIR
+ * @param {*} claimIssuer
  */
 async function isTrustedIssuer(TIR, claimIssuer) {
     try {
@@ -20,4 +20,4 @@ async function isTrustedIssuer(TIR, claimIssuer) {
     }
 }
 
-module.exports = isTrustedIssuer
+module.exports = { isTrustedIssuer };

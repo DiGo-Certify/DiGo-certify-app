@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, FlatList, Linking } from 'react-native';
+import { View, StyleSheet, FlatList, Linking, Alert } from 'react-native';
 import { Appbar, Searchbar, List, IconButton, Card, Button, Text, Portal, Modal } from 'react-native-paper';
 import Background from '@/components/Background';
 import colors from '@/constants/colors';
 import FormField from '@/components/FormField';
 import Colors from '@/constants/colors';
 import ActionButton from '@/components/ActionButton';
+import { addClaim } from '@/services/ethereum/scripts/claims/add-claim';
+import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
+import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
+import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
+import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
+import config from '@/config.json';
+import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
 
 // Simulate fetching data from the blockchain
 async function getCertificates() {
@@ -41,13 +48,22 @@ const emailRequest = (name, studentNumber, institutionCode, OID) => {
 const HomeScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [certificates, setCertificates] = useState([]);
+    const [privKeyModalVisible, setPrivKeyModalVisible] = useState(false);
+    const [privateKey, setPrivateKey] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         name: '',
         studentNumber: '',
         institutionCode: '',
         OID: '',
     });
+
+    useEffect(() => {
+        if (!modalVisible) {
+            setIsSubmitting(false);
+        }
+    }, [modalVisible]);
 
     useEffect(() => {
         async function fetchData() {
@@ -68,14 +84,72 @@ const HomeScreen = () => {
         certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleFormSubmit = () => {
-        const { name, studentNumber, institutionCode, OID } = form;
-        const emailBody = emailRequest(name, studentNumber, institutionCode, OID);
-        const subject = encodeURIComponent('Pedido de Certificado');
-        const body = encodeURIComponent(emailBody);
-        const url = `mailto:licenciaturas@isel.pt?subject=${subject}&body=${body}`;
-        Linking.openURL(url);
-        setModalVisible(false); // Fechar o modal após o envio
+    const onSubmitPrivateKey = async () => {
+        const userWallet = await getValueFor('wallet');
+        userWallet.privateKey = privateKey;
+        await save('wallet', JSON.stringify({ ...userWallet, privateKey: privateKey }));
+        setPrivKeyModalVisible(false);
+    };
+
+    const requestCertificateHandle = async () => {
+        const userWallet = await getValueFor('wallet');
+        if (userWallet.privateKey === undefined) {
+            Alert.alert(
+                'Private Key Required',
+                'Please enter your private key to request a certificate and make sure to do not send this to anyone',
+                [
+                    {
+                        text: 'Enter Private Key',
+                        onPress: () => setPrivKeyModalVisible(true),
+                    },
+                ]
+            );
+        } else {
+            setModalVisible(true);
+        }
+    };
+
+    const handleFormSubmit = async () => {
+        try {
+            setIsSubmitting(true);
+            const { name, studentNumber, institutionCode, OID } = form;
+            const emailBody = emailRequest(name, studentNumber, institutionCode, OID);
+            const subject = encodeURIComponent('Pedido de Certificado');
+            const body = encodeURIComponent(emailBody);
+            const url = `mailto:licenciaturas@isel.pt?subject=${subject}&body=${body}`;
+
+            // Add self claim of student number and student name (CLAIM TOPICS: STUDENT)
+
+            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
+
+            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
+
+            const userIdentity = await getIdentity(userWallet.address, identityFactory);
+
+            // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
+            // With this the student is allowing the institution to emit certificates on his behalf
+            const trustedIR = getContractAt(
+                config.trex.trustedIssuersRegistry.address,
+                config.trex.trustedIssuersRegistry.abi,
+                signer
+            );
+
+            await addClaim(
+                trustedIR,
+                userIdentity,
+                userIdentity,
+                userIdentity.runner,
+                CLAIM_TOPICS_OBJ.STUDENT,
+                form.name
+            );
+
+            Linking.openURL(url);
+            setIsSubmitting(false);
+            setModalVisible(false); // Fechar o modal após o envio
+        } catch (error) {
+            console.log(error);
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -84,7 +158,7 @@ const HomeScreen = () => {
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
                         <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
-                        <Appbar.Action icon="plus" onPress={() => setModalVisible(true)} />
+                        <Appbar.Action icon="plus" onPress={requestCertificateHandle} />
                     </Appbar.Header>
                 </View>
             }
@@ -96,6 +170,14 @@ const HomeScreen = () => {
                         formData={form}
                         onChangeForm={handleChangeForm}
                         onPress={handleFormSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                    <PrivateKeyModal
+                        visible={privKeyModalVisible}
+                        onDismiss={() => setPrivKeyModalVisible(false)}
+                        privateKey={privateKey}
+                        onChangePrivateKey={text => setPrivateKey(text)}
+                        onSubmitPrivateKey={onSubmitPrivateKey}
                     />
                     <View style={styles.body}>
                         <View style={styles.searchBarContainer}>
@@ -141,9 +223,44 @@ const HomeScreen = () => {
     );
 };
 
-export default HomeScreen;
+// /**
+//  * Add self claims (nummber and name) to the student identity
+//  */
+// async function addStudentSelfClaims(userIdentity, studentName, studentNumber, provider) {
 
-function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPress }) {
+// }
+
+function PrivateKeyModal({ visible, onDismiss, privateKey, onChangePrivateKey, onSubmitPrivateKey }) {
+    return (
+        <Portal>
+            <Modal
+                animationType="slide"
+                onDismiss={onDismiss}
+                visible={visible}
+                contentContainerStyle={styles.modalView}
+            >
+                <Text style={styles.modalTitle}>Private Key</Text>
+                <Text style={styles.modalSubtitleText}>Don't Share with anyone that you don't trust!</Text>
+                <FormField
+                    label="Private Key"
+                    value={privateKey}
+                    onChange={onChangePrivateKey}
+                    style={styles.modalInput}
+                />
+                <ActionButton
+                    text="Add"
+                    onPress={onSubmitPrivateKey}
+                    textStyle={styles.modalButtonText}
+                    buttonStyle={styles.modalSubmitButton}
+                    mode={'elevated'}
+                    color={Colors.backgroundColor}
+                />
+            </Modal>
+        </Portal>
+    );
+}
+
+function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPress, isSubmitting }) {
     return (
         <Portal>
             <Modal
@@ -162,7 +279,7 @@ function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPr
                 <FormField
                     label="Student Number"
                     value={formData.studentNumber}
-                    onChangeText={text => onChangeForm('studentNumber', text)}
+                    onChange={text => onChangeForm('studentNumber', text)}
                     style={styles.modalInput}
                 />
                 <FormField
@@ -184,6 +301,8 @@ function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPr
                     buttonStyle={styles.modalSubmitButton}
                     mode={'elevated'}
                     color={Colors.backgroundColor}
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
                 />
             </Modal>
         </Portal>
@@ -208,6 +327,11 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
     },
+    modalSubtitleText: {
+        fontSize: 20,
+        fontFamily: 'Poppins-Bold',
+        color: Colors.caution,
+    },
     modalInput: {
         justifyContent: 'center',
         marginTop: 20,
@@ -220,6 +344,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 4,
         borderColor: Colors.white,
+        backgroundColor: Colors.green,
         elevation: 5,
         alignSelf: 'center',
         width: '80%',
@@ -266,3 +391,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 });
+
+export default HomeScreen;
