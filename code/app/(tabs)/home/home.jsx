@@ -109,11 +109,6 @@ const HomeScreen = () => {
         }
     };
 
-    const handlePrivKeyModalDismiss = () => {
-        setPrivKeyModalVisible(false);
-        setModalVisible(true);
-    };
-
     const handleFormSubmit = async () => {
         try {
             setIsSubmitting(true);
@@ -141,12 +136,20 @@ const HomeScreen = () => {
             // Get the identity of the user
             const userIdentity = await getIdentity(savedWallet.address, identityFactory);
 
+            if (!userIdentity) {
+                Alert.alert('Warning', `Identity for wallet: ${savedWallet.address} not found.`);
+                setIsSubmitting(false);
+                return;
+            }
+
             // Create the user wallet object (ethers.Wallet)
             const userWallet = getWallet(savedWallet.privateKey, provider);
 
             // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
             // With this the student is allowing the institution to emit certificates on his behalf
             const issuers = await trustedIR.getTrustedIssuersForClaimTopic(ethers.id(CLAIM_TOPICS_OBJ.INSTITUTION));
+
+            console.log('userIdentity', userIdentity);
 
             for (const issuer of issuers) {
                 // Get contract of the issuer, by searching the issuer address in the configuration file
@@ -200,7 +203,7 @@ const HomeScreen = () => {
                     />
                     <PrivateKeyModal
                         visible={privKeyModalVisible}
-                        onDismiss={handlePrivKeyModalDismiss}
+                        onDismiss={() => setPrivKeyModalVisible(false)}
                         privateKey={privateKey}
                         onChangePrivateKey={text => setPrivateKey(text)}
                         onSubmitPrivateKey={onSubmitPrivateKey}

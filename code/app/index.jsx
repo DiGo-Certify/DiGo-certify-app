@@ -12,6 +12,7 @@ import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-id
 import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
 import { v4 as uuidv4 } from 'uuid';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
+import config from '@/config.json';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -26,7 +27,8 @@ function App() {
                 if (!isAdminWallet(walletAddress.address)) {
                     deployUserIdentity();
                 }
-                router.replace('/profile');
+                setLoading(false);
+                return router.replace('/profile');
             }
             setLoading(false);
         };

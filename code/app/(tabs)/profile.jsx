@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import config from '@/config.json';
+import SettingsModal from '@/components/SettingsModal';
 
 const Profile = () => {
     const [onSettings, setOnSettings] = useState(false);
@@ -61,13 +62,14 @@ const Profile = () => {
 
     useEffect(() => {
         if (address) {
-            getValueFor('wallet').then(wallet => {
+            const wallet = getValueFor('wallet').then(wallet => {
                 if (wallet && wallet.address === address) {
                     return;
                 }
+                return wallet;
             });
             const saveWalletAddress = async () => {
-                await save('wallet', JSON.stringify({ address }));
+                await save('wallet', JSON.stringify({ address: address, privateKey: wallet.privateKey }));
                 setProfile(currentProfile => ({
                     ...currentProfile,
                     wallet: address,
