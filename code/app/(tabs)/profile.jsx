@@ -6,7 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { List, ActivityIndicator } from 'react-native-paper';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
+import SettingsModal from '@/components/SettingsModal';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import config from '@/config.json';
@@ -15,8 +16,10 @@ import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider
 import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
 import { v4 as uuidv4 } from 'uuid';
 
-// TODO: Settings Page
 const Profile = () => {
+    const [onSettings, setOnSettings] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
     const [profile, setProfile] = useState({
         username: '',
         image: Images.mockupProfileImage,
@@ -24,10 +27,6 @@ const Profile = () => {
         since: '2024',
         OID: '',
     });
-
-    const [isSaving, setIsSaving] = useState(false);
-
-    const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -78,12 +77,13 @@ const Profile = () => {
         deployUserIdentity();
     }, [address]);
 
-    //! Handle wallet connect with (To be used on settings)
     const handleWalletConnect = async () => {
         console.log('Connecting wallet...');
         setIsSaving(true);
         await handlePress();
     };
+
+    useEffect(() => {}, []);
 
     // Handle logout
     const handleLogout = () => {
@@ -99,7 +99,26 @@ const Profile = () => {
         );
     };
 
-    const pickImage = async () => {
+    useEffect(() => {
+        if (address) {
+            getValueFor('wallet').then(wallet => {
+                if (wallet && wallet.address === address) {
+                    return;
+                }
+            });
+            const saveWalletAddress = async () => {
+                await save('wallet', JSON.stringify({ address }));
+                setProfile(currentProfile => ({
+                    ...currentProfile,
+                    wallet: address,
+                }));
+                setIsSaving(false);
+            };
+            saveWalletAddress();
+        }
+    }, [address]);
+
+    const handlePickImage = async () => {
         let result = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (result.granted === false) {
             Alert.alert('Permission to access camera roll is required!');
@@ -125,7 +144,7 @@ const Profile = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.profile}>
-                <ProfileImage source={profile.image} pickImage={pickImage} />
+                <ProfileImage source={profile.image} pickImage={handlePickImage} />
                 <ProfileInfo username={profile.username} since={profile.since} />
             </View>
             <View style={styles.walletAccount}>
@@ -135,8 +154,6 @@ const Profile = () => {
                     disabled={isConnected}
                     isLoading={isSaving}
                 />
-                {/* Revise the need of this button */}
-                {/* <WalletInfo title="Account" info="Account information" /> */}
             </View>
             <View style={styles.options}>
                 <ListItem title="Your favorite" onPress={() => console.log('Favorite')} icon={Icons.favorite} />
@@ -145,9 +162,17 @@ const Profile = () => {
                     onPress={() => console.log('Tell your friends')}
                     icon={Icons.send}
                 />
-                <ListItem title="Settings" onPress={() => console.log('Settings')} icon={Icons.settings} />
+                <ListItem title="Settings" onPress={() => setOnSettings(true)} icon={Icons.settings} />
                 <ListItem title="Log out" onPress={handleLogout} icon={Icons.logOut} />
             </View>
+            {onSettings && (
+                <SettingsModal
+                    isVisible={onSettings}
+                    onDismiss={() => setOnSettings(false)}
+                    onChangeWallet={handleWalletConnect}
+                    onRequestAdmin={() => console.log('Request Admin')}
+                />
+            )}
             {WalletConnectModal}
         </SafeAreaView>
     );
@@ -164,7 +189,6 @@ const ProfileImage = ({ source, pickImage }) => (
 const ProfileInfo = ({ username, from, since }) => (
     <View style={styles.profileInfo}>
         <Text style={styles.username}>{username}</Text>
-        {/* <Text style={styles.info}>{from}</Text> */}
         <Text style={styles.info}>{'Since ' + since}</Text>
     </View>
 );

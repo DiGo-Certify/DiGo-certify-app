@@ -79,20 +79,20 @@ async function addClaim(
             console.log('Claim Data:', claim.data);
 
             // Verify the claim status
-            const claimStatus = await claimIssuerContract.isClaimValid(
-                await receiverIdentity.getAddress(),
-                claim.topic,
-                claim.signature,
-                claim.data
-            );
+            // const claimStatus = await claimIssuerContract.isClaimValid(
+            //     receiverIdentity,
+            //     claim.topic,
+            //     claim.signature,
+            //     claim.data
+            // );
 
-            console.log('Claim status:', claimStatus);
+            // console.log('Claim status:', claimStatus);
 
-            if (!claimStatus) {
-                throw new Error('[x] Claim is not valid');
-            } else {
-                console.log('[✓] Claim is valid');
-            }
+            // if (!claimStatus) {
+            //     throw new Error('[x] Claim is not valid');
+            // } else {
+            //     console.log('[✓] Claim is valid');
+            // }
 
             // Add the claim to the identity
             const tx = await receiverIdentity

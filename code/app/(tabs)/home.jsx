@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Linking, Alert } from 'react-native';
-import { Appbar, Searchbar, List, IconButton, Card, Button, Text, Portal, Modal } from 'react-native-paper';
+import { Appbar, Searchbar, List, IconButton, Card, Text, Portal, Modal } from 'react-native-paper';
 import Background from '@/components/Background';
 import colors from '@/constants/colors';
 import FormField from '@/components/FormField';
@@ -8,11 +8,11 @@ import Colors from '@/constants/colors';
 import ActionButton from '@/components/ActionButton';
 import { addClaim } from '@/services/ethereum/scripts/claims/add-claim';
 import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
-import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
+import { getValueFor, save } from '@/services/storage/storage';
 import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
-import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 import config from '@/config.json';
 import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
+import { ethers } from 'ethers';
 
 // Simulate fetching data from the blockchain
 async function getCertificates() {
@@ -119,9 +119,9 @@ const HomeScreen = () => {
             const url = `mailto:licenciaturas@isel.pt?subject=${subject}&body=${body}`;
 
             // Add self claim of student number and student name (CLAIM TOPICS: STUDENT)
-
-            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-
+            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const signer = new ethers.Wallet(config.deployer.privateKey, provider);
+            const userWallet = await getValueFor('wallet');
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
 
             const userIdentity = await getIdentity(userWallet.address, identityFactory);
@@ -134,14 +134,9 @@ const HomeScreen = () => {
                 signer
             );
 
-            await addClaim(
-                trustedIR,
-                userIdentity,
-                userIdentity,
-                userIdentity.runner,
-                CLAIM_TOPICS_OBJ.STUDENT,
-                form.name
-            );
+            const walletAddr = new ethers.Wallet(userWallet.privateKey, provider);
+
+            await addClaim(trustedIR, userIdentity, userIdentity, walletAddr, CLAIM_TOPICS_OBJ.STUDENT, form.name);
 
             Linking.openURL(url);
             setIsSubmitting(false);
