@@ -74,26 +74,6 @@ async function addClaim(
                 )
             );
 
-            console.log('Claim signature:', claim.signature);
-            console.log('Claim Topic:', claim.topic);
-            console.log('Claim Data:', claim.data);
-
-            // Verify the claim status
-            // const claimStatus = await claimIssuerContract.isClaimValid(
-            //     receiverIdentity,
-            //     claim.topic,
-            //     claim.signature,
-            //     claim.data
-            // );
-
-            // console.log('Claim status:', claimStatus);
-
-            // if (!claimStatus) {
-            //     throw new Error('[x] Claim is not valid');
-            // } else {
-            //     console.log('[✓] Claim is valid');
-            // }
-
             // Add the claim to the identity
             const tx = await receiverIdentity
                 .connect(claimIssuerWallet)
@@ -116,6 +96,12 @@ async function addClaim(
                     item.eventName === 'ClaimAdded'
                 ) {
                     console.log('[✓] Claim added:', item.args.claimId);
+                    claimAdded = item.args;
+                } else if (
+                    item.eventName !== undefined &&
+                    item.eventName === 'ClaimChanged'
+                ) {
+                    console.log('[i] Claim Changed:', item.args.claimId);
                     claimAdded = item.args;
                 }
             });

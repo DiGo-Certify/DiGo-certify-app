@@ -18,13 +18,10 @@ async function addKeyToIdentity(
     keyType
 ) {
     try {
-
-        // console.log(
-        //     '[!] Adding key to Identity w/ Wallet: ',
-        //     await identityWallet.getAddress()
-        // );
-
-        console.log(identityWallet)
+        console.log(
+            '[!] Adding key to Identity w/ Wallet: ',
+            identityWallet.address
+        );
 
         // Add the key to the identity
         const tx = await identity.connect(identityWallet).addKey(
@@ -37,9 +34,6 @@ async function addKeyToIdentity(
             keyPurpose, // KeyPurpose.CLAIM_SIGNER
             keyType // KeyType.ECDSA
         );
-
-        console.log(tx)
-
 
         const tx_receipt = await tx.wait();
 
