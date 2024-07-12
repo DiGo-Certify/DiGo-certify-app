@@ -2,7 +2,6 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { PaperProvider } from 'react-native-paper';
-import { App } from '.';
 
 SplashScreen.preventAutoHideAsync();
 
