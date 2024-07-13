@@ -21,11 +21,9 @@ const Validation = () => {
     };
 
     const handleValidate = () => {
-        // validate certificate
-        //! Needs to be implemented
-        // ...
-        const valid = true;
-        //
+        // Validate the claiom that has the link to the certificate (claimTopic CERTIFICATE)
+        
+
         setValid(true);
     };
 

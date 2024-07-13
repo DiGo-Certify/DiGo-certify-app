@@ -16,34 +16,31 @@ import PrivateKeyModal from './components/privateKeyModal';
 import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 
-
 async function getCertificates() {
     try {
-
         // 'Name' Licenciado in 'course code' at 'institution code', available at 'uri'
         const userWallet = await getValueFor('wallet');
 
         const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
         console.log('User Wallet:', userWallet);
-    
+
         const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
         const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
-    
-        console.log('User Identity:', userIdentity);    
-    
+
+        console.log('User Identity:', userIdentity);
+
         const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
         const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
         const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
-    
-        console.log(certificates)
-        console.log(institutions)
-        console.log(students)
+
+        console.log(certificates);
+        console.log(institutions);
+        console.log(students);
     } catch (error) {
         console.log(error);
         throw error;
     }
-
 }
 
 // Função modificada para usar os valores do estado do formulário
@@ -104,8 +101,12 @@ const HomeScreen = () => {
 
     const onSubmitPrivateKey = async () => {
         const userWallet = await getValueFor('wallet');
-        userWallet.privateKey = privateKey;
-        await save('wallet', JSON.stringify({ ...userWallet, privateKey: privateKey }));
+        if (privateKey.startsWith('0x')) {
+            userWallet.privateKey = privateKey;
+        } else {
+            userWallet.privateKey = `0x${privateKey}`;
+        }
+        await save('wallet', JSON.stringify({ ...userWallet, privateKey: userWallet.privateKey }));
         setPrivKeyModalVisible(false);
     };
 
@@ -186,7 +187,10 @@ const HomeScreen = () => {
 
             for (const issuer of issuers) {
                 for (const institution of config.institutions) {
-                    if (institution.address === issuer && institution.institutionID.toString() === form.institutionCode) {
+                    if (
+                        institution.address === issuer &&
+                        institution.institutionID.toString() === form.institutionCode
+                    ) {
                         const issuerWallet = getWallet(institution.wallet.privateKey, provider);
                         await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
                     }
