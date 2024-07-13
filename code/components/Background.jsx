@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.backgroundColor,
     },
     header: {
-        flex: 0.35,
+        flex: 0.4,
         width: '100%',
         alignItems: 'center',
     },

@@ -9,7 +9,6 @@ import { List, ActivityIndicator } from 'react-native-paper';
 import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
-import config from '@/config.json';
 import SettingsModal from '@/components/SettingsModal';
 
 const Profile = () => {
@@ -50,7 +49,7 @@ const Profile = () => {
     const handleLogout = () => {
         removeValueFor('OID').then(() =>
             removeValueFor('user_info').then(() =>
-                removeValueFor('wallet_adress').then(async () => {
+                removeValueFor('wallet').then(async () => {
                     if (isConnected) {
                         await handlePress();
                     }
@@ -198,7 +197,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-SemiBold',
     },
     info: {
-        fontSize: 16,
+        paddingTop: 10,
+        fontSize: 15,
         fontFamily: 'Poppins-Regular',
     },
     walletAccount: {

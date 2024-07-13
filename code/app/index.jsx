@@ -81,7 +81,7 @@ function App() {
     }, [error]);
 
     const handleGuestPress = () => {
-        save('user_type', JSON.stringify({ type: 'Guest' }));
+        save('user_type', JSON.stringify({ type: 'Admin' }));
         return router.replace('/(tabs)/validation');
     };
 

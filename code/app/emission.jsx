@@ -16,10 +16,15 @@ import { getValueFor } from '@/services/storage/storage';
 import searchInstitution from '@/services/ethereum/scripts/utils/searchInstitution';
 import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
 import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethers';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import * as Crypto from 'expo-crypto';
 import { ethers } from 'ethers';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
+    const [fileInfo, setFileInfo] = useState(null);
+    const [fileHash, setFileHash] = useState(null);
     const [form, setForm] = useState({
         registrationCode: '',
         courseID: '',
@@ -33,6 +38,7 @@ const Emission = () => {
             setSubmitting(true);
             if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
                 Alert.alert('Warning', 'Please fill the required fields.');
+                setSubmitting(false);
                 return;
             }
 
@@ -109,19 +115,38 @@ const Emission = () => {
         }
     };
 
-    const handleUpload = () => {
-        // Upload certificate
+    const handleUpload = async () => {
+        try {
+            console.log('Uploading certificate...');
+            const result = await DocumentPicker.getDocumentAsync({
+                type: '*/*',
+                copyToCacheDirectory: true,
+            });
+
+            if (result) {
+                const { uri, name, size } = result.assets[0];
+                setFileInfo({ uri, name, size });
+                const fileContents = await FileSystem.readAsStringAsync(uri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+
+                const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, fileContents);
+                setFileHash(hash);
+            }
+        } catch (error) {
+            console.error('Error picking document:', error);
+        }
     };
 
     return (
         <Background
             header={
                 <View style={styles.header}>
-                    <Appbar.Header style={styles.topHeader}>
+                    <Appbar.Header>
                         <Appbar.BackAction onPress={() => router.back()} />
                         <Appbar.Content title="Certificate Emission" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
                     </Appbar.Header>
-                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ alignSelf: 'center', marginTop: 16 }}>
                         <HeaderImage imageSource={Images.splashScreenImage} />
                     </View>
                 </View>
@@ -167,7 +192,7 @@ const Emission = () => {
                             onPress={handleUpload}
                             color={Colors.green}
                             buttonStyle={styles.upload}
-                            isLoading={isSubmitting}
+                            disabled={isSubmitting}
                         />
                     </ScrollView>
                 </View>
@@ -193,11 +218,10 @@ const Emission = () => {
 export default Emission;
 
 const styles = StyleSheet.create({
-    topHeader: {
-        widht: '100%',
-        backgroundColor: Colors.solitudeGrey,
+    header: {
+        width: '100%',
+        justifyContent: 'center',
     },
-    header: { flex: 1, width: '100%', justifyContent: 'center', marginBottom: 20 },
     inputField: {
         justifyContent: 'center',
         marginTop: 20,
@@ -219,12 +243,12 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     body: {
-        justifyContent: 'center',
-        paddingBottom: 20,
+        marginTop: -45,
         marginBottom: 20,
     },
     title: {
         paddingTop: 5,
+        marginBottom: 20,
         fontSize: 30,
         fontFamily: 'Poppins-ExtraBold',
         color: Colors.black,

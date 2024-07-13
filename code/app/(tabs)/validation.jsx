@@ -38,7 +38,7 @@ const Validation = () => {
                     </View>
                 }
                 body={
-                    <View style={{ marginTop: -25 }}>
+                    <View>
                         <Text style={styles.title}>Certificate Validation</Text>
                         <View style={{ marginTop: 16 }}>
                             <FormField
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     qrButton: {
-        marginTop: 16,
+        marginTop: 24,
         borderRadius: 10,
         borderWidth: 4,
         borderColor: colors.white,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-ExtraBold',
     },
     validateButton: {
-        marginTop: -45,
+        marginTop: -25,
         borderRadius: 16,
         borderWidth: 4,
         borderColor: colors.white,

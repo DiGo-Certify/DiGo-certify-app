@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'react-native-paper';
 
-const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color, mode, disabled }) => {
+const ActionButton = ({ text, onPress, buttonStyle, textStyle, icon, isLoading, color, mode, disabled = false }) => {
     return (
         <Button
             icon={icon}

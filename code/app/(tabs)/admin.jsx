@@ -58,15 +58,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     options: {
-        flex: 1,
-        alignItems: 'center',
         width: '85%',
-        marginTop: 20,
     },
     body: {
         width: '100%',
         paddingHorizontal: 30,
-        marginTop: -25,
     },
     title: {
         fontSize: 30,
