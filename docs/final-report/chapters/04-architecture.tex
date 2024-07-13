@@ -23,7 +23,7 @@ Below is a high-level diagram of the DiGo Certify architecture:
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{../diagrams/architecture-overview.drawio.png}
-    \caption{Architecture Overview Diagram (inspired by \cite{geeksforgeeks-dApps}).}
+    \caption{Architecture Overview Diagram (inspired by~\cite{geeksforgeeks-dApps}).}
     \label{fig:architecture-overview}
 \end{figure}
 
@@ -165,7 +165,7 @@ In summary, the choice of React Native with Expo for DiGo Certify provides a rob
 
 \subsection{Certificate Issuance}
 
-Initially, a student or alumni requests a certificate from the ONCHAINID~\cite{ONCHAINID} system. The system checks whether the requester has an existing ONCHAINID. If it exists, the system proceeds to verify the associated claims and sends the certificate to the DiGo Certify application. The application then submits the certificate to the blockchain for validation and secure storage. Once the certificate is successfully submitted, it is delivered back to the student or alumni. In cases where the ONCHAINID does not exist, the system initiates the creation of a new identifier. This involves sending a certificate emission request to the Admin for approval. Upon receiving the request, the Admin emits the certificate and submits it to the blockchain. After the submission, the certificate is sent back to the ONCHAINID system, which verifies the claims and delivers the certificate to the student or alumni. This process ensures that all issued certificates are securely stored on the blockchain, providing a tamper-proof and verifiable record of the certification.
+Initially, a student or alumni requests a certificate from the OnchainID~\cite{ONCHAINID} system. The system checks whether the requester has an existing OnchainID. If it exists, the system proceeds to verify the associated claims and sends the certificate to the DiGo Certify application. The application then submits the certificate to the blockchain for validation and secure storage. Once the certificate is successfully submitted, it is delivered back to the student or alumni. In cases where the OnchainID does not exist, the system initiates the creation of a new identifier. This involves sending a certificate emission request to the Admin for approval. Upon receiving the request, the Admin emits the certificate and submits it to the blockchain. After the submission, the certificate is sent back to the OnchainID system, which verifies the claims and delivers the certificate to the student or alumni. This process ensures that all issued certificates are securely stored on the blockchain, providing a tamper-proof and verifiable record of the certification.
 
 \begin{figure}[H]
     \centering
