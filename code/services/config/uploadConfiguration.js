@@ -14,8 +14,7 @@ function uploadConfig(
     identityRegistryStorage,
     identityRegistry,
     modularCompliance,
-    token,
-    initialTrustedIssuers
+    token
 ) {
     // Update the configuration file with the address of the deployed factory
     const configFilePath = path.resolve(__dirname, '../../config.json');
@@ -68,26 +67,6 @@ function uploadConfig(
 
         configuration.trex.token.address = token.address;
         configuration.trex.token.abi = token.abi;
-
-        // Add the initial trusted issuers to the configuration
-
-        // ISEL
-        configuration.institutions[0].address =
-            initialTrustedIssuers[0].claimIssuerContract.target;
-        configuration.institutions[0].abi = initialTrustedIssuers[0]
-            .claimIssuerContract.interface.fragments;
-
-        // IST
-        configuration.institutions[1].address =
-            initialTrustedIssuers[1].claimIssuerContract.target;
-        configuration.institutions[1].abi =
-            initialTrustedIssuers[1].claimIssuerContract.interface.fragments;
-
-        // UL
-        configuration.institutions[2].address =
-            initialTrustedIssuers[2].claimIssuerContract.target;
-        configuration.institutions[2].abi =
-            initialTrustedIssuers[2].claimIssuerContract.interface.fragments;
 
         // Write the updated config object to the file
         fs.writeFileSync(

@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Linking, Alert } from 'react-native';
-import { Appbar, Searchbar, List, IconButton, Card, Text, Portal, Modal } from 'react-native-paper';
+import { Appbar, Searchbar, List, IconButton, Card } from 'react-native-paper';
 import Background from '@/components/Background';
-import colors from '@/constants/colors';
-import FormField from '@/components/FormField';
 import Colors from '@/constants/colors';
-import ActionButton from '@/components/ActionButton';
 import { addClaim } from '@/services/ethereum/scripts/claims/add-claim';
-import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
+import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethers';
 import { getValueFor, save } from '@/services/storage/storage';
 import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
 import config from '@/config.json';
-import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
 import { ethers } from 'ethers';
+import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
+import { addKeyToIdentity } from '@/services/ethereum/scripts/claimIssuer/addKeyToIdentity';
+import CertificateFormModal from './components/certificateFormModal';
+import PrivateKeyModal from './components/privateKeyModal';
 
 // Simulate fetching data from the blockchain
 async function getCertificates() {
@@ -49,8 +49,8 @@ const HomeScreen = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [certificates, setCertificates] = useState([]);
     const [privKeyModalVisible, setPrivKeyModalVisible] = useState(false);
-    const [privateKey, setPrivateKey] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
+    const [privateKey, setPrivateKey] = useState(''); // Private Key Modal Input
+    const [modalVisible, setModalVisible] = useState(false); // Form Modal (Request Certificate)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         name: '',
@@ -118,25 +118,59 @@ const HomeScreen = () => {
             const body = encodeURIComponent(emailBody);
             const url = `mailto:licenciaturas@isel.pt?subject=${subject}&body=${body}`;
 
-            // Add self claim of student number and student name (CLAIM TOPICS: STUDENT)
+            // Get the provider and signer
             const provider = new ethers.JsonRpcProvider(config.rpc);
             const signer = new ethers.Wallet(config.deployer.privateKey, provider);
-            const userWallet = await getValueFor('wallet');
+
+            // Get the identity factory contract and the trusted issuers registry contract
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
-
-            const userIdentity = await getIdentity(userWallet.address, identityFactory);
-
-            // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
-            // With this the student is allowing the institution to emit certificates on his behalf
             const trustedIR = getContractAt(
                 config.trex.trustedIssuersRegistry.address,
                 config.trex.trustedIssuersRegistry.abi,
                 signer
             );
 
-            const walletAddr = new ethers.Wallet(userWallet.privateKey, provider);
+            // Get the user wallet info stored in the safe-storage
+            const savedWallet = await getValueFor('wallet');
 
-            await addClaim(trustedIR, userIdentity, userIdentity, walletAddr, CLAIM_TOPICS_OBJ.STUDENT, form.name);
+            // Get the identity of the user
+            const userIdentity = await getIdentity(savedWallet.address, identityFactory);
+
+            if (!userIdentity) {
+                Alert.alert('Warning', `Identity for wallet: ${savedWallet.address} not found.`);
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Create the user wallet object (ethers.Wallet)
+            const userWallet = getWallet(savedWallet.privateKey, provider);
+
+            // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
+            // With this the student is allowing the institution to emit certificates on his behalf
+            const issuers = await trustedIR.getTrustedIssuersForClaimTopic(ethers.id(CLAIM_TOPICS_OBJ.INSTITUTION));
+
+            console.log('userIdentity', userIdentity);
+
+            for (const issuer of issuers) {
+                // Get contract of the issuer, by searching the issuer address in the configuration file
+                for (const institution of config.institutions) {
+                    if (institution.address === issuer) {
+                        const issuerWallet = getWallet(institution.wallet.privateKey, provider);
+                        await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
+                    }
+                }
+            }
+
+            // Self assign the student number and name (CLAIM_TOPICS: STUDENT)
+            await addClaim(trustedIR, userIdentity, userIdentity, userWallet, CLAIM_TOPICS_OBJ.STUDENT, form.name);
+            await addClaim(
+                trustedIR,
+                userIdentity,
+                userIdentity,
+                userWallet,
+                CLAIM_TOPICS_OBJ.STUDENT,
+                form.studentNumber
+            );
 
             Linking.openURL(url);
             setIsSubmitting(false);
@@ -218,137 +252,9 @@ const HomeScreen = () => {
     );
 };
 
-// /**
-//  * Add self claims (nummber and name) to the student identity
-//  */
-// async function addStudentSelfClaims(userIdentity, studentName, studentNumber, provider) {
-
-// }
-
-function PrivateKeyModal({ visible, onDismiss, privateKey, onChangePrivateKey, onSubmitPrivateKey }) {
-    return (
-        <Portal>
-            <Modal
-                animationType="slide"
-                onDismiss={onDismiss}
-                visible={visible}
-                contentContainerStyle={styles.modalView}
-            >
-                <Text style={styles.modalTitle}>Private Key</Text>
-                <Text style={styles.modalSubtitleText}>Don't Share with anyone that you don't trust!</Text>
-                <FormField
-                    label="Private Key"
-                    value={privateKey}
-                    onChange={onChangePrivateKey}
-                    style={styles.modalInput}
-                />
-                <ActionButton
-                    text="Add"
-                    onPress={onSubmitPrivateKey}
-                    textStyle={styles.modalButtonText}
-                    buttonStyle={styles.modalSubmitButton}
-                    mode={'elevated'}
-                    color={Colors.backgroundColor}
-                />
-            </Modal>
-        </Portal>
-    );
-}
-
-function CertificateFormModal({ visible, onDismiss, formData, onChangeForm, onPress, isSubmitting }) {
-    return (
-        <Portal>
-            <Modal
-                animationType="slide"
-                onDismiss={onDismiss}
-                visible={visible}
-                contentContainerStyle={styles.modalView}
-            >
-                <Text style={styles.modalTitle}>Request Certificate</Text>
-                <FormField
-                    label="Name"
-                    value={formData.name}
-                    onChange={text => onChangeForm('name', text)}
-                    style={styles.modalInput}
-                />
-                <FormField
-                    label="Student Number"
-                    value={formData.studentNumber}
-                    onChange={text => onChangeForm('studentNumber', text)}
-                    style={styles.modalInput}
-                />
-                <FormField
-                    label="Institution Code"
-                    value={formData.institutionCode}
-                    onChange={text => onChangeForm('institutionCode', text)}
-                    style={styles.modalInput}
-                />
-                <FormField
-                    label="OID"
-                    value={formData.OID}
-                    onChange={text => onChangeForm('OID', text)}
-                    style={styles.modalInput}
-                />
-                <ActionButton
-                    text="Submit"
-                    onPress={onPress}
-                    textStyle={styles.modalButtonText}
-                    buttonStyle={styles.modalSubmitButton}
-                    mode={'elevated'}
-                    color={Colors.backgroundColor}
-                    isLoading={isSubmitting}
-                    disabled={isSubmitting}
-                />
-            </Modal>
-        </Portal>
-    );
-}
-
 const styles = StyleSheet.create({
     topHeader: {
-        backgroundColor: colors.solitudeGrey,
-    },
-    modalView: {
-        backgroundColor: colors.solitudeGrey,
-        padding: 20,
-        marginHorizontal: 20,
-        borderRadius: 20,
-    },
-    modalTitle: {
-        fontSize: 28,
-        fontFamily: 'Poppins-Bold',
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-    },
-    modalSubtitleText: {
-        fontSize: 20,
-        fontFamily: 'Poppins-Bold',
-        color: Colors.caution,
-    },
-    modalInput: {
-        justifyContent: 'center',
-        marginTop: 20,
-        borderRadius: 10,
-        borderBottomWidth: 2,
-        borderBottomColor: Colors.sonicSilver,
-    },
-    modalSubmitButton: {
-        marginTop: 20,
-        borderRadius: 16,
-        borderWidth: 4,
-        borderColor: Colors.white,
-        backgroundColor: Colors.green,
-        elevation: 5,
-        alignSelf: 'center',
-        width: '80%',
-    },
-    modalButtonText: {
-        fontSize: 15,
-        lineHeight: 20,
-        fontFamily: 'Poppins-Bold',
-        color: Colors.black,
+        backgroundColor: Colors.solitudeGrey,
     },
     header: {
         width: '100%',
@@ -361,7 +267,7 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         elevation: 2,
-        backgroundColor: colors.solitudeGrey,
+        backgroundColor: Colors.solitudeGrey,
     },
     searchBarContainer: {
         borderRadius: 10,
@@ -376,7 +282,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         display: 'flex',
         flexDirection: 'row',
-        backgroundColor: colors.white,
+        backgroundColor: Colors.white,
     },
     certificateContent: {
         flexDirection: 'row',

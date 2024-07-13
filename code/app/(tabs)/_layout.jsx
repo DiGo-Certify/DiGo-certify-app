@@ -5,7 +5,7 @@ import icons from '@/constants/icons';
 import { BottomNavigation } from 'react-native-paper';
 import ProfileScreen from './profile';
 import ValidationScreen from './validation';
-import HomeScreen from './home';
+import HomeScreen from './home/home';
 import AdminScreen from './admin';
 import * as SecureStore from 'expo-secure-store';
 

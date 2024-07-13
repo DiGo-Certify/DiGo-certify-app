@@ -7,14 +7,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { List, ActivityIndicator } from 'react-native-paper';
 import { router } from 'expo-router';
-import SettingsModal from '@/components/SettingsModal';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
 import config from '@/config.json';
-import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
-import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
-import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
-import { v4 as uuidv4 } from 'uuid';
+import SettingsModal from '@/components/SettingsModal';
 
 const Profile = () => {
     const [onSettings, setOnSettings] = useState(false);
@@ -25,7 +21,6 @@ const Profile = () => {
         image: Images.mockupProfileImage,
         wallet: 'Not connected',
         since: '2024',
-        OID: '',
     });
 
     useEffect(() => {
@@ -45,45 +40,11 @@ const Profile = () => {
         fetchUserInfo();
     }, []);
 
-    useEffect(() => {
-        if (!isConnected) {
-            return;
-        }
-        const deployUserIdentity = async () => {
-            if (!address && !provider) {
-                return;
-            }
-            try {
-                const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-                const identityFactory = getContractAt(
-                    config.identityFactory.address,
-                    config.identityFactory.abi,
-                    signer
-                );
-                const user_salt = uuidv4();
-                const idContract = await deployIdentity(identityFactory, address, user_salt, signer);
-                if (idContract) {
-                    const idAddress = await idContract.getAddress();
-                    await save('OID', JSON.stringify({ OID: idAddress }));
-                    setProfile(currentProfile => ({
-                        ...currentProfile,
-                        OID: idAddress,
-                    }));
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        deployUserIdentity();
-    }, [address]);
-
     const handleWalletConnect = async () => {
         console.log('Connecting wallet...');
         setIsSaving(true);
         await handlePress();
     };
-
-    useEffect(() => {}, []);
 
     // Handle logout
     const handleLogout = () => {
@@ -101,20 +62,14 @@ const Profile = () => {
 
     useEffect(() => {
         if (address) {
-            const a = getValueFor('wallet').then(wallet => {
+            const wallet = getValueFor('wallet').then(wallet => {
                 if (wallet && wallet.address === address) {
                     return;
                 }
                 return wallet;
             });
             const saveWalletAddress = async () => {
-                await save(
-                    'wallet',
-                    JSON.stringify({
-                        address: address,
-                        privateKey: a.then(wallet => wallet.privateKey),
-                    })
-                );
+                await save('wallet', JSON.stringify({ address: address, privateKey: wallet.privateKey }));
                 setProfile(currentProfile => ({
                     ...currentProfile,
                     wallet: address,
@@ -184,8 +139,6 @@ const Profile = () => {
         </SafeAreaView>
     );
 };
-
-export default Profile;
 
 const ProfileImage = ({ source, pickImage }) => (
     <TouchableOpacity onPress={pickImage}>
@@ -279,3 +232,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Regular',
     },
 });
+
+export default Profile;

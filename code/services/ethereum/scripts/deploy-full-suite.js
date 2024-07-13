@@ -5,7 +5,6 @@ const { uploadConfig } = require('../../config/uploadConfiguration');
 const config = require('../../../config.json');
 const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
 const { CLAIM_TOPICS } = require('./claims/claimTopics');
-const { useRpcProvider } = require('./utils/useRpcProvider');
 const { getContractAt, getWallet } = require('./utils/ethers');
 
 /**
@@ -18,10 +17,10 @@ const { getContractAt, getWallet } = require('./utils/ethers');
  *      - STUDENT
  * - TrustedIssuersRegistry contract (TREX suite)
  *      - With some initial trusted issuers (for signing claims for the INSTITUTION topic)
- * - IdentityRegistryStorage contract (TREX suite)
- * - IdentityRegistry contract (TREX suite)
- * - ModularCompliance contract (TREX suite)
- * - Token contract (TREX suite)
+ * - IdentityRegistryStorage contract (TREX suite)  [Not used in this version]
+ * - IdentityRegistry contract (TREX suite)         [Not used in this version]
+ * - ModularCompliance contract (TREX suite)        [Not used in this version]
+ * - Token contract (TREX suite)                    [Not used in this version]
  *
  */
 async function main() {
@@ -47,28 +46,6 @@ async function main() {
         deployer
     );
 
-    // Initial trusted issuers for the INSTITUTION topic
-    const initialTrustedIssuers = [
-        await deployClaimIssuer(
-            trustedIR,
-            CLAIM_TOPICS,
-            getWallet(config.institutions[0].wallet.privateKey, provider),
-            deployer
-        ),
-        await deployClaimIssuer(
-            trustedIR,
-            CLAIM_TOPICS,
-            getWallet(config.institutions[1].wallet.privateKey, provider),
-            deployer
-        ),
-        await deployClaimIssuer(
-            trustedIR,
-            CLAIM_TOPICS,
-            getWallet(config.institutions[2].wallet.privateKey, provider),
-            deployer
-        )
-    ];
-
     // Update the configuration file
     uploadConfig(
         identityFactoryAddress,
@@ -79,8 +56,17 @@ async function main() {
         identityRegistryStorage,
         identityRegistry,
         modularCompliance,
-        token,
-        initialTrustedIssuers
+        token
+    );
+
+    // Initial trusted issuers for the CLAIM_TOPICS = ['INSTITUTION', 'STUDENT', 'CERTIFICATE'] is the app owner
+    await deployClaimIssuer(
+        trustedIR,
+        CLAIM_TOPICS,
+        deployer,
+        deployer,
+        3117,
+        config.deployer.privateKey
     );
 }
 

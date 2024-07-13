@@ -5,6 +5,14 @@ const {
     deployClaimIssuer
 } = require('../../scripts/claimIssuer/deploy-claim-issuer');
 const { ethers } = require('hardhat');
+const {
+    CLAIM_TOPICS_OBJ,
+    CLAIM_TOPICS
+} = require('../../scripts/claims/claimTopics');
+const { getClaimsByTopic } = require('../../scripts/claims/getClaimsByTopic');
+const hash = require('../../scripts/utils/hash');
+const { deployIdentity } = require('../../scripts/identities/deploy-identity');
+const { getIdentity } = require('../../scripts/identities/getIdentity');
 
 describe('ClaimIssuer Creation', () => {
     it('Should add claim issuer', async () => {
@@ -72,5 +80,32 @@ describe('ClaimIssuer Creation', () => {
         expect(await cicAndTir1.TIR.getTrustedIssuers()).to.be.deep.equal(
             await cicAndTir2.TIR.getTrustedIssuers()
         );
+    });
+    it('Should create a claim issuer with a claim of a institution code', async () => {
+        const { deployerWallet, trustedIssuersRegistry, identityFactory } =
+            await loadFixture(deployFullTREXSuiteFixture);
+
+        const [aliceWallet] = await ethers.getSigners();
+
+        const cicAndTir = await deployClaimIssuer(
+            trustedIssuersRegistry,
+            CLAIM_TOPICS,
+            aliceWallet,
+            deployerWallet,
+            3117
+        );
+
+        expect((await cicAndTir.TIR.getTrustedIssuers())[0]).to.be.equal(
+            await cicAndTir.claimIssuerContract.getAddress()
+        );
+
+        console.log('Wallet:', deployerWallet);
+
+        const claims = await getClaimsByTopic(
+            cicAndTir.claimIssuerContract,
+            CLAIM_TOPICS_OBJ.INSTITUTION
+        );
+
+        expect(claims[0].data).to.be.equal(hash(3117));
     });
 });
