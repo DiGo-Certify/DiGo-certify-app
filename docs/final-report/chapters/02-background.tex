@@ -21,14 +21,13 @@ There are several approaches to address the challenges of the traditional academ
 where educational institutions are required to submit digital copies of certificates for verification purposes~\cite{LinWays}.
 Other solution is the adoption of distributed storage systems where data is stored across multiple nodes in a network, but not all nodes have the same equal authority and the data is not fully decentralized. Which means that there's an entity that has control over the network~\cite{sharples2016blockchain}.
 This solution is not centralized neither fully distributed but have a mix of both approaches that makes the system more secure and reliable than only a centralized one.
-The third solution that we will approach is a fully distributed one that offers a decentralized, secure and tamper-proof ledger where certificates can be stored and verified where
-there is no single entity that has control over the network. This solution is based on the \textit{blockchain technology}~\cite{app14020706, saleh2020blockchain}.
+The third solution that we will approach is a fully distributed one that offers a decentralized, secure, and tamper-proof ledger. In this system, certificates can be stored and verified without a single entity having control over the network. Instead, the control is distributed across multiple nodes, making the system more resilient to tampering and centralized failures. Each transaction is validated by a consensus mechanism, ensuring that only legitimate entries are added to the ledger. This decentralized nature means that no single entity can unilaterally alter or manipulate the stored certificates, enhancing security and trustworthiness. This solution is based on the \textit{blockchain technology}~\cite{app14020706, saleh2020blockchain}.
 
 \section{Centralized Storage Systems}\label{sec:centralized-systems}
 \paragraph{}
 
 Several attempts have been made to address the challenges of the traditional academic certificate registry system.
-How we can see in the Figure~\ref{fig:centralized-system}, one such solution is the implementation of \textit{centralized databases}~\cite{OLSON200971} managed by government or regulatory authorities, where educational institutions are required to
+As we can see in the Figure~\ref{fig:centralized-system}, one such solution is the implementation of \textit{centralized databases}~\cite{OLSON200971} managed by government or regulatory authorities, where educational institutions are required to
 submit digital copies of certificates for verification purposes. Although this approach aims to centralize certificate records and simplify the verification process, it still faces challenges
 such as the risk and concerns of data privacy and security, interoperability issues between different databases and the need of a trusted third party to manage the database.
 This storage systems often only store grades and not the actual certificates which undermines the credibility and integrity of academic qualifications.
@@ -96,7 +95,7 @@ In 2013, Vitalik Buterin proposed the concept of \textit{smart contracts} in his
 \textit{Ethereum} has launched his own blockchain in 2015.~\cite{reiff2020bitcoin}.
 
 Blockchain can be defined as a time-ordered set of blocks or nodes where each block is cryptographically linked to the previous one forming a chain. All blocks are stored in a decentralized and distributed ledger and become
-trustworthy digital records what are unmodifiable in practice but very easy to verify. Like mentioned before, there is no centralized or hierarchical structure in the blockchain network and the information is shared by a network of \textit{peers}.
+trustworthy digital records what are not modifiable in practice but very easy to verify. Like mentioned before, there is no centralized or hierarchical structure in the blockchain network and the information is shared by a network of \textit{peers}.
 
 \begin{figure}[h]\label{fig:blockchain}
     \begin{center}
@@ -107,7 +106,7 @@ trustworthy digital records what are unmodifiable in practice but very easy to v
 
 As it can be observed in Figure~\ref{fig:blockchain}, each block contains a reliable register of one or more actually executed transactions that are created and exchanged by the network participants (peers) which eventually must modify
 its state. To add new information to the chain, a \textbf{consensus} about its truthfulness must be reached among the peers in the network.
-For a detailed explanation of consensus mechanism, please refer to Section \ref{subsec:distributed-consensus-mechanisms}
+For a detailed explanation of consensus mechanism, please refer to Section \ref{subsec:distributed-consensus-mechanisms}.
 
 The content of each transaction that is stored in a single block depends on the specific type of blockchain and its purpose. In our case and very succinctly, the transaction has an `item' that contains information about the academic certificate; we will discuss this in more detail in the next chapters. Other example used nowadays is the Bitcoin, where the main information registered in transactions are exchanges of bitcoins between accounts.
 
@@ -179,8 +178,7 @@ It prevent the \textit{double-spending} problem, where a user spends the same di
           against 51\% attacks, as it would require a majority of the network's coins to alter the blockchain. However, as the system is based on the number of coins held by the validators, it can lead to centralization, as those with more coins have more influence over the network.
 \end{itemize}
 
-After approaching all the three concepts of centralized, distributed and blockchain systems, we can conclude seeing the results in the Table~\ref{tab:centralized-vs-distributed-vs-blockchain} that the blockchain technology is the most suitable solution for the academic certificate registry system.
-This is due to its decentralized, secure and tamper-proof nature, which ensures the integrity and authenticity of academic certificates, while also providing instant verification and transparency to all stakeholders.
+After approaching all three concepts—centralized, distributed, and blockchain systems—we created a summary and made a comparison table (Table~\ref{tab:centralized-vs-distributed-vs-blockchain}) to evaluate their suitability for an academic certificate registry system. From the results in the table, we can conclude that blockchain technology is the most suitable solution. This is due to its decentralized, secure, and tamper-proof nature, which ensures the integrity and authenticity of academic certificates while also providing instant verification and transparency to all stakeholders.
 
 \begin{table}[h]\label{tab:centralized-vs-distributed-vs-blockchain}
     \centering
@@ -219,7 +217,7 @@ This will ensure that the certificates are stored in a secure and tamper-proof m
 \section{Blockchain for Document Registry}\label{sec:blockchain-academic-certificate-registry}
 \paragraph{}
 
-After what we've seen in the Section~\ref{sec:blockchain}, by leveraging the blockchain's decentralization, certificates can be stored across a distributed network,
+As described in Section~\ref{sec:blockchain}, by leveraging the blockchain's decentralization, certificates can be stored across a distributed network,
 reducing the risks associated with centralized storage systems such data breaches and corruption.
 The immutability of the blockchain brings some advantages and disadvantages to the academic certificate registry system~\cite{nzuva2019smart}.
 It is considered as main advantage the fact that certificates are tamper-proof and secure, as they cannot be altered or deleted once they are added to the blockchain. This ensures the
@@ -233,9 +231,9 @@ This Smart Contract will be responsible for storing and verifying the certificat
 \subsection*{Blockchain in Different Sectors}\label{subsec:blockchain-different-sectors}
 \paragraph{}
 
-Such implementation is beeing previously introduced by some institutions and companies. For example, the Massachusetts Institute of Technology (MIT) has developed a blockchain-based system called Blockcerts~\cite{blockcerts}
+Such implementation is being previously introduced by some institutions and companies. For example, the Massachusetts Institute of Technology (MIT) has developed a blockchain-based system called Blockcerts~\cite{blockcerts}
 that allows students to store and share their academic certificates. Additionally, there are some articles that propose the use of blockchain technology for document registry~\cite{app112411811, app14020706}.
-In Portugal, institutions from other sectors are also starting to use blockchain technology for registry. For example, a group of people working for Blockchain Portugal~\cite{blockchainPortugal}, in the sector of agriculture,
-have developed a blockchain-based system for making the registry of cherry boxes that are beeing distributed to the market~\cite{tertuliaCereja}.
-This system registers every location of each box, from the moment they leave the farm where they were harvested until they are sold to the market. Moreover the system makes possible the tracking of the boxes without the need of a centralized authority to manage the registry.
-This is a good example of how blockchain technology can be used in different sectors and how it can be used to make the registry of documents or assets in a secure and tamper-proof way keeping the integrity and transparency of the data.
+In Portugal, institutions from other sectors are also starting to use blockchain technology for registry. For example, a group of people working for Blockchain Portugal~\cite{blockchainPortugal}, in agriculture sector,
+have developed a blockchain-based system for making the registry of cherry boxes that are being distributed to the market~\cite{tertuliaCereja}.
+This system registers every stop location of each box, from the moment they leave the farm where they were harvested until they are sold to the market. With this, the system makes possible the tracking of the boxes without the need of a centralized authority to manage the registry.
+These are good examples of how blockchain technology can be used in different sectors and how it can be used to make the registry of documents or assets in a secure and tamper-proof way keeping the integrity and transparency of the data.
