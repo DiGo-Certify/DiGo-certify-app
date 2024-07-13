@@ -36,11 +36,19 @@ const Emission = () => {
     const handleEmit = async () => {
         try {
             setSubmitting(true);
-            if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
-                Alert.alert('Warning', 'Please fill the required fields.');
-                setSubmitting(false);
-                return;
-            }
+            const formValidations = (form, setForm) => {
+                if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
+                    throw new Error('Please fill the required fields.');
+                } else if (isNaN(form.courseID) || isNaN(form.institutionID) || isNaN(form.registrationCode)) {
+                    throw new Error('Course ID and Institution ID must be numbers.');
+                } else if (!form.walletAddr.startsWith('0x')) {
+                    setForm({ ...form, walletAddr: '0x' + form.walletAddr });
+                    return;
+                } else if (form.walletAddr.length !== 42) {
+                    throw new Error('Confirm that the wallet address is correct.');
+                }
+            };
+            formValidations(form, setForm);
 
             const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
@@ -91,27 +99,50 @@ const Emission = () => {
                 CLAIM_TOPICS_OBJ.INSTITUTION,
                 form.institutionID
             ); // Institution ID
-            await addClaim(
-                trustedIR,
-                identity,
-                claimIssuerContract,
-                claimIssuerWallet,
-                CLAIM_TOPICS_OBJ.CERTIFICATE,
-                form.registrationCode
-            ); // Registration Code
-            await addClaim(
-                trustedIR,
-                identity,
-                claimIssuerContract,
-                claimIssuerWallet,
-                CLAIM_TOPICS_OBJ.CERTIFICATE,
-                form.certificateUri
-            ); // Certificate URI
-            setSubmitting(false);
+
+            if (!form.certificateUri) {
+                await addClaim(
+                    trustedIR,
+                    identity,
+                    claimIssuerContract,
+                    claimIssuerWallet,
+                    CLAIM_TOPICS_OBJ.CERTIFICATE,
+                    form.registrationCode,
+                    1
+                ); // Registration Code and Certificate URL
+            } else {
+                await addClaim(
+                    trustedIR,
+                    identity,
+                    claimIssuerContract,
+                    claimIssuerWallet,
+                    CLAIM_TOPICS_OBJ.CERTIFICATE,
+                    form.registrationCode,
+                    1,
+                    form.certificateUri
+                ); // Registration Code and Certificate URL
+
+                await addClaim(
+                    trustedIR,
+                    identity,
+                    claimIssuerContract,
+                    claimIssuerWallet,
+                    CLAIM_TOPICS_OBJ.CERTIFICATE,
+                    form.certificateUri,
+                    1
+                ); // Claim of the certificate URL encrypted with aes-256 algorithm 
+            }
+
+            Alert.alert('Success', 'Certificate emitted successfully.', [
+                {
+                    text: 'OK',
+                    onPress: () => router.back(),
+                },
+            ]);
         } catch (error) {
             setSubmitting(false);
             console.error(error);
-            Alert.alert('Unexpected error', 'An unexpected error occurred. Please try again.');
+            Alert.alert('Error', error.message);
         }
     };
 

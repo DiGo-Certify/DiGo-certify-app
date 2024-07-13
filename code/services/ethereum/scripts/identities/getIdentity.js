@@ -14,8 +14,6 @@ async function getIdentity(address, identityFactory, signer = undefined) {
         console.log('[!] Getting identity for wallet with address:', address);
         const identity = await identityFactory.getIdentity(address);
 
-        console.log('[!] Identity:', identity);
-
         if (identity !== ethers.ZeroAddress) {
             console.log('[✓] Identity found:', identity);
 

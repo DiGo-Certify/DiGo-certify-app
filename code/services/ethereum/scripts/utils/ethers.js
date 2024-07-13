@@ -27,7 +27,6 @@ function getWallet(privateKey, provider) {
     try {
         return new ethers.Wallet(privateKey, provider);
     } catch (error) {
-        console.error('Error getting wallet with private key: ', privateKey);
         return null;
     }
 }

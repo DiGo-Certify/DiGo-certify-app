@@ -10,7 +10,7 @@ const {
     CLAIM_TOPICS
 } = require('../../scripts/claims/claimTopics');
 const { getClaimsByTopic } = require('../../scripts/claims/getClaimsByTopic');
-const hash = require('../../scripts/utils/hash');
+const hash = require('../../scripts/utils/encryption/hash');
 const { deployIdentity } = require('../../scripts/identities/deploy-identity');
 const { getIdentity } = require('../../scripts/identities/getIdentity');
 

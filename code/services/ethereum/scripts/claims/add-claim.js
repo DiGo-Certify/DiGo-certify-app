@@ -1,7 +1,8 @@
 const { ethers } = require('ethers');
 const { isTrustedIssuer } = require('../claimIssuer/isTrustedIssuer');
 const { isSelfSigner } = require('../claimIssuer/isSelfSigner');
-const hash = require('../utils/hash');
+const hash = require('../utils/encryption/hash');
+const { encrypt } = require('../utils/encryption/aes-256');
 
 /**
  * Responsible for adding a claim to an identity contract
@@ -42,9 +43,13 @@ async function addClaim(
         } else {
             console.log('[✓] Claim issuer is trusted or self-signer');
 
+            console.log(
+                encrypt(claimData, await receiverIdentity.getAddress())
+            );
+
             // Create the claim (see https://github.com/ethereum/EIPs/issues/735)
             const claim = {
-                data: hash(claimData),
+                data: claimData,
                 issuer: await claimIssuerContract.getAddress(),
                 topic: ethers.id(claimTopic),
                 scheme: claimScheme,
@@ -74,17 +79,30 @@ async function addClaim(
                 )
             );
 
-            // Add the claim to the identity
-            const tx = await receiverIdentity
-                .connect(claimIssuerWallet)
-                .addClaim(
-                    claim.topic,
-                    claim.scheme,
-                    claim.issuer,
-                    claim.signature,
-                    claim.data,
-                    uri
-                );
+            let tx;
+
+            if (uri !== '') {
+                tx = await receiverIdentity
+                    .connect(claimIssuerWallet)
+                    .addClaim(
+                        claim.topic,
+                        claim.scheme,
+                        claim.issuer,
+                        claim.signature,
+                        claim.data,
+                        claim.uri
+                    );
+            } else {
+                tx = await receiverIdentity
+                    .connect(claimIssuerWallet)
+                    .addClaim(
+                        claim.topic,
+                        claim.scheme,
+                        claim.issuer,
+                        claim.signature,
+                        claim.data
+                    );
+            }
 
             const tx_receipt = await tx.wait();
 

@@ -22,7 +22,7 @@ const ECDSA_KEY_TYPE = 1;
  * @param {*} TIR - The Trusted Issuers Registry contract
  * @param {*} deployerTIR - [Optional] The deployer signer for the Trusted Issuers Registry if different from the app owner
  * @param {*} claimTopics - The list of claims topics that the ClaimIssuer will be able to sign
- * @param {*} issuerWallet - The wallet address for which to deploy the ClaimIssuer
+ * @param {*} issuerWallet - The wallet for which to deploy the ClaimIssuer
  * @param {*} institutionCode - [Optional] The institution code to add as a claim to the ClaimIssuer
  */
 async function deployClaimIssuer(

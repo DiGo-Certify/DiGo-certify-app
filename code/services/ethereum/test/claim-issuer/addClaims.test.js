@@ -10,7 +10,7 @@ const {
 const {
     addKeyToIdentity
 } = require('../../scripts/claimIssuer/addKeyToIdentity');
-const hash = require('../../scripts/utils/hash');
+const hash = require('../../scripts/utils/encryption/hash');
 const {
     CLAIM_TOPICS,
     CLAIM_TOPICS_OBJ

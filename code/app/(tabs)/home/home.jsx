@@ -13,19 +13,37 @@ import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics
 import { addKeyToIdentity } from '@/services/ethereum/scripts/claimIssuer/addKeyToIdentity';
 import CertificateFormModal from './components/certificateFormModal';
 import PrivateKeyModal from './components/privateKeyModal';
+import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
+import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 
-// Simulate fetching data from the blockchain
+
 async function getCertificates() {
-    /*
-    On the future will probably be used, some async store aproach to store data after the first search or any update, because requests to the blockchain are expensive and slow
-    */
-    return [
-        { id: 1, title: 'Certificate 1' },
-        { id: 2, title: 'Certificate 2' },
-        { id: 3, title: 'Certificate 3' },
-        { id: 4, title: 'Certificate 4' },
-        { id: 5, title: 'Certificate 5' },
-    ];
+    try {
+
+        // 'Name' Licenciado in 'course code' at 'institution code', available at 'uri'
+        const userWallet = await getValueFor('wallet');
+
+        const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
+
+        console.log('User Wallet:', userWallet);
+    
+        const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
+        const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
+    
+        console.log('User Identity:', userIdentity);    
+    
+        const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
+        const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
+        const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
+    
+        console.log(certificates)
+        console.log(institutions)
+        console.log(students)
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
 }
 
 // Função modificada para usar os valores do estado do formulário
@@ -80,9 +98,9 @@ const HomeScreen = () => {
 
     const handleSearch = query => setSearchQuery(query);
 
-    const filteredCertificates = certificates.filter(certificate =>
-        certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredCertificates = certificates.filter(certificate =>
+    //     certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
 
     const onSubmitPrivateKey = async () => {
         const userWallet = await getValueFor('wallet');
@@ -144,17 +162,31 @@ const HomeScreen = () => {
 
             // Create the user wallet object (ethers.Wallet)
             const userWallet = getWallet(savedWallet.privateKey, provider);
+            if (userWallet === null) {
+                const onCancel = () => {
+                    setModalVisible(false);
+                    setIsSubmitting(false);
+                };
+                Alert.alert('Warning', 'Your private key is invalid.', [
+                    {
+                        text: 'Change Private Key',
+                        onPress: () => setPrivKeyModalVisible(true),
+                    },
+                    {
+                        text: 'Cancel',
+                        onPress: onCancel,
+                    },
+                ]);
+                return;
+            }
 
             // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
             // With this the student is allowing the institution to emit certificates on his behalf
             const issuers = await trustedIR.getTrustedIssuersForClaimTopic(ethers.id(CLAIM_TOPICS_OBJ.INSTITUTION));
 
-            console.log('userIdentity', userIdentity);
-
             for (const issuer of issuers) {
-                // Get contract of the issuer, by searching the issuer address in the configuration file
                 for (const institution of config.institutions) {
-                    if (institution.address === issuer) {
+                    if (institution.address === issuer && institution.institutionID.toString() === form.institutionCode) {
                         const issuerWallet = getWallet(institution.wallet.privateKey, provider);
                         await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
                     }
@@ -218,7 +250,7 @@ const HomeScreen = () => {
                             />
                         </View>
                         <FlatList
-                            data={filteredCertificates}
+                            data={() => console.log('certificates')}
                             keyExtractor={item => item.id.toString()}
                             renderItem={({ item }) => (
                                 <Card style={styles.certificateItem}>

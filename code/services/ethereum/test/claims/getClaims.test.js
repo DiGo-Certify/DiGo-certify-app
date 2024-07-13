@@ -15,7 +15,7 @@ const {
 const {
     addKeyToIdentity
 } = require('../../scripts/claimIssuer/addKeyToIdentity');
-const hash = require('../../scripts/utils/hash');
+const hash = require('../../scripts/utils/encryption/hash');
 
 describe('get all the claims of an identity by topic', function () {
     it('should return all the claims of an identity', async function () {
@@ -69,7 +69,10 @@ describe('get all the claims of an identity by topic', function () {
 
         expect(claimId).to.exist;
 
-        const claims = await getClaimsByTopic(aliceIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
+        const claims = await getClaimsByTopic(
+            aliceIdentity,
+            CLAIM_TOPICS_OBJ.INSTITUTION
+        );
 
         expect(claims).to.exist;
         expect(claims[0].id).to.be.equal(claimId.claimId);

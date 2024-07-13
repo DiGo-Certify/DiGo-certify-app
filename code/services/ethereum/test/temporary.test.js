@@ -1,29 +1,15 @@
 const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const config = require('../../../config.json');
-const { getClaimsByTopic } = require('../scripts/claims/getClaimsByTopic');
-const { getIdentity } = require('../scripts/identities/getIdentity');
-const { getContractAt } = require('../scripts/utils/ethers');
-const { useRpcProvider } = require('../scripts/utils/useRpcProvider');
-const { CLAIM_TOPICS_OBJ } = require('../scripts/claims/claimTopics');
-const hash = require('../scripts/utils/hash');
+const {
+    getPrivateKeyPem,
+    getPublicKeyPem,
+    encrypt,
+    decrypt
+} = require('../scripts/utils/encryption/aes-256');
 
-describe('Temporary', function () {
-    it(' jsdnsand', async function () {
+describe('ecnryption test', function () {
+    it('test encryptioon', async function () {
         
-        const signer = useRpcProvider(config.rpc, config.deployer.privateKey)
-        const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer)
-        const identity = await getIdentity('0x70997970C51812dc3A010C7d01b50e0d17dc79C8', identityFactory, signer)
-
-
-
-        const claims = await getClaimsByTopic(identity, CLAIM_TOPICS_OBJ.CERTIFICATE)
-
-        console.log(claims)
-        expect(claims[0].data).to.be.equal(hash('https://example.com'))
-        
-
-        
-    })
-})
+    });
+});
