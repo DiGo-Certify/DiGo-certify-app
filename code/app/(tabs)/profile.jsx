@@ -101,13 +101,20 @@ const Profile = () => {
 
     useEffect(() => {
         if (address) {
-            getValueFor('wallet').then(wallet => {
+            const a = getValueFor('wallet').then(wallet => {
                 if (wallet && wallet.address === address) {
                     return;
                 }
+                return wallet;
             });
             const saveWalletAddress = async () => {
-                await save('wallet', JSON.stringify({ address }));
+                await save(
+                    'wallet',
+                    JSON.stringify({
+                        address: address,
+                        privateKey: a.then(wallet => wallet.privateKey),
+                    })
+                );
                 setProfile(currentProfile => ({
                     ...currentProfile,
                     wallet: address,

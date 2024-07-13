@@ -40,7 +40,6 @@ function TabLayout() {
             switch (userType.type) {
                 case USER_TYPES.Admin:
                     availableRoutes = [
-                        { key: 'home', title: 'Home', focusedIcon: icons.home },
                         { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
                         { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
                         { key: 'admin', title: 'Admin', focusedIcon: icons.admin },

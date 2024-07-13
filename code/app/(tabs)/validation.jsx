@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Images from '@/constants/images';
 import FormField from '@/components/FormField';
@@ -7,6 +7,7 @@ import colors from '@/constants/colors';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';
+import FeatureUnderDev from '@/components/FeatureUnderDev';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const Validation = () => {
@@ -67,6 +68,7 @@ const Validation = () => {
                                 textStyle={styles.qrButtonText}
                                 mode={'elevated'}
                                 color={colors.backgroundColor}
+                                onPress={() => FeatureUnderDev()}
                             />
                         </View>
                     </View>

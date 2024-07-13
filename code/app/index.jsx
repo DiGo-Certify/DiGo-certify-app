@@ -19,7 +19,8 @@ function App() {
             const userInfo = await getValueFor('user_info');
             const walletAddress = await getValueFor('wallet');
             if (userInfo && walletAddress) {
-                router.replace('/profile');
+                setLoading(false);
+                return router.replace('/profile');
             }
             setLoading(false);
         };
