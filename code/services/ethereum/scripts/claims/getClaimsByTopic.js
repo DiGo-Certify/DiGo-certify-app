@@ -15,7 +15,16 @@ async function getClaimsByTopic(identity, topic) {
             throw new Error('[x] Invalid topic');
         }
 
-        console.log('[i] Getting claims for identity: ', await identity.getAddress(), 'by topic:', topic);
+        try {
+            console.log(
+                '[i] Getting claims for identity: ',
+                await identity.getAddress(),
+                'by topic:',
+                topic
+            );
+        } catch (error) {
+            console.error('[x] Error getting identity address:', error);
+        }
 
         let claims = [];
 
@@ -39,7 +48,9 @@ async function getClaimsByTopic(identity, topic) {
                         uri: claimArray[5]
                     });
                 })
-            );
+            ).catch(error => {
+                console.error('[x] Error getting institution claims:', error);
+            });
         } else if (topic === CLAIM_TOPICS_OBJ.CERTIFICATE) {
             const certificateClaims = await identity.getClaimIdsByTopic(
                 ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE)
@@ -57,7 +68,9 @@ async function getClaimsByTopic(identity, topic) {
                         uri: claimArray[5]
                     });
                 })
-            );
+            ).catch(error => {
+                console.error('[x] Error getting certificate claims:', error);
+            });
         } else if (topic === CLAIM_TOPICS_OBJ.STUDENT) {
             const studentClaims = await identity.getClaimIdsByTopic(
                 ethers.id(CLAIM_TOPICS_OBJ.STUDENT)
@@ -75,7 +88,9 @@ async function getClaimsByTopic(identity, topic) {
                         uri: claimArray[5]
                     });
                 })
-            );
+            ).catch(error => {
+                console.error('[x] Error getting student claims:', error);
+            });
         }
 
         return claims;

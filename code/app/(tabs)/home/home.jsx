@@ -112,7 +112,7 @@ const HomeScreen = () => {
 
     const requestCertificateHandle = async () => {
         const userWallet = await getValueFor('wallet');
-        if (userWallet.privateKey === undefined) {
+        if (!userWallet.privateKey) {
             Alert.alert(
                 'Private Key Required',
                 'Please enter your private key to request a certificate and make sure to do not send this to anyone',

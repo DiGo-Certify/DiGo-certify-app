@@ -39,7 +39,7 @@ function App() {
         if (isConnected && address) {
             save('wallet', JSON.stringify({ address: address }));
             if (isAdminWallet(address)) {
-                save('user_type', JSON.stringify({ type: 'Guest' }));
+                save('user_type', JSON.stringify({ type: 'Admin' }));
             } else {
                 deployUserIdentity();
                 save('user_type', JSON.stringify({ type: 'Default' }));
@@ -81,7 +81,7 @@ function App() {
     }, [error]);
 
     const handleGuestPress = () => {
-        save('user_type', JSON.stringify({ type: 'Admin' }));
+        save('user_type', JSON.stringify({ type: 'Guest' }));
         return router.replace('/(tabs)/validation');
     };
 
