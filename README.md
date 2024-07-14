@@ -118,14 +118,11 @@ The following instructions will guide you through the installation process.
 📄 Clone or fork `DiGo Certify App`:
    ```sh
    git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
-   cd DiGo-certify-app/code/
+   cd DiGo-certify-app/
    ```
 💿 Install All Dependencies:
    ```sh
-    npm install && \
-    cd services/ethereum && \
-    npm install && \
-    cd ../../
+    ./install.sh
    ```
 📦 Deploy the initial smart contract onto the blockchain
    ```sh
