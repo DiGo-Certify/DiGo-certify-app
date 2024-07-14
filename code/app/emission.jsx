@@ -18,8 +18,9 @@ import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics
 import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethers';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
-import * as Crypto from 'expo-crypto';
 import { ethers } from 'ethers';
+import hash from '@/services/ethereum/scripts/utils/encryption/hash';
+import { encrypt } from '@/services/ethereum/scripts/utils/encryption/aes-256';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
@@ -28,24 +29,27 @@ const Emission = () => {
     const [form, setForm] = useState({
         registrationCode: '',
         courseID: '',
-        institutionID: '',
+        grade: '',
         walletAddr: '',
         certificateUri: '',
+        password: '',
     });
 
     const handleEmit = async () => {
         try {
             setSubmitting(true);
             const formValidations = (form, setForm) => {
-                if (!form.registrationCode || !form.courseID || !form.institutionID || !form.walletAddr) {
+                if (!form.registrationCode || !form.courseID || !form.grade || !form.walletAddr) {
                     throw new Error('Please fill the required fields.');
-                } else if (isNaN(form.courseID) || isNaN(form.institutionID) || isNaN(form.registrationCode)) {
+                } else if (!form.certificateUri && !form.password) {
+                    throw new Error('Please fill the certificate URL or the password.');
+                } else if (isNaN(form.courseID) || isNaN(form.registrationCode)) {
                     throw new Error('Course ID and Institution ID must be numbers.');
                 } else if (!form.walletAddr.startsWith('0x')) {
                     setForm({ ...form, walletAddr: '0x' + form.walletAddr });
                     return;
-                } else if (form.walletAddr.length !== 42) {
-                    throw new Error('Confirm that the wallet address is correct.');
+                } else if (!form.certificateUri && !fileInfo) {
+                    throw new Error('Please insert URL or upload the certificate.');
                 }
             };
             formValidations(form, setForm);
@@ -82,56 +86,49 @@ const Emission = () => {
             const provider = new ethers.JsonRpcProvider(config.rpc);
             const claimIssuerWallet = getWallet(institution.wallet.privateKey, provider);
 
-            // Add claims
+            const institutionClaim = JSON.stringify({
+                institutionID: institution.institutionID,
+                courseID: form.courseID,
+            }).toString();
+            const certificateClaim = JSON.stringify({
+                registrationCode: form.registrationCode,
+                certificate: fileHash ? fileHash : encrypt(form.certificateUri, form.password),
+            }).toString();
+
+            const claimUri = !fileInfo ? hash(form.certificateUri) : hash(fileInfo.fileContents);
+
+            // Claim institution (Institution ID, Course ID)
             await addClaim(
                 trustedIR,
                 identity,
                 claimIssuerContract,
                 claimIssuerWallet,
                 CLAIM_TOPICS_OBJ.INSTITUTION,
-                form.courseID
-            ); // Course ID
+                institutionClaim
+            );
+
+            // Claim student (Grade)
             await addClaim(
                 trustedIR,
                 identity,
                 claimIssuerContract,
                 claimIssuerWallet,
-                CLAIM_TOPICS_OBJ.INSTITUTION,
-                form.institutionID
-            ); // Institution ID
+                CLAIM_TOPICS_OBJ.STUDENT,
+                form.grade      // Grade (Licenciado, Mestre, Doutor...)
+            );
 
-            if (!form.certificateUri) {
-                await addClaim(
-                    trustedIR,
-                    identity,
-                    claimIssuerContract,
-                    claimIssuerWallet,
-                    CLAIM_TOPICS_OBJ.CERTIFICATE,
-                    form.registrationCode,
-                    1
-                ); // Registration Code and Certificate URL
-            } else {
-                await addClaim(
-                    trustedIR,
-                    identity,
-                    claimIssuerContract,
-                    claimIssuerWallet,
-                    CLAIM_TOPICS_OBJ.CERTIFICATE,
-                    form.registrationCode,
-                    1,
-                    form.certificateUri
-                ); // Registration Code and Certificate URL
-
-                await addClaim(
-                    trustedIR,
-                    identity,
-                    claimIssuerContract,
-                    claimIssuerWallet,
-                    CLAIM_TOPICS_OBJ.CERTIFICATE,
-                    form.certificateUri,
-                    1
-                ); // Claim of the certificate URL encrypted with aes-256 algorithm 
-            }
+            // Claim certificate (Registration Code, Certificate)
+            await addClaim(
+                trustedIR,
+                identity,
+                claimIssuerContract,
+                claimIssuerWallet,
+                CLAIM_TOPICS_OBJ.CERTIFICATE,
+                certificateClaim,
+                1,
+                claimUri,
+                form.password
+            );
 
             Alert.alert('Success', 'Certificate emitted successfully.', [
                 {
@@ -156,12 +153,11 @@ const Emission = () => {
 
             if (result) {
                 const { uri, name, size } = result.assets[0];
-                setFileInfo({ uri, name, size });
                 const fileContents = await FileSystem.readAsStringAsync(uri, {
                     encoding: FileSystem.EncodingType.Base64,
                 });
-
-                const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, fileContents);
+                setFileInfo({ uri, name, size, fileContents });
+                const hash = encrypt(fileContents, form.password);
                 setFileHash(hash);
             }
         } catch (error) {
@@ -193,9 +189,9 @@ const Emission = () => {
                             style={styles.inputField}
                         />
                         <FormField
-                            label="Institution ID*"
+                            label="Grade*"
                             icon="book"
-                            onChange={text => setForm({ ...form, institutionID: text })}
+                            onChange={text => setForm({ ...form, grade: text })}
                             style={styles.inputField}
                         />
                         <FormField
@@ -214,6 +210,12 @@ const Emission = () => {
                             label="Certificate URL"
                             icon="file"
                             onChange={text => setForm({ ...form, certificateUri: text })}
+                            style={styles.inputField}
+                        />
+                        <FormField
+                            label="Password"
+                            icon="lock"
+                            onChange={text => setForm({ ...form, password: text })}
                             style={styles.inputField}
                         />
                         <ActionButton

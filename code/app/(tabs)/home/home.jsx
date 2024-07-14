@@ -37,6 +37,8 @@ async function getCertificates() {
         console.log(certificates);
         console.log(institutions);
         console.log(students);
+        console.log('Institution Info:', ethers.toUtf8String(institutions[0].data));
+        console.log('Student Info:', ethers.toUtf8String(students[0].data));
     } catch (error) {
         console.log(error);
         throw error;
@@ -112,7 +114,7 @@ const HomeScreen = () => {
 
     const requestCertificateHandle = async () => {
         const userWallet = await getValueFor('wallet');
-        if (!userWallet.privateKey) {
+        if (userWallet.privateKey === undefined || userWallet.privateKey === '') {
             Alert.alert(
                 'Private Key Required',
                 'Please enter your private key to request a certificate and make sure to do not send this to anyone',
@@ -192,21 +194,20 @@ const HomeScreen = () => {
                         institution.institutionID.toString() === form.institutionCode
                     ) {
                         const issuerWallet = getWallet(institution.wallet.privateKey, provider);
+                        console.log('Issuer Wallet:', issuerWallet.address);
                         await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
                     }
                 }
             }
 
             // Self assign the student number and name (CLAIM_TOPICS: STUDENT)
-            await addClaim(trustedIR, userIdentity, userIdentity, userWallet, CLAIM_TOPICS_OBJ.STUDENT, form.name);
-            await addClaim(
-                trustedIR,
-                userIdentity,
-                userIdentity,
-                userWallet,
-                CLAIM_TOPICS_OBJ.STUDENT,
-                form.studentNumber
-            );
+            const studentClaim = JSON.stringify({
+                studentNumber: form.studentNumber,
+                name: form.name,
+            });
+            console.log('Student Claim:', studentClaim);
+
+            await addClaim(trustedIR, userIdentity, userIdentity, userWallet, CLAIM_TOPICS_OBJ.STUDENT, studentClaim);
 
             Linking.openURL(url);
             setIsSubmitting(false);
@@ -222,7 +223,8 @@ const HomeScreen = () => {
             header={
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
-                        <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold' }} />
+                        <Appbar.Action icon="reload" onPress={() => getCertificates()} />
+                        <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold', justifyContent: 'center' }} />
                         <Appbar.Action icon="plus" onPress={requestCertificateHandle} />
                     </Appbar.Header>
                 </View>

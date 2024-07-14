@@ -35,11 +35,6 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "locales": {
-      "pt": "./languages/pt.json",
-      "en": "./languages/en.json",
-      "fr": "./languages/fr.json"
-    },
     "web": {
       "favicon": "./assets/favicon.png"
     },

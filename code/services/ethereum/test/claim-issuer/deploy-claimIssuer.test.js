@@ -106,6 +106,6 @@ describe('ClaimIssuer Creation', () => {
             CLAIM_TOPICS_OBJ.INSTITUTION
         );
 
-        expect(claims[0].data).to.be.equal(hash(3117));
+        expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3117');
     });
 });

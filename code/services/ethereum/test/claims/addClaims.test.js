@@ -15,6 +15,7 @@ const {
     CLAIM_TOPICS,
     CLAIM_TOPICS_OBJ
 } = require('../../scripts/claims/claimTopics');
+const { getClaimsByTopic } = require('../../scripts/claims/getClaimsByTopic');
 
 describe('Claims Test', () => {
     describe('A trusted claim issuer can asign claims to an identity that has his key', () => {
@@ -118,7 +119,7 @@ describe('Claims Test', () => {
             );
 
             expect(claim).to.exist;
-            expect(claim.data).to.be.equal(hash(claimData));
+            expect(ethers.toUtf8String(claim.data)).to.be.equal(claimData);
             expect(claim.issuer).to.be.equal(
                 await cicAndTir.claimIssuerContract.getAddress()
             );
@@ -171,7 +172,7 @@ describe('Claims Test', () => {
             );
 
             expect(claim).to.exist;
-            expect(claim.data).to.be.equal(hash(claimData));
+            expect(ethers.toUtf8String(claim.data)).to.be.equal(claimData);
             expect(claim.issuer).to.be.equal(await aliceIdentity.getAddress());
             expect(ethers.toQuantity(claim.topic)).to.be.equal(
                 ethers.id(claimTopic)
@@ -179,6 +180,54 @@ describe('Claims Test', () => {
             expect(parseInt(ethers.toQuantity(claim.scheme), 16)).to.be.equal(
                 claimScheme
             );
+        });
+
+        it('Add a claim as a json with multi values', async () => {
+            const { deployerWallet, trustedIssuersRegistry, identityFactory } =
+                await loadFixture(deployFullTREXSuiteFixture);
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            );
+
+            expect(aliceIdentity).to.exist;
+            expect(
+                await identityFactory.getIdentity(aliceWallet.address)
+            ).to.be.equal(await aliceIdentity.getAddress());
+            expect(await aliceIdentity.runner.getAddress()).to.be.equal(
+                aliceWallet.address
+            );
+
+            // Alice add a claim to her identity
+            const claimData1 = JSON.stringify({
+                name: 'Alice',
+                age: 25,
+                address: 'Alice address'
+            });
+            const claimTopic = CLAIM_TOPICS_OBJ.STUDENT; // INSTITUTION
+            const claimScheme = 1; // ECDSA
+            const uri = '';
+
+            const claim1 = await addClaim(
+                trustedIssuersRegistry,
+                aliceIdentity,
+                aliceIdentity,
+                aliceIdentity.runner,
+                claimTopic,
+                claimData1,
+                claimScheme,
+                uri
+            );
+
+            const claims = await getClaimsByTopic(aliceIdentity, claimTopic);
+
+            expect(claims.length).to.be.equal(1);
+            expect(ethers.toUtf8String(claims[0].data)).to.be.equal(claimData1);
         });
     });
 });

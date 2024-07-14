@@ -16,6 +16,7 @@ const { encrypt } = require('../utils/encryption/aes-256');
  * @param {*} claimData Data of the claim to be added (e.g. institution name, student ID, etc.)
  * @param {*} claimScheme Scheme of the claim to be added (e.g. 1-ECDSA, 2-RSA, etc.)
  * @param {*} uri [Optional] URI where the claim data can be found (e.g. IPFS hash, HTTPS link, etc.)
+ * @param {*} key [Optional] Key to encrypt the claim data (in case of sending sensitive data to be seen for the requester only)
  */
 async function addClaim(
     TIR,
@@ -25,7 +26,8 @@ async function addClaim(
     claimTopic,
     claimData,
     claimScheme = 1,
-    uri = ''
+    uri = '',
+    key = undefined
 ) {
     try {
         console.log(
@@ -45,7 +47,7 @@ async function addClaim(
 
             // Create the claim (see https://github.com/ethereum/EIPs/issues/735)
             const claim = {
-                data: hash(claimData),
+                data: ethers.toUtf8Bytes(claimData),
                 issuer: await claimIssuerContract.getAddress(),
                 topic: ethers.id(claimTopic),
                 scheme: claimScheme,
@@ -60,7 +62,7 @@ async function addClaim(
                         ]
                     )
                 ),
-                uri: hash(uri)
+                uri: !uri ? '' : hash(uri)
             };
 
             // Sign the claim
@@ -74,6 +76,10 @@ async function addClaim(
                     )
                 )
             );
+
+            if (uri !== '' && key !== undefined) {
+                claim.data = ethers.toUtf8Bytes(encrypt(claim.data, key));
+            }
 
             // Add the claim to the identity
             const tx = await receiverIdentity

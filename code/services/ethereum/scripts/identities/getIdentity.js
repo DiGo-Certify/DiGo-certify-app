@@ -4,11 +4,13 @@ const {
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const config = require('../../../../config.json');
+const { getContractAt } = require('../utils/ethers');
 
-async function getIdentity(address, identityFactory, signer = undefined) {
+async function getIdentity(address, identityFactory = undefined, signer = undefined) {
     try {
         if (signer === undefined) {
             signer = useRpcProvider(config.url, config.deployer.privateKey);
+            identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
         }
 
         console.log('[!] Getting identity for wallet with address:', address);

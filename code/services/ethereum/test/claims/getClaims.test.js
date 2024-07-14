@@ -77,7 +77,7 @@ describe('get all the claims of an identity by topic', function () {
         expect(claims).to.exist;
         expect(claims[0].id).to.be.equal(claimId.claimId);
         expect(claims[0].topic).to.be.equal(claimId.topic);
-        expect(claims[0].data).to.be.equal(hash(claim.data));
+        expect(ethers.toUtf8String(claims[0].data)).to.be.equal(claim.data);
         expect(claims[0].uri).to.be.equal(claimId.uri);
     });
 });

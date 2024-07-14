@@ -26,13 +26,13 @@ const Profile = () => {
         const fetchUserInfo = async () => {
             const userInfo = await getValueFor('user_info');
             const profileImage = await getValueFor('profile_image');
-            const walletAddress = await getValueFor('wallet');
-            if (userInfo && walletAddress) {
+            const wallet = await getValueFor('wallet');
+            if (userInfo && wallet) {
                 setProfile(() => ({
                     username: userInfo.username,
                     since: userInfo.year,
                     image: profileImage || Images.mockupProfileImage,
-                    wallet: walletAddress.address,
+                    wallet: wallet.address,
                 }));
             }
         };
@@ -61,14 +61,12 @@ const Profile = () => {
 
     useEffect(() => {
         if (address) {
-            if (profile.wallet === address || profile.wallet === 'Not connected') {
-                console.log('Wallet address already saved!');
+            if (profile.wallet === address) {
                 setIsSaving(false);
                 return;
             }
             const saveWalletAddress = async () => {
-                console.log('Saving wallet address...');
-                await save('wallet', JSON.stringify({ address: address, privateKey: '' }));
+                await save('wallet', JSON.stringify({ address: address  }));
                 setProfile(currentProfile => ({
                     ...currentProfile,
                     wallet: address,
