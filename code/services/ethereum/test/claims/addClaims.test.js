@@ -16,6 +16,7 @@ const {
     CLAIM_TOPICS_OBJ
 } = require('../../scripts/claims/claimTopics');
 const { getClaimsByTopic } = require('../../scripts/claims/getClaimsByTopic');
+const { encrypt, decrypt } = require('../../scripts/utils/encryption/aes-256');
 
 describe('Claims Test', () => {
     describe('A trusted claim issuer can asign claims to an identity that has his key', () => {
@@ -229,5 +230,58 @@ describe('Claims Test', () => {
             expect(claims.length).to.be.equal(1);
             expect(ethers.toUtf8String(claims[0].data)).to.be.equal(claimData1);
         });
+
+        it('Temporary add claim', async () => {
+            const { deployerWallet, trustedIssuersRegistry, identityFactory } =
+                await loadFixture(deployFullTREXSuiteFixture);
+
+            const [aliceWallet] = await ethers.getSigners();
+
+            const aliceIdentity = await deployIdentity(
+                identityFactory,
+                aliceWallet.address,
+                'alice-salt',
+                deployerWallet
+            );
+
+            expect(aliceIdentity).to.exist;
+            expect(
+                await identityFactory.getIdentity(aliceWallet.address)
+            ).to.be.equal(await aliceIdentity.getAddress());
+            expect(await aliceIdentity.runner.getAddress()).to.be.equal(
+                aliceWallet.address
+            );
+
+            const uri = 'http://example.com';
+
+            const claimData = JSON.stringify({
+                registrationCode: '123',
+                certificate: encrypt(uri, 'Kempa')
+            });
+
+            const encrypted = encrypt(claimData, 'Kempa');
+            console.log('Encrypted:', encrypted);
+            console.log('Decrypted:', decrypt(encrypted, 'Kempa'));
+
+            const claim = await addClaim(
+                trustedIssuersRegistry,
+                aliceIdentity,
+                aliceIdentity,
+                aliceIdentity.runner,
+                CLAIM_TOPICS_OBJ.STUDENT,
+                claimData,
+                1,
+                uri,
+                'Kempa'
+            );
+
+            expect(claim).to.exist;
+            console.log('Claim:', ethers.toUtf8String(claim.data));
+            expect(ethers.toUtf8String(claim.data)).to.be.equal(claimData);
+            const json = JSON.parse(ethers.toUtf8String(claim.data));
+            expect(json.registrationCode).to.be.equal('123');
+            expect(decrypt(json.certificate, 'Kempa')).to.be.equal(uri);
+
+        })
     });
 });

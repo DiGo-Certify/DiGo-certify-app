@@ -45,6 +45,11 @@ async function addClaim(
         } else {
             console.log('[✓] Claim issuer is trusted or self-signer');
 
+            console.log('claimData:' ,claimData);
+            console.log('claimTopic:' ,claimTopic);
+            console.log('claimScheme:' ,claimScheme);
+            console.log('uri:' ,uri);
+
             // Create the claim (see https://github.com/ethereum/EIPs/issues/735)
             const claim = {
                 data: ethers.toUtf8Bytes(claimData),
@@ -62,9 +67,10 @@ async function addClaim(
                         ]
                     )
                 ),
-                uri: !uri ? '' : hash(uri)
+                uri: hash(uri)
             };
 
+            
             // Sign the claim
             claim.signature = await claimIssuerWallet.signMessage(
                 ethers.getBytes(
@@ -77,9 +83,10 @@ async function addClaim(
                 )
             );
 
-            if (uri !== '' && key !== undefined) {
-                claim.data = ethers.toUtf8Bytes(encrypt(claim.data, key));
-            }
+            console.log('claim data:', claimData);
+            console.log('key:', key);
+            console.log('claim:', claim);
+
 
             // Add the claim to the identity
             const tx = await receiverIdentity
@@ -90,7 +97,7 @@ async function addClaim(
                     claim.issuer,
                     claim.signature,
                     claim.data,
-                    uri
+                    claim.uri
                 );
 
             const tx_receipt = await tx.wait();

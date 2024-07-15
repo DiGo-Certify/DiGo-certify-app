@@ -8,11 +8,20 @@ import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';
 import FeatureUnderDev from '@/components/FeatureUnderDev';
+import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
+import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
+import config from '@/config.json';
+import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
+import hash from '@/services/ethereum/scripts/utils/encryption/hash';
+import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
+import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const Validation = () => {
     const [valid, setValid] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [certificateLink, setCertificateLink] = useState('');
+    const [userAddress, setUserAddress] = useState('');
 
     const handleQRCodeScan = event => {
         // Process the scanned QR code (event.data) as needed
@@ -20,11 +29,34 @@ const Validation = () => {
         setCertificateLink(event.data);
     };
 
-    const handleValidate = () => {
+    const handleValidate = async () => {
         // Validate the claiom that has the link to the certificate (claimTopic CERTIFICATE)
-        
+        // If the claim is valid, and hash of the certificate is the same as the hash of the certificate in the claim uri field, setValid(true)
+        // Otherwise, setValid(false)
+        try {
+            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
-        setValid(true);
+            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
+            console.log(userAddress);
+            const userIdentity = await getIdentity(userAddress, identityFactory, signer);
+
+            if (userIdentity) {
+                const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
+                console.log('claims:', certificates);
+                const claimUri = certificates[0].uri;
+                console.log('claimUri:', claimUri);
+                if (claimUri === hash(certificateLink)) {
+                    setValid(true);
+                } else {
+                    setValid(false);
+                }
+                setShowModal(true);
+            } else {
+                Alert.alert('Error', 'User identity not found');
+            }
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
     };
 
     return (
@@ -45,6 +77,13 @@ const Validation = () => {
                                 value={certificateLink}
                                 onChange={link => setCertificateLink(link)}
                             />
+                            <FormField
+                                label="Insert Student Address"
+                                icon="account"
+                                value={userAddress}
+                                onChange={address => setUserAddress(address)}
+                            />
+
                             <Text style={styles.or}>OR</Text>
                             {/* <QRCodeScanner
                                 onRead={handleQRCodeScan}
@@ -82,7 +121,7 @@ const Validation = () => {
                     />
                 }
             />
-            <ValidatedModal visible={valid} onDismiss={() => setValid(false)} valid={valid} />
+            <ValidatedModal visible={showModal} onDismiss={() => setShowModal(false)} valid={valid} />
         </>
     );
 };

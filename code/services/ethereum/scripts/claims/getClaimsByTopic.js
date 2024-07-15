@@ -34,8 +34,6 @@ async function getClaimsByTopic(identity, topic) {
                 ethers.id(CLAIM_TOPICS_OBJ.INSTITUTION)
             );
 
-            console.log('[i] Institution claims:', institutionClaims);
-
             await Promise.all(
                 institutionClaims.map(async claimId => {
                     const claimArray = await identity.getClaim(claimId); // see return at https://github.com/onchain-id/solidity/blob/main/contracts/Identity.sol
