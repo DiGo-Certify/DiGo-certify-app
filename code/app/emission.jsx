@@ -91,7 +91,7 @@ const Emission = () => {
             });
             const certificateClaim = JSON.stringify({
                 registrationCode: form.registrationCode,
-                certificate: form.certificateUri ? encrypt(form.certificateUri, form.password) : 'Certificate hash: ' + fileHash,
+                certificate: form.certificateUri ? encrypt(form.certificateUri, form.password) : 'Certificate hash',
             });
 
             const certificateClaimUri = form.certificateUri ? form.certificateUri : fileHash;
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     body: {
-        marginTop: -45,
+        marginTop: -20,
         marginBottom: 20,
     },
     title: {

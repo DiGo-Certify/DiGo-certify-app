@@ -39,12 +39,13 @@ const Validation = () => {
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
             console.log(userAddress);
             const userIdentity = await getIdentity(userAddress, identityFactory, signer);
-
             if (userIdentity) {
                 const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
-                console.log('claims:', certificates);
+                if(certificates.length === 0) {
+                    Alert.alert('Error', 'No certificates found');
+                    return;
+                }
                 const claimUri = certificates[0].uri;
-                console.log('claimUri:', claimUri);
                 if (claimUri === hash(certificateLink)) {
                     setValid(true);
                 } else {
