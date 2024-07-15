@@ -2,21 +2,24 @@ const fs = require('fs');
 const path = require('path');
 const { ethers } = require('ethers');
 const CryptoJS = require('crypto-js');
-const { FILE } = require('dns');
+const { useRpcProvider } = require('../utils/useRpcProvider');
 
 // Carregar o ABI do contrato a partir do arquivo JSON
 const contractJsonPath = path.join(
     __dirname,
-    'artifacts/contracts/FileStorage.sol/FileStorage.json'
+    '../../artifacts/contracts/config/FileStorage.sol/FileStorage.json'
 );
+console.log('Json path ' + contractJsonPath);
 const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, 'utf8'));
 const contractABI = contractJson.abi;
 
 const HARCODED_RPC = 'http://localhost:8545';
 const FILE_STORAGE_CONTRACT = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
-
+const HARD_CODED_PRIVATE_KEY =
+    '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+    
 async function getFileStorage() {
-    const provider = new ethers.providers.JsonRpcProvider(HARCODED_RPC);
+    const provider = useRpcProvider(HARCODED_RPC, HARD_CODED_PRIVATE_KEY);
     const contractAddress = FILE_STORAGE_CONTRACT;
     const contract = new ethers.Contract(
         contractAddress,
@@ -26,3 +29,7 @@ async function getFileStorage() {
 
     return contract;
 }
+
+module.exports = { getFileStorage };
+// C:\Coding\DiGo-certify-app\code\services\ethereum\artifacts\contracts\config\FileStorage.sol\FileStorage.json
+// C:\Coding\DiGo-certify-app\code\services\ethereum\scripts\config\artifacts\contracts\config\FileStorage.sol\FileStorage.json

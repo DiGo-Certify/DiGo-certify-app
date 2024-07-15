@@ -61,12 +61,12 @@ const Profile = () => {
 
     useEffect(() => {
         if (address) {
-            if (profile.wallet === address) {
+            if (profile.wallet === address || profile.wallet === 'Not connected') {
                 setIsSaving(false);
                 return;
             }
             const saveWalletAddress = async () => {
-                await save('wallet', JSON.stringify({ address: address  }));
+                await save('wallet', JSON.stringify({ address: address }));
                 setProfile(currentProfile => ({
                     ...currentProfile,
                     wallet: address,

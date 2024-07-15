@@ -114,7 +114,7 @@ const HomeScreen = () => {
 
     const requestCertificateHandle = async () => {
         const userWallet = await getValueFor('wallet');
-        if (userWallet.privateKey === undefined || userWallet.privateKey === '') {
+        if (!userWallet.privateKey) {
             Alert.alert(
                 'Private Key Required',
                 'Please enter your private key to request a certificate and make sure to do not send this to anyone',
@@ -224,7 +224,10 @@ const HomeScreen = () => {
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
                         <Appbar.Action icon="reload" onPress={() => getCertificates()} />
-                        <Appbar.Content title="My Certificates" titleStyle={{ fontFamily: 'Poppins-SemiBold', justifyContent: 'center' }} />
+                        <Appbar.Content
+                            title="My Certificates"
+                            titleStyle={{ fontFamily: 'Poppins-SemiBold', justifyContent: 'center' }}
+                        />
                         <Appbar.Action icon="plus" onPress={requestCertificateHandle} />
                     </Appbar.Header>
                 </View>
