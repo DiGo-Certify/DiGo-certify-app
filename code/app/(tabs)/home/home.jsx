@@ -15,10 +15,11 @@ import CertificateFormModal from './components/certificateFormModal';
 import PrivateKeyModal from './components/privateKeyModal';
 import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
+import { decrypt } from '@/services/ethereum/scripts/utils/encryption/aes-256';
+import { getClaimsData } from '@/services/ethereum/scripts/claims/getClaimsData';
 
 async function getCertificates() {
     try {
-        // 'Name' Licenciado in 'course code' at 'institution code', available at 'uri'
         const userWallet = await getValueFor('wallet');
 
         const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
@@ -28,17 +29,17 @@ async function getCertificates() {
         const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
         const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
 
-        console.log('User Identity:', userIdentity);
-
         const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
         const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
         const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
 
-        console.log(certificates);
-        console.log(institutions);
-        console.log(students);
-        console.log('Institution Info:', ethers.toUtf8String(institutions[0].data));
-        console.log('Student Info:', ethers.toUtf8String(students[0].data));
+        console.log('Certificates:', certificates);
+        console.log('Institutions:', institutions);
+        console.log('Students:', students);
+
+        // 'Name' Licenciado in 'course code' at 'institution code', available at 'uri'
+
+
     } catch (error) {
         console.log(error);
         throw error;
@@ -165,7 +166,10 @@ const HomeScreen = () => {
 
             // Create the user wallet object (ethers.Wallet)
             const userWallet = getWallet(savedWallet.privateKey, provider);
-            if (userWallet === null) {
+            console.log('User Wallet:', userWallet.address);
+            console.log('Saved wallet:', savedWallet.address);
+            console.log(userWallet.address !== savedWallet.address);
+            if (userWallet.address.toLowerCase() !== savedWallet.address) {
                 const onCancel = () => {
                     setModalVisible(false);
                     setIsSubmitting(false);
@@ -180,6 +184,7 @@ const HomeScreen = () => {
                         onPress: onCancel,
                     },
                 ]);
+                setIsSubmitting(false);
                 return;
             }
 

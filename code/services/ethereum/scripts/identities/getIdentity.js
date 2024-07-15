@@ -33,6 +33,7 @@ async function getIdentity(address, identityFactory, signer = undefined) {
             return null;
         }
     } catch (error) {
+        console.error('[X] Error getting identity:', error);
         console.error(error);
         return null;
     }

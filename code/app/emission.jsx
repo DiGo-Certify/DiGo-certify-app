@@ -19,7 +19,6 @@ import { getContractAt, getWallet } from '@/services/ethereum/scripts/utils/ethe
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { ethers } from 'ethers';
-import hash from '@/services/ethereum/scripts/utils/encryption/hash';
 import { encrypt } from '@/services/ethereum/scripts/utils/encryption/aes-256';
 
 const Emission = () => {
@@ -87,16 +86,17 @@ const Emission = () => {
             const claimIssuerWallet = getWallet(institution.wallet.privateKey, provider);
 
             const institutionClaim = JSON.stringify({
-                institutionID: institution.institutionID,
+                institutionID: institution.institutionID.toString(),
                 courseID: form.courseID,
-            }).toString();
+            });
             const certificateClaim = JSON.stringify({
                 registrationCode: form.registrationCode,
-                certificate: fileHash ? fileHash : encrypt(form.certificateUri, form.password),
-            }).toString();
+                certificate: form.certificateUri ? encrypt(form.certificateUri, form.password) : 'Certificate hash: ' + fileHash,
+            });
 
-            const claimUri = !fileInfo ? hash(form.certificateUri) : hash(fileInfo.fileContents);
+            const certificateClaimUri = form.certificateUri ? form.certificateUri : fileHash;
 
+            console.log('certificate claim:', certificateClaim);
             // Claim institution (Institution ID, Course ID)
             await addClaim(
                 trustedIR,
@@ -114,10 +114,9 @@ const Emission = () => {
                 claimIssuerContract,
                 claimIssuerWallet,
                 CLAIM_TOPICS_OBJ.STUDENT,
-                form.grade      // Grade (Licenciado, Mestre, Doutor...)
+                form.grade // Grade (Licenciado, Mestre, Doutor...)
             );
 
-            // Claim certificate (Registration Code, Certificate)
             await addClaim(
                 trustedIR,
                 identity,
@@ -126,7 +125,7 @@ const Emission = () => {
                 CLAIM_TOPICS_OBJ.CERTIFICATE,
                 certificateClaim,
                 1,
-                claimUri,
+                certificateClaimUri,
                 form.password
             );
 
@@ -156,8 +155,10 @@ const Emission = () => {
                 const fileContents = await FileSystem.readAsStringAsync(uri, {
                     encoding: FileSystem.EncodingType.Base64,
                 });
+
                 setFileInfo({ uri, name, size, fileContents });
-                const hash = encrypt(fileContents, form.password);
+
+                const hash = hash(fileContents);
                 setFileHash(hash);
             }
         } catch (error) {
@@ -217,9 +218,10 @@ const Emission = () => {
                             icon="lock"
                             onChange={text => setForm({ ...form, password: text })}
                             style={styles.inputField}
+                            secure={true}
                         />
                         <ActionButton
-                            text="Upload Certificate"
+                            text={fileInfo ? fileInfo.name : 'Upload Certificate'}
                             mode="contained"
                             icon={'file-upload'}
                             onPress={handleUpload}

@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "crypto-js": "^4.2.0",
+        "deflate-js": "^0.2.3",
         "ethers": "^6.13.1",
         "glob": "^10.2.6"
     }

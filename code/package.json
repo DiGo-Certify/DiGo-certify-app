@@ -17,10 +17,13 @@
     "@walletconnect/modal-react-native": "^1.1.0",
     "@walletconnect/react-native-compat": "^2.12.2",
     "crypto-js": "^4.2.0",
+    "deflate-js": "^0.2.3",
     "ethers": "^6.13.1",
     "expo": "^51.0.20",
     "expo-application": "~5.9.1",
     "expo-constants": "~16.0.2",
+    "expo-crypto": "~13.0.2",
+    "expo-document-picker": "~12.0.2",
     "expo-file-system": "~17.0.1",
     "expo-font": "^12.0.8",
     "expo-image-picker": "~15.0.7",
@@ -28,6 +31,7 @@
     "expo-router": "^3.5.18",
     "expo-secure-store": "~13.0.2",
     "expo-status-bar": "~1.12.1",
+    "pako": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-document-picker": "^9.3.0",
@@ -42,9 +46,7 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-swiper": "^1.6.0",
-    "uuid": "^10.0.0",
-    "expo-document-picker": "~12.0.2",
-    "expo-crypto": "~13.0.2"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
