@@ -2,9 +2,22 @@ name: Node.js CI
 
 on:
   push:
-    branches: [$default-branch]
+    branches: ["main"]
+
   pull_request:
-    branches: [$default-branch]
+    branches: ["main"]
+
+  # Can be called by another workflow
+  workflow_call:
+  # Allows you to run this workflow manually from the Actions tab (only runs on the default branch)
+  workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -38,4 +51,3 @@ jobs:
         run: |
           cd code/services/ethereum/test
           npx hardhat test
-      # Optionally, add build or test commands for services/ethereum if needed
