@@ -78,13 +78,10 @@ const HomeScreen = () => {
 
     const getCertificates = async () => {
         try {
-            setSelectedCertificate(null);
             setIsLoading(true);
             const userWallet = await getValueFor('wallet');
 
             const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-
-            console.log('User Wallet:', userWallet);
 
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
             const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
@@ -93,9 +90,6 @@ const HomeScreen = () => {
             const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
             const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
 
-            //console.log('Certificates:', certificates);
-            //console.log('Institutions:', institutions);
-            //console.log('Students:', students);
             setIsLoading(false);
             return certificates.map((certificate, index) => {
                 const institution = institutions.find(inst => inst.issuer.trim() === certificate.issuer.trim());
@@ -181,7 +175,8 @@ const HomeScreen = () => {
 
             // Create the user wallet object (ethers.Wallet)
             const userWallet = getWallet(savedWallet.privateKey, provider);
-            if (userWallet.address.toLowerCase() !== savedWallet.address) {
+            console.log('User Wallet:', userWallet);
+            if (!userWallet || userWallet.address.toLowerCase() !== savedWallet.address) {
                 const onCancel = () => {
                     setModalVisible(false);
                     setIsSubmitting(false);
@@ -203,27 +198,29 @@ const HomeScreen = () => {
             // Add the key of the claim issuer that matches the institution code to the identity of the student that requested the certificate
             // With this the student is allowing the institution to emit certificates on his behalf
             const issuers = await trustedIR.getTrustedIssuersForClaimTopic(ethers.id(CLAIM_TOPICS_OBJ.INSTITUTION));
+            console.log('Issuers:', issuers);
 
+            let issuerFound = false;
             for (const issuer of issuers) {
+                console.log('Issuer:', issuer);
                 for (const institution of config.institutions) {
-                    if (
-                        institution.address === issuer &&
-                        institution.institutionID.toString() === form.institutionCode
-                    ) {
+                    console.log('Institution:', institution);
+                    if (institution.address === issuer && institution.institutionID === form.institutionCode) {
+                        issuerFound = true;
                         const issuerWallet = getWallet(institution.wallet.privateKey, provider);
                         const issuerContract = getContractAt(institution.address, institution.abi, issuerWallet);
                         const issuerKeys = await issuerContract.getKeysByPurpose(3);
                         const userKeys = await userIdentity.getKeysByPurpose(3);
-                        console.log('User Keys: ', userKeys);
                         if (!userKeys.includes(issuerKeys[0])) {
                             await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
                         }
-                    } else {
-                        Alert.alert('Warning', 'Institution not found.');
-                        setIsSubmitting(false);
-                        return;
                     }
                 }
+            }
+            if (!issuerFound) {
+                Alert.alert('Warning', 'Institution not found.');
+                setIsSubmitting(false);
+                return;
             }
 
             // Self assign the student number and name (CLAIM_TOPICS: STUDENT)
@@ -244,6 +241,11 @@ const HomeScreen = () => {
     };
 
     const handleCertificatePress = certificate => {
+        console.log(certificate);
+        if(certificate.uri === 'Certificate hash') {
+            Alert.alert('Warning', 'URL not available yet. Contact the institution for more information.');
+            return;
+        }
         setSelectedCertificate(certificate);
         setCertificateModalVisible(true);
     };
@@ -315,7 +317,10 @@ const HomeScreen = () => {
                         {selectedCertificate && (
                             <PasswordModal
                                 visible={certificateModalVisible}
-                                onDismiss={() => setCertificateModalVisible(false)}
+                                onDismiss={() => {
+                                    setCertificateModalVisible(false);
+                                    setSelectedCertificate(null);
+                                }}
                                 encryptedURI={selectedCertificate.uri}
                             />
                         )}

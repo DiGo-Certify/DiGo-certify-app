@@ -15,26 +15,27 @@ is_empty() {
   fi
 }
 
-# Ask the user for trusted issuer registry address
-while true; do
-  read -p "[W] Enter the address of the trusted issuer registry: " TRUSTED_ISSUER_REGISTRY
-  if is_empty "$TRUSTED_ISSUER_REGISTRY"; then
-    echo "Trusted issuer registry cannot be empty. Please try again."
+# Function to check if wallet private key is valid
+is_valid_wallet_private_key() {
+  if [[ "$1" =~ ^0x[a-fA-F0-9]{64}$ ]]; then
+    return 0
   else
-    break
+    return 1
   fi
-done
+}
 
 # Ask for institution wallet private key
 while true; do
-  read -s -p "[$] Institution Wallet Private Key: " INSTITUTION_WALLET_PRIVATE_KEY
+  read -s -p "[#] Institution Wallet Private Key: " INSTITUTION_WALLET_PRIVATE_KEY
   echo
     if is_empty "$INSTITUTION_WALLET_PRIVATE_KEY"; then
-        echo "Institution wallet private key cannot be empty. Please try again."
+        echo "Private key cannot be empty. Please try again."
+    elif ! is_valid_wallet_private_key "$INSTITUTION_WALLET_PRIVATE_KEY"; then
+        echo "Invalid private key. Please try again."
     else
         break
     fi
-done
+done 
 
 # Ask for the institution code
 while true; do
@@ -50,7 +51,7 @@ done
 # Call the deploy claim issuer script
 node -e "
 const deployClaimIssuer = require('$DEPLOY_CLAIM_ISSUER').deployClaimIssuer;
-deployClaimIssuer('$TRUSTED_ISSUER_REGISTRY', undefined, undefined, '$INSTITUTION_WALLET_PRIVATE_KEY', '$INSTITUTION_CODE');
+deployClaimIssuer(undefined, undefined, undefined, '$INSTITUTION_WALLET_PRIVATE_KEY', '$INSTITUTION_CODE');
 "
 
 

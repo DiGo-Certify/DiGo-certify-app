@@ -60,13 +60,13 @@ async function main() {
     );
 
     // Initial trusted issuers for the CLAIM_TOPICS = ['INSTITUTION', 'STUDENT', 'CERTIFICATE'] is the app owner
-    await deployClaimIssuer(
-        trustedIR,
-        deployer,
-        deployer,
-        config.deployer.privateKey,
-        3117,
-    );
+    // await deployClaimIssuer(
+    //     trustedIR,
+    //     undefined,
+    //     deployer,
+    //     config.deployer.privateKey,
+    //     3117,
+    // );
 }
 
 main()

@@ -24,7 +24,7 @@ function addIssuerToConfig(institutionID, walletAddress, walletPrivateKey, claim
         configuration = JSON.parse(configFile);
 
         for (const institution of configuration.institutions) {
-            if (institution.institutionID === institutionID) {
+            if (institution.institutionID.toString() === institutionID) {
                 console.log(`Institution with ID ${institutionID} already exists in the configuration file, updating...`);
                 institution.wallet.address = walletAddress;
                 institution.wallet.privateKey = walletPrivateKey;

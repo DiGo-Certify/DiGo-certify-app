@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Bold',
         textAlign: 'center',
         marginTop: 20,
+        color: Colors.url,
     },
 });
 

@@ -18,14 +18,16 @@ import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider
 import { IconButton } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
+import { getValueFor } from '@/services/storage/storage';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const Validation = () => {
     const [valid, setValid] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [certificateLink, setCertificateLink] = useState('');
-    const [hashedContent, setHashedContent] = useState('');
+    const [content, setContent] = useState('');
     const [userAddress, setUserAddress] = useState('');
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
 
     const handleQRCodeScan = event => {
         // Process the scanned QR code (event.data) as needed
@@ -33,11 +35,34 @@ const Validation = () => {
         setCertificateLink(event.data);
     };
 
+    useEffect(() => {
+        const isUserAuthenticated = async () => {
+            const userWallet = await getValueFor('wallet');
+            console.log(userWallet);
+            userWallet.address ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
+        };
+        isUserAuthenticated();
+    }, []);
+
+    // If the input of link is empty, clean the content
+    useEffect(() => {
+        if (!certificateLink) {
+            setContent('');
+        }
+    }, [certificateLink]);
+
     const handleValidate = async () => {
         // Validate the claiom that has the link to the certificate (claimTopic CERTIFICATE)
         // If the claim is valid, and hash of the certificate is the same as the hash of the certificate in the claim uri field, setValid(true)
         // Otherwise, setValid(false)
         try {
+            if (!userAddress || !certificateLink) {
+                Alert.alert('Error', 'Please fill in all fields');
+                return;
+            } else if (!content && !certificateLink) {
+                Alert.alert('Error', 'Please upload a certificate or insert a URL');
+                return;
+            }
             const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
@@ -45,15 +70,21 @@ const Validation = () => {
             const userIdentity = await getIdentity(userAddress, identityFactory, signer);
             if (userIdentity) {
                 const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
-                if(certificates.length === 0) {
+                console.log('Certificates:', certificates);
+                if (certificates.length === 0) {
                     Alert.alert('Error', 'No certificates found');
                     return;
                 }
-                const claimUri = certificates[0].uri;
-                console.log('claimUri:', claimUri);
-                if (claimUri === hash(certificateLink) || claimUri === hash(hashedContent)) {
-                    setValid(true);
-                } else {
+                let valid = false;
+                for (const certificate of certificates) {
+                    const claimUri = certificate.uri;
+                    if (claimUri === hash(certificateLink) || claimUri === hash(content)) {
+                        setValid(true);
+                        valid = true;
+                        break;
+                    }
+                }
+                if (!valid) {
                     setValid(false);
                 }
                 setShowModal(true);
@@ -75,10 +106,16 @@ const Validation = () => {
             const fileContents = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64,
             });
-            const hashedContent = hash(fileContents);
-            setHashedContent(hashedContent);
+            setContent(fileContents);
             setCertificateLink(name);
             onChange(result.uri);
+        }
+    };
+
+    const handleImportOwnWallet = async () => {
+        const userWallet = await getValueFor('wallet');
+        if (userWallet) {
+            setUserAddress(userWallet.address);
         }
     };
 
@@ -99,7 +136,14 @@ const Validation = () => {
                                 icon="account"
                                 value={userAddress}
                                 onChange={address => setUserAddress(address)}
-                                outSideIconComponent={<IconButton icon="" color="black" size={20} onPress={() => {}} />}
+                                outSideIconComponent={
+                                    <IconButton
+                                        icon={isUserAuthenticated ? 'account-plus' : ''}
+                                        color="black"
+                                        size={20}
+                                        onPress={handleImportOwnWallet}
+                                    />
+                                }
                             />
                             <FormField
                                 label="Insert Certificate Link"
@@ -117,20 +161,6 @@ const Validation = () => {
                             />
 
                             <Text style={styles.or}>OR</Text>
-                            {/* <QRCodeScanner
-                                onRead={handleQRCodeScan}
-                                showMarker={true}
-                                containerStyle={{ marginTop: 16 }}
-                                markerStyle={{ borderColor: 'red', borderRadius: 10 }}
-                                reactivate={true}
-                                permissionDialogMessage="Need permission to access camera"
-                                reactivateTimeout={2000}
-                                bottomContent={
-                                    <Text style={{ color: 'white', fontSize: 20, marginBottom: 50 }}>
-                                        Scan QR code to insert link
-                                    </Text>
-                                }
-                            /> */}
                             <ActionButton
                                 text="Scan QR Code"
                                 buttonStyle={styles.qrButton}

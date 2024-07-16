@@ -47,48 +47,22 @@ describe('ClaimIssuer Creation', () => {
         ).to.be.true;
     });
 
-    it('Should create two claim issuers with different claim issuers but same tir deployer', async () => {
-        const { deployerWallet, trustedIssuersRegistry } = await loadFixture(
-            deployFullTREXSuiteFixture
-        );
-
-        const [tirDeployer, claimIssuerDeployer1, claimIssuerDeployer2] =
-            await ethers.getSigners();
-
-        const claimTopics = ['EXAMPLE'];
-
-        const cicAndTir1 = await deployClaimIssuer(
-            trustedIssuersRegistry,
-            claimIssuerDeployer1,
-            tirDeployer
-        );
-
-        const cicAndTir2 = await deployClaimIssuer(
-            trustedIssuersRegistry,
-            claimIssuerDeployer2,
-            tirDeployer
-        );
-
-        expect(await cicAndTir1.TIR.getTrustedIssuers()).to.have.lengthOf(2);
-        expect(await cicAndTir2.TIR.getTrustedIssuers()).to.have.lengthOf(2);
-        expect(await cicAndTir1.TIR.getTrustedIssuers()).to.be.deep.equal(
-            await cicAndTir2.TIR.getTrustedIssuers()
-        );
-    });
-    it('Should create a claim issuer with a claim of a institution code', async () => {
+    it('Should create a claim issuer with some data', async () => {
         const { deployerWallet, trustedIssuersRegistry, identityFactory } =
             await loadFixture(deployFullTREXSuiteFixture);
 
-        const [aliceWallet] = await ethers.getSigners();
+        const privKey = '0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'
+        const institutionCode = 3311;
 
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            aliceWallet,
-            deployerWallet,
             undefined,
-            3117
+            deployerWallet,
+            privKey,
+            3311,
         );
 
+        
         expect((await cicAndTir.TIR.getTrustedIssuers())[0]).to.be.equal(
             await cicAndTir.claimIssuerContract.getAddress()
         );
@@ -100,34 +74,6 @@ describe('ClaimIssuer Creation', () => {
             CLAIM_TOPICS_OBJ.INSTITUTION
         );
 
-        expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3117');
-    });
-
-    it('Should create a claim issuer with some data', async () => {
-        const { deployerWallet, trustedIssuersRegistry, identityFactory } =
-            await loadFixture(deployFullTREXSuiteFixture);
-
-        const privKey = '0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656'
-
-        const cicAndTir = await deployClaimIssuer(
-            trustedIssuersRegistry,
-            undefined,
-            deployerWallet,
-            privKey,
-            3311
-        );
-
-        expect((await cicAndTir.TIR.getTrustedIssuers())[0]).to.be.equal(
-            await cicAndTir.claimIssuerContract.getAddress()
-        );
-
-        // console.log('Wallet:', deployerWallet);
-
-        // const claims = await getClaimsByTopic(
-        //     cicAndTir.claimIssuerContract,
-        //     CLAIM_TOPICS_OBJ.INSTITUTION
-        // );
-
-        // expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3311');
+        expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3311');
     });
 });

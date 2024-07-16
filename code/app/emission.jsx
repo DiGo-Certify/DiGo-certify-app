@@ -20,11 +20,11 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { ethers } from 'ethers';
 import { encrypt } from '@/services/ethereum/scripts/utils/encryption/aes-256';
+import hash from '@/services/ethereum/scripts/utils/encryption/hash';
 
 const Emission = () => {
     const [isSubmitting, setSubmitting] = useState(false);
     const [fileInfo, setFileInfo] = useState(null);
-    const [fileHash, setFileHash] = useState(null);
     const [form, setForm] = useState({
         registrationCode: '',
         courseID: '',
@@ -94,7 +94,7 @@ const Emission = () => {
                 certificate: form.certificateUri ? encrypt(form.certificateUri, form.password) : 'Certificate hash',
             });
 
-            const certificateClaimUri = form.certificateUri ? form.certificateUri : fileHash;
+            const certificateClaimUri = form.certificateUri ? form.certificateUri : fileInfo.fileContents;
 
             console.log('certificate claim:', certificateClaim);
             // Claim institution (Institution ID, Course ID)
@@ -157,9 +157,6 @@ const Emission = () => {
                 });
 
                 setFileInfo({ uri, name, size, fileContents });
-
-                const hash = hash(fileContents);
-                setFileHash(hash);
             }
         } catch (error) {
             console.error('Error picking document:', error);
@@ -279,7 +276,7 @@ const styles = StyleSheet.create({
     },
     body: {
         marginTop: -20,
-        marginBottom: 20,
+        marginBottom: 40,
     },
     title: {
         paddingTop: 5,
