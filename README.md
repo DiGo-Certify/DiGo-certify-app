@@ -24,7 +24,7 @@
     <a href="https://github.com/DiGo-Certify/DiGo-certify-app"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="[https://youtu.be/hXqPzB27vpg](https://youtu.be/hXqPzB27vpg)">View Demo</a>
+    <a href="https://youtu.be/hXqPzB27vpg">View Demo</a>
     ·
     <a href="https://github.com/DiGo-Certify/DiGo-certify-app/issues">Report Bug</a>
     ·
