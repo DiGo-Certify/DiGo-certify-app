@@ -37,17 +37,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - name: Install dependencies
-        run: |
-          npm install
-          cd services/ethereum
-          npm install
-        working-directory: ../code
+      - name: Install Client Dependencies
+        run: cd ./code/ && npm install
+
+      - name: Install Services Dependencies
+        run: cd ./code/services/ethereum && npm install
 
       - name: Build code directory
-        run: npm run build --if-present
-        working-directory: ../code
+        run: cd ./code/ && npm run build --if-present
 
       - name: Test code directory
-        run: npx hardhat test
-        working-directory: ../code/services/ethereum/test
+        run: cd ./code/ && npx hardhat test
