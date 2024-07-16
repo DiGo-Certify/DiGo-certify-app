@@ -15,12 +15,16 @@ import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity'
 import hash from '@/services/ethereum/scripts/utils/encryption/hash';
 import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
+import { IconButton } from 'react-native-paper';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 // import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const Validation = () => {
     const [valid, setValid] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [certificateLink, setCertificateLink] = useState('');
+    const [hashedContent, setHashedContent] = useState('');
     const [userAddress, setUserAddress] = useState('');
 
     const handleQRCodeScan = event => {
@@ -45,7 +49,7 @@ const Validation = () => {
                 console.log('claims:', certificates);
                 const claimUri = certificates[0].uri;
                 console.log('claimUri:', claimUri);
-                if (claimUri === hash(certificateLink)) {
+                if (claimUri === hash(certificateLink) || claimUri === hash(hashedContent)) {
                     setValid(true);
                 } else {
                     setValid(false);
@@ -56,6 +60,23 @@ const Validation = () => {
             }
         } catch (error) {
             Alert.alert('Error', error.message);
+        }
+    };
+
+    const handleDocumentPicker = async () => {
+        const result = await DocumentPicker.getDocumentAsync({
+            type: '*/*',
+            copyToCacheDirectory: true,
+        });
+        if (result) {
+            const { uri, name } = result.assets[0];
+            const fileContents = await FileSystem.readAsStringAsync(uri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+            const hashedContent = hash(fileContents);
+            setHashedContent(hashedContent);
+            setCertificateLink(name);
+            onChange(result.uri);
         }
     };
 
@@ -72,16 +93,25 @@ const Validation = () => {
                         <Text style={styles.title}>Certificate Validation</Text>
                         <View style={{ marginTop: 16 }}>
                             <FormField
-                                label="Insert Certificate Link"
-                                icon="certificate"
-                                value={certificateLink}
-                                onChange={link => setCertificateLink(link)}
-                            />
-                            <FormField
                                 label="Insert Student Address"
                                 icon="account"
                                 value={userAddress}
                                 onChange={address => setUserAddress(address)}
+                                outSideIconComponent={<IconButton icon="" color="black" size={20} onPress={() => {}} />}
+                            />
+                            <FormField
+                                label="Insert Certificate Link"
+                                icon="certificate"
+                                value={certificateLink}
+                                onChange={link => setCertificateLink(link)}
+                                outSideIconComponent={
+                                    <IconButton
+                                        icon="file-upload"
+                                        color="black"
+                                        size={20}
+                                        onPress={handleDocumentPicker}
+                                    />
+                                }
                             />
 
                             <Text style={styles.or}>OR</Text>

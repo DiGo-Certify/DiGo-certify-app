@@ -7,6 +7,7 @@ const ethers = require('ethers');
 function getClaimsData(claims) {
     const claimsData = [];
     for (const claim of claims) {
+        console.log('CLAIM', ethers.toUtf8String(claim.data));
         claimsData.push({
             data: ethers.toUtf8String(claim.data)
         });

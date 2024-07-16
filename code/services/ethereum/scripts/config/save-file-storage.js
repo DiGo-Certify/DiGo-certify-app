@@ -13,7 +13,8 @@ const contractJsonPath = path.join(
 const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, 'utf8'));
 const contractABI = contractJson.abi;
 //0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-const HARDCODED_RPC = 'http://localhost:8545';
+const HARDCODED_RPC =
+    'https://4442-2001-8a0-f972-ce00-5c99-9c8e-a23f-8595.ngrok-free.app';
 const FILE_STORAGE_CONTRACT = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
 const HARD_CODED_PRIVATE_KEY =
     '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
@@ -21,16 +22,13 @@ const SECRET_KEY = 'change-it'; // A chave secreta usada para cifrar e decifrar
 
 async function saveFileStorage(filePath) {
     try {
-        const provider = useRpcProvider(HARDCODED_RPC, HARD_CODED_PRIVATE_KEY);
+        const provider = new ethers.JsonRpcProvider(HARDCODED_RPC); //useRpcProvider(HARDCODED_RPC, HARD_CODED_PRIVATE_KEY);
+        const signer = new ethers.Wallet(HARD_CODED_PRIVATE_KEY, provider);
         const contractAddress = FILE_STORAGE_CONTRACT;
         const contract = new ethers.Contract(
             contractAddress,
             contractABI,
             provider
-        );
-        const signer = new ethers.Wallet(
-            HARD_CODED_PRIVATE_KEY,
-            contract.provider
         );
 
         // Ler o conteúdo do arquivo

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Linking, Alert } from 'react-native';
-import { Appbar, Searchbar, List, IconButton, Card } from 'react-native-paper';
+import { Appbar, Searchbar, List, IconButton, Card, ActivityIndicator } from 'react-native-paper';
 import Background from '@/components/Background';
 import Colors from '@/constants/colors';
 import { addClaim } from '@/services/ethereum/scripts/claims/add-claim';
@@ -15,36 +15,7 @@ import CertificateFormModal from './components/certificateFormModal';
 import PrivateKeyModal from './components/privateKeyModal';
 import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
-import { decrypt } from '@/services/ethereum/scripts/utils/encryption/aes-256';
-import { getClaimsData } from '@/services/ethereum/scripts/claims/getClaimsData';
-
-async function getCertificates() {
-    try {
-        const userWallet = await getValueFor('wallet');
-
-        const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-
-        console.log('User Wallet:', userWallet);
-
-        const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
-        const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
-
-        const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
-        const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
-        const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
-
-        console.log('Certificates:', certificates);
-        console.log('Institutions:', institutions);
-        console.log('Students:', students);
-
-        // 'Name' Licenciado in 'course code' at 'institution code', available at 'uri'
-
-
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-}
+import PasswordModal from './components/certificateModal';
 
 // Função modificada para usar os valores do estado do formulário
 const emailRequest = (name, studentNumber, institutionCode, OID) => {
@@ -69,7 +40,10 @@ const HomeScreen = () => {
     const [privKeyModalVisible, setPrivKeyModalVisible] = useState(false);
     const [privateKey, setPrivateKey] = useState(''); // Private Key Modal Input
     const [modalVisible, setModalVisible] = useState(false); // Form Modal (Request Certificate)
+    const [certificateModalVisible, setCertificateModalVisible] = useState(false); // Certificate Modal
+    const [selectedCertificate, setSelectedCertificate] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Loading state for fetching certificates
     const [form, setForm] = useState({
         name: '',
         studentNumber: '',
@@ -98,9 +72,50 @@ const HomeScreen = () => {
 
     const handleSearch = query => setSearchQuery(query);
 
-    // const filteredCertificates = certificates.filter(certificate =>
-    //     certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
-    // );
+    const filteredCertificates = certificates.filter(certificate =>
+        certificate.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const getCertificates = async () => {
+        try {
+            setSelectedCertificate(null);
+            setIsLoading(true);
+            const userWallet = await getValueFor('wallet');
+
+            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
+
+            console.log('User Wallet:', userWallet);
+
+            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
+            const userIdentity = await getIdentity(userWallet.address, identityFactory, signer);
+
+            const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
+            const institutions = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.INSTITUTION);
+            const students = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.STUDENT);
+
+            //console.log('Certificates:', certificates);
+            //console.log('Institutions:', institutions);
+            //console.log('Students:', students);
+            setIsLoading(false);
+            return certificates.map((certificate, index) => {
+                const institution = institutions.find(inst => inst.issuer.trim() === certificate.issuer.trim());
+                const instData = JSON.parse(ethers.toUtf8String(institution.data));
+                const studentFirstClaim = students.find(std => std.issuer.trim() != certificate.issuer.trim());
+                const studentFirstClaimData = JSON.parse(ethers.toUtf8String(studentFirstClaim.data));
+                const student = students.find(std => std.issuer.trim() === certificate.issuer.trim());
+                const studentData = ethers.toUtf8String(student.data);
+                const certData = JSON.parse(ethers.toUtf8String(certificate.data));
+                return {
+                    id: index,
+                    title: `${studentFirstClaimData.name} ${studentData} em ${instData.courseID} na ${instData.institutionID}`,
+                    uri: certData.certificate,
+                };
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    };
 
     const onSubmitPrivateKey = async () => {
         const userWallet = await getValueFor('wallet');
@@ -223,12 +238,17 @@ const HomeScreen = () => {
         }
     };
 
+    const handleCertificatePress = certificate => {
+        setSelectedCertificate(certificate);
+        setCertificateModalVisible(true);
+    };
+
     return (
         <Background
             header={
                 <View style={styles.header}>
                     <Appbar.Header style={styles.topHeader}>
-                        <Appbar.Action icon="reload" onPress={() => getCertificates()} />
+                        <Appbar.Action icon="reload" onPress={getCertificates} disabled={isLoading} />
                         <Appbar.Content
                             title="My Certificates"
                             titleStyle={{ fontFamily: 'Poppins-SemiBold', justifyContent: 'center' }}
@@ -263,34 +283,37 @@ const HomeScreen = () => {
                                 style={styles.searchBar}
                             />
                         </View>
-                        <FlatList
-                            data={() => console.log('certificates')}
-                            keyExtractor={item => item.id.toString()}
-                            renderItem={({ item }) => (
-                                <Card style={styles.certificateItem}>
-                                    <Card.Content style={styles.certificateContent}>
-                                        <List.Item
-                                            title={item.title}
-                                            right={() => (
-                                                <View style={styles.certificateActions}>
-                                                    <IconButton icon="pencil" onPress={() => {}} />
-                                                    <IconButton
-                                                        icon="share"
-                                                        onPress={() => {}}
-                                                        style={{ alignItems: 'flex-end' }}
-                                                    />
-                                                    <IconButton
-                                                        icon="arrow-down-circle"
-                                                        onPress={() => {}}
-                                                        style={{ alignItems: 'flex-end' }}
-                                                    />
-                                                </View>
-                                            )}
-                                        />
-                                    </Card.Content>
-                                </Card>
-                            )}
-                        />
+                        {isLoading ? (
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <ActivityIndicator animating={true} color={Colors.green} size="large" />
+                            </View>
+                        ) : (
+                            <FlatList
+                                data={filteredCertificates}
+                                keyExtractor={item => item.id.toString()}
+                                renderItem={({ item }) => (
+                                    <Card style={styles.certificateItem}>
+                                        <Card.Content style={styles.certificateContent}>
+                                            <List.Item title={item.title} titleStyle={styles.title} />
+                                            <View style={styles.certificateActions}>
+                                                <IconButton
+                                                    icon="eye"
+                                                    onPress={() => handleCertificatePress(item)}
+                                                    style={{ marginRight: 8 }}
+                                                />
+                                            </View>
+                                        </Card.Content>
+                                    </Card>
+                                )}
+                            />
+                        )}
+                        {selectedCertificate && (
+                            <PasswordModal
+                                visible={certificateModalVisible}
+                                onDismiss={() => setCertificateModalVisible(false)}
+                                encryptedURI={selectedCertificate.uri}
+                            />
+                        )}
                     </View>
                 </>
             }
@@ -311,6 +334,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         marginTop: -155,
     },
+    title: {
+        flexWrap: 'wrap',
+        fontFamily: 'Poppins-SemiBold',
+        //width: '80%', // Ajuste a largura conforme necessário
+    },
     searchBar: {
         elevation: 2,
         backgroundColor: Colors.solitudeGrey,
@@ -330,12 +358,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: Colors.white,
     },
-    certificateContent: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-    },
     certificateActions: {
         flexDirection: 'row',
+    },
+    certificateContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 
