@@ -171,7 +171,7 @@ const HomeScreen = () => {
             const savedWallet = await getValueFor('wallet');
 
             // Get the identity of the user
-            const userIdentity = await getIdentity(savedWallet.address, identityFactory);
+            const userIdentity = await getIdentity(savedWallet.address, identityFactory, signer);
 
             if (!userIdentity) {
                 Alert.alert('Warning', `Identity for wallet: ${savedWallet.address} not found.`);
@@ -181,9 +181,6 @@ const HomeScreen = () => {
 
             // Create the user wallet object (ethers.Wallet)
             const userWallet = getWallet(savedWallet.privateKey, provider);
-            console.log('User Wallet:', userWallet.address);
-            console.log('Saved wallet:', savedWallet.address);
-            console.log(userWallet.address !== savedWallet.address);
             if (userWallet.address.toLowerCase() !== savedWallet.address) {
                 const onCancel = () => {
                     setModalVisible(false);
@@ -214,8 +211,17 @@ const HomeScreen = () => {
                         institution.institutionID.toString() === form.institutionCode
                     ) {
                         const issuerWallet = getWallet(institution.wallet.privateKey, provider);
-                        console.log('Issuer Wallet:', issuerWallet.address);
-                        await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
+                        const issuerContract = getContractAt(institution.address, institution.abi, issuerWallet);
+                        const issuerKeys = await issuerContract.getKeysByPurpose(3);
+                        const userKeys = await userIdentity.getKeysByPurpose(3);
+                        console.log('User Keys: ', userKeys);
+                        if (!userKeys.includes(issuerKeys[0])) {
+                            await addKeyToIdentity(userIdentity, userWallet, issuerWallet, 3, 1);
+                        }
+                    } else {
+                        Alert.alert('Warning', 'Institution not found.');
+                        setIsSubmitting(false);
+                        return;
                     }
                 }
             }
@@ -225,7 +231,6 @@ const HomeScreen = () => {
                 studentNumber: form.studentNumber,
                 name: form.name,
             });
-            console.log('Student Claim:', studentClaim);
 
             await addClaim(trustedIR, userIdentity, userIdentity, userWallet, CLAIM_TOPICS_OBJ.STUDENT, studentClaim);
 

@@ -49,10 +49,15 @@ async function getClaimsByTopic(identity, topic) {
             ).catch(error => {
                 console.error('[x] Error getting institution claims:', error);
             });
+        
         } else if (topic === CLAIM_TOPICS_OBJ.CERTIFICATE) {
-            const certificateClaims = await identity.getClaimIdsByTopic(
-                ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE)
-            );
+            try {
+                certificateClaims = await identity.getClaimIdsByTopic(
+                    ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE)
+                );
+            } catch (error) {
+                console.error('[x] Error getting certificate claims:', error);
+            }
 
             await Promise.all(
                 certificateClaims.map(async claimId => {
