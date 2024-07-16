@@ -42,12 +42,12 @@ jobs:
           npm install
           cd services/ethereum
           npm install
-        working-directory: ./code
+        working-directory: ../code
 
       - name: Build code directory
         run: npm run build --if-present
-        working-directory: ./code
+        working-directory: ../code
 
       - name: Test code directory
         run: npx hardhat test
-        working-directory: ./code/services/ethereum/test
+        working-directory: ../code/services/ethereum/test
