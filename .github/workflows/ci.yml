@@ -13,8 +13,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -30,24 +30,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - name: Install dependencies in code directory
+
+      - name: Install dependencies
         run: |
-          cd code
           npm install
-      - name: Install dependencies in services/ethereum directory
-        run: |
           cd services/ethereum
           npm install
+        working-directory: ./code
+
       - name: Build code directory
-        run: |
-          cd code
-          npm run build --if-present
+        run: npm run build --if-present
+        working-directory: ./code
+
       - name: Test code directory
-        run: |
-          cd code/services/ethereum/test
-          npx hardhat test
+        run: npx hardhat test
+        working-directory: ./code/services/ethereum/test
