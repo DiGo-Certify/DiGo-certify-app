@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -38,11 +38,11 @@ jobs:
       - name: Install dependencies in code directory
         run: |
           cd code
-          npm ci
+          npm install
       - name: Install dependencies in services/ethereum directory
         run: |
           cd services/ethereum
-          npm ci
+          npm install
       - name: Build code directory
         run: |
           cd code
