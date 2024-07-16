@@ -48,7 +48,6 @@ describe('Claims Test', () => {
             // Deploy a claim issuer
             const cicAndTir = await deployClaimIssuer(
                 trustedIssuersRegistry,
-                CLAIM_TOPICS,
                 claimIssuerWallet,
                 deployerWallet
             );

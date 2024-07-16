@@ -5,7 +5,7 @@
     "privateKey": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
   },
   "identityFactory": {
-    "address": "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570",
+    "address": "0x4C4a2f8c81640e47606d3fd77B353E87Ba015584",
     "abi": [
       {
         "inputs": [
@@ -413,7 +413,7 @@
   },
   "trex": {
     "implementationAuthority": {
-      "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
+      "address": "0x8198f5d8F8CfFE8f9C413d98a0A55aEB8ab9FbB7",
       "abi": [
         {
           "type": "constructor",
@@ -1515,7 +1515,7 @@
       ]
     },
     "claimsTopicRegistry": {
-      "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+      "address": "0x202CCe504e04bEd6fC0521238dDf04Bc9E8E15aB",
       "abi": [
         {
           "type": "event",
@@ -1715,7 +1715,7 @@
       ]
     },
     "trustedIssuersRegistry": {
-      "address": "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650",
+      "address": "0xf4B146FbA71F41E0592668ffbF264F1D186b2Ca8",
       "abi": [
         {
           "type": "event",
@@ -2146,7 +2146,7 @@
       ]
     },
     "identityRegistry": {
-      "address": "0xFD471836031dc5108809D173A067e8486B9047A3",
+      "address": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
       "abi": [
         {
           "type": "event",
@@ -2911,7 +2911,7 @@
       ]
     },
     "identityRegistryStorage": {
-      "address": "0xc351628EB244ec633d5f21fBD6621e1a683B1181",
+      "address": "0x172076E0166D1F9Cc711C77Adf8488051744980C",
       "abi": [
         {
           "type": "event",
@@ -3473,7 +3473,7 @@
       ]
     },
     "modularCompliance": {
-      "address": "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc",
+      "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
       "abi": [
         {
           "type": "event",
@@ -3975,7 +3975,7 @@
       ]
     },
     "token": {
-      "address": "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+      "address": "0xD84379CEae14AA33C123Af12424A37803F885889",
       "abi": [
         {
           "type": "event",
@@ -5651,10 +5651,9 @@
     {
       "institutionID": 3117,
       "wallet": {
-        "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        "privateKey": "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+        "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
       },
-      "address": "0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07",
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
       "abi": [
         {
           "type": "constructor",

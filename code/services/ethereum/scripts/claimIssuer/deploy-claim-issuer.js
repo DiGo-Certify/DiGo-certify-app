@@ -5,7 +5,7 @@ const {
 const config = require('../../../../config.json');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const { addClaim } = require('../claims/add-claim');
-const { CLAIM_TOPICS_OBJ } = require('../claims/claimTopics');
+const { CLAIM_TOPICS_OBJ, CLAIM_TOPICS } = require('../claims/claimTopics');
 const { addIssuerToConfig } = require('../../../config/addIssuerToConfig');
 
 const SIGN_CLAIM_PURPOSE = 3;
@@ -27,19 +27,31 @@ const ECDSA_KEY_TYPE = 1;
  */
 async function deployClaimIssuer(
     TIR,
-    claimTopics,
-    issuerWallet,
+    issuerWallet = undefined,
     deployerTIR = undefined,
-    institutionCode = undefined,
-    privateKey = undefined
+    privateKey = undefined,
+    institutionCode = undefined
 ) {
     try {
-        if (deployerTIR === undefined) {
+        if (!deployerTIR ) {
             deployerTIR = useRpcProvider(
                 config.rpc,
                 config.deployer.privateKey
             ); // app owner
         }
+
+        if (!issuerWallet) {
+            console.log('Creating issuer wallet');
+            console.log('privateKey:', privateKey);
+            const provider = new ethers.JsonRpcProvider(config.rpc);
+            issuerWallet = new ethers.Wallet(privateKey, provider);
+        }
+
+        console.log('TIR:', TIR);
+        console.log('issuerWallet:', issuerWallet);
+        console.log('deployerTIR:', deployerTIR);
+        console.log('privateKey:', privateKey);
+        console.log('institutionCode:', institutionCode);
 
         console.log(
             '[!] Deploying ClaimIssuer for wallet with address:',
@@ -73,7 +85,7 @@ async function deployClaimIssuer(
             `[+] Deployed ClaimIssuer: ${await claimIssuerContract.getAddress()}`
         );
 
-        const ethersClaimTopics = claimTopics.map(topic => ethers.id(topic));
+        const ethersClaimTopics = CLAIM_TOPICS.map(topic => ethers.id(topic));
 
         // Add the claimIssuer to the trusted issuers registry
         await TIR.connect(deployerTIR).addTrustedIssuer(

@@ -10,9 +10,6 @@ const {
     CLAIM_TOPICS
 } = require('../../scripts/claims/claimTopics');
 const { getClaimsByTopic } = require('../../scripts/claims/getClaimsByTopic');
-const hash = require('../../scripts/utils/encryption/hash');
-const { deployIdentity } = require('../../scripts/identities/deploy-identity');
-const { getIdentity } = require('../../scripts/identities/getIdentity');
 
 describe('ClaimIssuer Creation', () => {
     it('Should add claim issuer', async () => {
@@ -24,7 +21,6 @@ describe('ClaimIssuer Creation', () => {
 
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
             deployerWallet,
             deployerWallet
         );
@@ -63,14 +59,12 @@ describe('ClaimIssuer Creation', () => {
 
         const cicAndTir1 = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
             claimIssuerDeployer1,
             tirDeployer
         );
 
         const cicAndTir2 = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
             claimIssuerDeployer2,
             tirDeployer
         );
@@ -89,9 +83,9 @@ describe('ClaimIssuer Creation', () => {
 
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            CLAIM_TOPICS,
             aliceWallet,
             deployerWallet,
+            undefined,
             3117
         );
 
@@ -107,5 +101,33 @@ describe('ClaimIssuer Creation', () => {
         );
 
         expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3117');
+    });
+
+    it('Should create a claim issuer with some data', async () => {
+        const { deployerWallet, trustedIssuersRegistry, identityFactory } =
+            await loadFixture(deployFullTREXSuiteFixture);
+
+        const privKey = '0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656'
+
+        const cicAndTir = await deployClaimIssuer(
+            trustedIssuersRegistry,
+            undefined,
+            deployerWallet,
+            privKey,
+            3311
+        );
+
+        expect((await cicAndTir.TIR.getTrustedIssuers())[0]).to.be.equal(
+            await cicAndTir.claimIssuerContract.getAddress()
+        );
+
+        // console.log('Wallet:', deployerWallet);
+
+        // const claims = await getClaimsByTopic(
+        //     cicAndTir.claimIssuerContract,
+        //     CLAIM_TOPICS_OBJ.INSTITUTION
+        // );
+
+        // expect(ethers.toUtf8String(claims[0].data)).to.be.equal('3311');
     });
 });

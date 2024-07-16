@@ -20,7 +20,6 @@ describe('Verification of Trusted Issuer', () => {
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
             deployerWallet,
             deployerWallet
         );
@@ -44,7 +43,6 @@ describe('Verification of Trusted Issuer', () => {
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            claimTopics,
             deployerWallet,
             deployerWallet
         );

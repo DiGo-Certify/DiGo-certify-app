@@ -35,7 +35,6 @@ describe('get all the claims of an identity by topic', function () {
         // Deploy a claim issuer
         const cicAndTir = await deployClaimIssuer(
             trustedIssuersRegistry,
-            CLAIM_TOPICS,
             claimIssuerWallet,
             deployerWallet
         );
