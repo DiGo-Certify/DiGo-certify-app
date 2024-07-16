@@ -20,7 +20,7 @@ jobs:
       - name: Compile LaTeX
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: final-report.tex 
+          root_file: report.tex 
           working_directory: ./docs/final-report
           extra_system_packages: "inkscape"
 
