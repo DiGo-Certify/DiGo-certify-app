@@ -37,14 +37,24 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
+      - name: Check Client Lock File
+        run: ls -la ./code/
+
       - name: Install Client Dependencies
-        run: cd ./code/ && npm install
+        run: npm install
+        working-directory: ./code/
+
+      - name: Check Client Lock File
+        run: ls -la ./code/services/ethereum/
 
       - name: Install Services Dependencies
-        run: cd ./code/services/ethereum && npm install
+        run: npm install
+        working-directory: ./code/services/ethereum/
 
       - name: Build code directory
-        run: cd ./code/ && npm run build --if-present
+        run: npm run build --if-present
+        working-directory: ./code/
 
-      - name: Test code directory
-        run: cd ./code/ && npx hardhat test
+      - name: Test Service Functions and Contracts
+        run: npx hardhat test
+        working-directory: ./code/services/ethereum/
