@@ -21,7 +21,7 @@
   <p align="center">
     Academic certificates registry on blockchain for secure and tamper-proof verification.
     <br />
-    <a href="https://github.com/DiGo-Certify/DiGo-certify-app"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/DiGo-Certify/DiGo-certify-app/wiki"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://www.youtube.com/watch?v=4c9EznTLqlo&ab_channel=DiogoRodrigues">View Demo</a>
