@@ -1,0 +1,26 @@
+name: LaTeX Build
+
+on:
+  push:
+    branches:
+      - prototype
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy assets
+        run: cp -r ./docs/final-report/assets/* ./docs/final-report
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: report.tex 
+          working_directory: ./docs/final-report
+          extra_system_packages: "inkscape"
+

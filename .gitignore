@@ -5,7 +5,35 @@
 *.log
 *.out
 *.synctex.gz
+*.bbl
+*.blg
+*.lof
+*.lot
+*.toc
+*.alg
+*.acr
+*.ist
+*.gls
+*.glsdefs
+*.acn
+*.acr
+*.glg
+*.glo
+*.synctex(busy)
 
 # Mac OS ignored files
 *.DS_Store
 *.idea
+
+# File for personal notes
+notes.md
+
+# Webstorm
+
+.idea
+
+# Expo files
+.expo
+
+# Ignore the directory of wiki
+DiGo-certify-app.wiki/

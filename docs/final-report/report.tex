@@ -1,0 +1,155 @@
+\documentclass[10pt]{report}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.2}
+
+%% Sets page size and margins
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm, marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{graphicx}
+\usepackage{makeidx}    % allowsindexgeneration
+\usepackage{float}
+\usepackage{acronym}
+\usepackage{hyperref}
+
+\pagenumbering{arabic}
+
+\begin{document}
+\thispagestyle{empty}
+
+\begin{figure}[h]
+    \includegraphics[width=0.45\textwidth]{assets/logo.png}
+\end{figure}
+
+\begin{center}
+
+
+    \begin{Huge}
+        \textbf{SCAR\@: Smart Contract Academic \\ \vspace{.25cm}
+            Registry}
+    \end{Huge}
+
+    \vspace{.75cm}
+
+    \begin{LARGE}
+        \textbf{A Blockchain approach for Academic Registry}
+    \end{LARGE}
+
+    \vspace{1cm}
+
+    \vspace{.75cm}
+    \begin{large}
+        \begin{tabular}{ c c c }
+            Diogo Rodrigues               & Gonçalo Frutuoso              \\
+            \texttt{49513@alunos.isel.pt} & \texttt{49495@alunos.isel.pt} \\
+        \end{tabular}
+
+        \vspace{5.75cm} Supervisors \vspace{0.25cm}
+
+        \begin{tabular}{ c c }
+            Cátia Vaz, ISEL              & Alexandre Francisco, IST \\
+            \texttt{cvaz@cc.isel.ipl.pt} & \texttt{aplf@tecnico.pt}
+        \end{tabular}
+
+        \vspace{1.25cm}
+
+        \begin{Large}
+            Final Report written for Project and Seminary \\ \vspace{.25cm}
+            Licenciatura em Engenharia Informática e de Computadores
+        \end{Large}
+    \end{large}
+
+    \vspace{1.75cm} \today \vspace{.75cm}
+
+\end{center}
+
+% Empty page before the abstract
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%%%%% Abstract %%%%%
+\input{abstract/abstract.tex}
+
+% Empty page before the resumo
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%%%%% Resumo %%%%%
+\input{resume/resumo.tex}
+
+% Empty page before the acknowledgements
+\newpage
+\thispagestyle{empty}
+\mbox{}
+
+%%%%% Acknowledgements %%%%%
+% \input{acknowleggements/acknowledgements.tex}
+
+%%%%% Index %%%%%
+\renewcommand{\contentsname}{Index}
+\pagenumbering{arabic}
+\tableofcontents
+
+%%%%% List of figures %%%%%
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+
+%%%%% List of tables %%%%%
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+
+%%%%% List of acronyms %%%%%
+\input{acronyms.tex}
+
+%%%%% CHAPTERS (with an empty page before each one) %%%%%
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/01-introduction.tex}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/02-background.tex}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/03-requirements.tex}
+
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/04-architecture.tex}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/05-implementation.tex}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/06-testing.tex}
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\input{chapters/07-conclusions.tex}
+
+%%%%% Conclusion %%%%%
+
+\vspace{.75cm}
+
+%%%%% References %%%%%
+\bibliography{references}
+\bibliographystyle{abbrv}
+
+\end{document}
