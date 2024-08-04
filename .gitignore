@@ -34,3 +34,6 @@ notes.md
 
 # Expo files
 .expo
+
+# Ignore the directory of wiki
+DiGo-certify-app.wiki/
