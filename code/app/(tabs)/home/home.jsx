@@ -242,7 +242,7 @@ const HomeScreen = () => {
 
     const handleCertificatePress = certificate => {
         console.log(certificate);
-        if(certificate.uri === 'Certificate hash') {
+        if (certificate.uri === 'Certificate hash') {
             Alert.alert('Warning', 'URL not available yet. Contact the institution for more information.');
             return;
         }

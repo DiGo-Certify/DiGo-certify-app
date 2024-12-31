@@ -113,6 +113,11 @@ The following instructions will guide you through the installation process.
     [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/expo-go/id982107779)
     [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en)
 
+4. Install a wallet provider application, such as Metamask, on your smart phone:
+
+    [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/metamask/id1438144202)
+    [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=io.metamask&hl=en)
+
 ## 🛠️ Installation and Usage
 
 📄 Clone or fork `DiGo Certify App`:
@@ -128,7 +133,7 @@ The following instructions will guide you through the installation process.
    ```sh
     npx expo start
    ```
-📱 Scan the QR Code provided on your smart phone to run the app
+📱 Scan the QR Code provided with your smart phone to run the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
