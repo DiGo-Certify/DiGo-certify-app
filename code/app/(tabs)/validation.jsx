@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import Images from '@/constants/images';
 import FormField from '@/components/FormField';
 import ActionButton from '@/components/ActionButton';
@@ -19,84 +19,154 @@ import { IconButton } from 'react-native-paper';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { getValueFor } from '@/services/storage/storage';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
+
+const ACTIONS = {
+    EDIT: 'edit',
+    SUBMIT: 'submit',
+    ERROR: 'error',
+    SUCCESS: 'success',
+};
+
+const STATES = {
+    LOADING: 'loading',
+    EDITING: 'editing',
+    SUBMITTING: 'submitting',
+    EVALUATE: 'evaluate',
+};
+
+function reduce(state, action) {
+    switch (state.tag) {
+        case STATES.LOADING:
+            if (action.type === ACTIONS.EDIT) {
+                return {
+                    tag: STATES.EDITING,
+                    inputs: {
+                        ...state.inputs,
+                        [action.inputName]: action.inputValue,
+                    },
+                    isUserAuthenticated: action.isUserAuthenticated,
+                };
+            } else {
+                logUnexpectedAction(state, action);
+                return state;
+            }
+
+        case STATES.EDITING:
+            if (action.type === ACTIONS.EDIT) {
+                return {
+                    ...state,
+                    error: undefined,
+                    inputs: {
+                        ...state.inputs,
+                        [action.inputName]: action.inputValue,
+                    },
+                };
+            } else if (action.type === ACTIONS.SUBMIT) {
+                return { ...state, tag: STATES.SUBMITTING, error: '' };
+            } else {
+                logUnexpectedAction(state, action);
+                return state;
+            }
+
+        case STATES.SUBMITTING:
+            if (action.type === ACTIONS.ERROR) {
+                return {
+                    ...state,
+                    tag: STATES.EDITING,
+                    error: action.message,
+                    inputs: { ...state.inputs, password: '' },
+                };
+            } else if (action.type === ACTIONS.SUCCESS) {
+                return { ...state, tag: STATES.EVALUATE, valid: state.valid };
+            } else {
+                logUnexpectedAction(state, action);
+                return state;
+            }
+
+        case STATES.EVALUATE:
+            logUnexpectedAction(state, action);
+            return state;
+    }
+}
+
+function logUnexpectedAction(state, action) {
+    console.log(`Unexpected action '${action.type} on state '${state.tag}'`);
+}
 
 const Validation = () => {
-    const [valid, setValid] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [certificateLink, setCertificateLink] = useState('');
-    const [content, setContent] = useState('');
-    const [userAddress, setUserAddress] = useState('');
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
-
-    const handleQRCodeScan = event => {
-        // Process the scanned QR code (event.data) as needed
-        console.log('Scanned QR code:', event.data);
-        setCertificateLink(event.data);
-    };
+    const [state, dispatch] = useReducer(reduce, {
+        tag: STATES.LOADING,
+        inputs: {
+            certificateLink: '',
+            userAdress: '',
+        },
+        error: '',
+    });
 
     useEffect(() => {
-        const isUserAuthenticated = async () => {
-            const userWallet = await getValueFor('wallet');
-            console.log(userWallet);
-            userWallet.address ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
-        };
-        isUserAuthenticated();
-    }, []);
-
-    // If the input of link is empty, clean the content
-    useEffect(() => {
-        if (!certificateLink) {
-            setContent('');
+        if (state.tag === STATES.LOADING) {
+            const isUserAuthenticated = async () => {
+                const userWallet = await getValueFor('wallet');
+                dispatch({
+                    type: ACTIONS.EDIT,
+                    inputName: 'userAddress',
+                    inputValue: '0x',
+                    isUserAuthenticated: !!userWallet,
+                });
+            };
+            isUserAuthenticated();
         }
-    }, [certificateLink]);
+    }, [state.tag]);
+
+    useEffect(() => {
+        if (state.tag === STATES.EDITING && state.error) {
+            Alert.alert('Error', state.error, [{ text: 'OK', onPress: () => dispatch({ type: ACTIONS.EDIT }) }]);
+        }
+    }, [state.error]);
+
+    // HANDLERS
 
     const handleValidate = async () => {
-        // Validate the claiom that has the link to the certificate (claimTopic CERTIFICATE)
-        // If the claim is valid, and hash of the certificate is the same as the hash of the certificate in the claim uri field, setValid(true)
-        // Otherwise, setValid(false)
-        try {
-            if (!userAddress || !certificateLink) {
-                Alert.alert('Error', 'Please fill in all fields');
-                return;
-            } else if (!content && !certificateLink) {
-                Alert.alert('Error', 'Please upload a certificate or insert a URL');
-                return;
-            }
-            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
+        if (state.tag !== STATES.EDITING) {
+            return;
+        }
+        dispatch({ type: ACTIONS.SUBMIT });
+        const { userAddress, certificateLink } = state.inputs;
 
+        if (!userAddress || userAddress === '0x') {
+            return dispatch({ type: ACTIONS.ERROR, message: 'User address is required' });
+        }
+        if (!certificateLink) {
+            return dispatch({ type: ACTIONS.ERROR, message: 'Certificate link is required' });
+        }
+
+        try {
+            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
             const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
-            console.log(userAddress);
             const userIdentity = await getIdentity(userAddress, identityFactory, signer);
-            if (userIdentity) {
-                const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
-                console.log('Certificates:', certificates);
-                if (certificates.length === 0) {
-                    Alert.alert('Error', 'No certificates found');
-                    return;
-                }
-                let valid = false;
-                for (const certificate of certificates) {
-                    const claimUri = certificate.uri;
-                    if (claimUri === hash(certificateLink) || claimUri === hash(content)) {
-                        setValid(true);
-                        valid = true;
-                        break;
-                    }
-                }
-                if (!valid) {
-                    setValid(false);
-                }
-                setShowModal(true);
-            } else {
-                Alert.alert('Error', 'User identity not found');
+
+            if (!userIdentity) {
+                return dispatch({ type: ACTIONS.ERROR, message: 'User identity not found' });
             }
+
+            const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
+
+            if (certificates.length === 0) {
+                return dispatch({ type: ACTIONS.ERROR, message: 'No certificates found' });
+            }
+
+            const isValidCertificate = certificates.some(certificate => certificate.uri === hash(certificateLink));
+
+            dispatch({ type: ACTIONS.SUCCESS, valid: isValidCertificate });
         } catch (error) {
-            Alert.alert('Error', error.message);
+            dispatch({ type: ACTIONS.ERROR, message: error.message });
         }
     };
 
     const handleDocumentPicker = async () => {
+        if (state.tag !== STATES.EDITING) {
+            return;
+        }
         const result = await DocumentPicker.getDocumentAsync({
             type: '*/*',
             copyToCacheDirectory: true,
@@ -106,19 +176,31 @@ const Validation = () => {
             const fileContents = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64,
             });
-            setContent(fileContents);
-            setCertificateLink(name);
-            onChange(result.uri);
+            dispatch({
+                type: ACTIONS.EDIT,
+                inputs: {
+                    ...state.inputs,
+                    content: fileContents,
+                    certificateLink: name,
+                },
+            });
         }
     };
 
     const handleImportOwnWallet = async () => {
         const userWallet = await getValueFor('wallet');
         if (userWallet) {
-            setUserAddress(userWallet.address);
+            dispatch({ type: ACTIONS.EDIT, inputName: 'userAddress', inputValue: userWallet.address });
         }
     };
 
+    const handleChange = (name, value) => {
+        dispatch({ type: ACTIONS.EDIT, inputName: name, inputValue: value });
+    };
+
+    const userAdress = state.tag === STATES.EDITING ? state.inputs.userAddress : '';
+    const certificateLink = state.tag === STATES.EDITING ? state.inputs.certificateLink : '';
+    const valid = state.tag === STATES.EVALUATE ? state.valid : false;
     return (
         <>
             <Background
@@ -134,11 +216,11 @@ const Validation = () => {
                             <FormField
                                 label="Insert Student Address"
                                 icon="account"
-                                value={userAddress}
-                                onChange={address => setUserAddress(address)}
+                                value={userAdress}
+                                onChange={address => handleChange('userAddress', address)}
                                 outSideIconComponent={
                                     <IconButton
-                                        icon={isUserAuthenticated ? 'account-plus' : ''}
+                                        icon={state.isUserAuthenticated ? 'account-plus' : ''}
                                         color="black"
                                         size={20}
                                         onPress={handleImportOwnWallet}
@@ -149,7 +231,7 @@ const Validation = () => {
                                 label="Insert Certificate Link"
                                 icon="certificate"
                                 value={certificateLink}
-                                onChange={link => setCertificateLink(link)}
+                                onChange={link => handleChange('certificateLink', link)}
                                 outSideIconComponent={
                                     <IconButton
                                         icon="file-upload"
@@ -183,7 +265,11 @@ const Validation = () => {
                     />
                 }
             />
-            <ValidatedModal visible={showModal} onDismiss={() => setShowModal(false)} valid={valid} />
+            <ValidatedModal
+                visible={state.tag === STATES.EVALUATE}
+                onDismiss={() => dispatch({ type: ACTIONS.EDIT })}
+                valid={valid}
+            />
         </>
     );
 };

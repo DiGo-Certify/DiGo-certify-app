@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#DBDBDB"
     },
+    "newArchEnabled": true,
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -33,7 +34,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.digocertify"
     },
     "web": {
       "favicon": "./assets/favicon.png"
