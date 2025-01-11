@@ -39,9 +39,9 @@ const RootLayout = () => {
             <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="initial-screen/initial-screen" options={{ headerShown: false }} />
+                <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
                 <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="emission" options={{ headerShown: false }} />
+                <Stack.Screen name="emission/index" options={{ headerShown: false }} />
             </Stack>
         </PaperProvider>
     );

@@ -1,8 +1,7 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import React from 'react';
 import Images from '@/constants/images';
 import Colors from '@/constants/colors';
-import ActionButton from '@/components/ActionButton';
 import HeaderImage from '@/components/HeaderImage';
 import Icons from '@/constants/icons';
 import Background from '@/components/Background';
@@ -21,7 +20,7 @@ const Admin = () => {
                 <View style={styles.options}>
                     <ListItem
                         title="Send a New Certificate"
-                        onPress={() => router.push('/emission')}
+                        onPress={() => router.push('/emission/emission-enhancement')}
                         icon={Icons.newCertificate}
                     />
                     <ListItem

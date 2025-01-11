@@ -5,7 +5,7 @@ import { ActivityIndicator, Alert } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import Colors from '@/constants/colors';
 import { getValueFor, save } from '@/services/storage/storage';
-import InitialScreen from './initial-screen/initial-screen';
+import InitialScreen from './initial-screen';
 import useWalletConnect from '@/services/web3/wallet-connect.js';
 import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
 import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';

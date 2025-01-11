@@ -93,15 +93,17 @@ function logUnexpectedAction(state, action) {
     console.log(`Unexpected action '${action.type} on state '${state.tag}'`);
 }
 
+const firstState = {
+    tag: STATES.LOADING,
+    inputs: {
+        certificateLink: '',
+        userAdress: '',
+    },
+    error: '',
+};
+
 const Validation = () => {
-    const [state, dispatch] = useReducer(reduce, {
-        tag: STATES.LOADING,
-        inputs: {
-            certificateLink: '',
-            userAdress: '',
-        },
-        error: '',
-    });
+    const [state, dispatch] = useReducer(reduce, firstState);
 
     useEffect(() => {
         if (state.tag === STATES.LOADING) {
