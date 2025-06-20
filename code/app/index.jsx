@@ -13,6 +13,7 @@ import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
 import { v4 as uuidv4 } from 'uuid';
 import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
 import config from '@/config.json';
+import HomeScreen from './(tabs)/home/home2';
 
 function App() {
     const [loading, setLoading] = useState(true);
