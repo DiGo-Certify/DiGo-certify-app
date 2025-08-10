@@ -1,4 +1,4 @@
-import Loader from '@/components/Loader';
+import { Loading } from '@/components/Loading';
 import React from 'react';
 import { Redirect, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';

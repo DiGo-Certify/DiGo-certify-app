@@ -7,18 +7,13 @@ import ProfileScreen from './profile';
 import ValidationScreen from './validation';
 import HomeScreen from './home/home';
 import AdminScreen from './admin';
-import * as SecureStore from 'expo-secure-store';
+import { USER_TYPES, STORAGE_KEYS } from '@/constants/app';
+import { getValueFor } from '@/services/storage/storage';
 
 const HomeRoute = () => <HomeScreen />;
 const ProfileRoute = () => <ProfileScreen />;
 const ValidationRoute = () => <ValidationScreen />;
 const AdminRoute = () => <AdminScreen />;
-
-const USER_TYPES = {
-    Admin: 'Admin',
-    Guest: 'Guest',
-    Default: 'Default',
-};
 
 function TabLayout() {
     const [idx, setIdx] = useState(0);
@@ -27,8 +22,8 @@ function TabLayout() {
 
     useEffect(() => {
         const getUserType = async () => {
-            const userType = await SecureStore.getItemAsync('user_type');
-            setUserType(JSON.parse(userType));
+            const userType = await getValueFor(STORAGE_KEYS.USER_TYPE);
+            setUserType(userType);
         };
         getUserType();
     }, []);
@@ -38,14 +33,14 @@ function TabLayout() {
         const getRoutesForUserType = async () => {
             let availableRoutes;
             switch (userType.type) {
-                case USER_TYPES.Admin:
+                case USER_TYPES.ADMIN:
                     availableRoutes = [
                         { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
                         { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
                         { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
                     ];
                     break;
-                case USER_TYPES.Guest:
+                case USER_TYPES.GUEST:
                     availableRoutes = [{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }];
                     break;
                 case USER_TYPES.Default:

@@ -5,14 +5,15 @@ import Images from '@/constants/images';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { List, ActivityIndicator } from 'react-native-paper';
+import { List, ActivityIndicator, Button } from 'react-native-paper';
 import { router } from 'expo-router';
 import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
 import useWalletConnect from '@/services/web3/wallet-connect';
+import SettingsScreen from '@/components/SettingsScreen';
 import SettingsModal from '@/components/SettingsModal';
 
 const Profile = () => {
-    const [onSettings, setOnSettings] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
     const [profile, setProfile] = useState({
@@ -21,6 +22,11 @@ const Profile = () => {
         wallet: 'Not connected',
         since: '2024',
     });
+
+    // If settings is open, show SettingsScreen
+    if (showSettings) {
+        return <SettingsScreen onBack={() => setShowSettings(false)} />;
+    }
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -121,17 +127,9 @@ const Profile = () => {
                     onPress={() => console.log('Tell your friends')}
                     icon={Icons.send}
                 />
-                <ListItem title="Settings" onPress={() => setOnSettings(true)} icon={Icons.settings} />
+                <ListItem title="Settings" onPress={() => setShowSettings(true)} icon={Icons.settings} />
                 <ListItem title="Log out" onPress={handleLogout} icon={Icons.logOut} />
             </View>
-            {onSettings && (
-                <SettingsModal
-                    isVisible={onSettings}
-                    onDismiss={() => setOnSettings(false)}
-                    onChangeWallet={handleWalletConnect}
-                    onRequestAdmin={() => console.log('Request Admin')}
-                />
-            )}
             {WalletConnectModal}
         </SafeAreaView>
     );

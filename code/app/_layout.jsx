@@ -2,6 +2,8 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { PaperProvider } from 'react-native-paper';
+import { AppProvider } from '@/contexts/AppContext';
+import { useBlockchainOperations } from '@/hooks/useBlockchainOperations';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,15 +37,17 @@ const RootLayout = () => {
     }
 
     return (
-        <PaperProvider>
-            <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="emission/index" options={{ headerShown: false }} />
-            </Stack>
-        </PaperProvider>
+        <AppProvider>
+            <PaperProvider>
+                <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                    <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
+                    <Stack.Screen name="index" options={{ headerShown: false }} />
+                    <Stack.Screen name="emission/index" options={{ headerShown: false }} />
+                </Stack>
+            </PaperProvider>
+        </AppProvider>
     );
 };
 
