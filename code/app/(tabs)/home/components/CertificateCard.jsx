@@ -1,157 +1,136 @@
-// Certificate Card Component
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Card, Title, Paragraph, Chip, Avatar } from 'react-native-paper';
+import { Text, Surface } from 'react-native-paper';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '@/constants/colors';
-import Icons from '@/constants/icons';
 
 const CertificateCard = ({ certificate, onPress }) => {
-    const getGradeColor = grade => {
-        const gradeColors = {
-            Licenciado: Colors.success,
-            Mestre: Colors.warning,
-            Doutor: Colors.primary,
-            default: Colors.gray,
-        };
-        return gradeColors[grade] || gradeColors.default;
+    // Helper to pick color based on grade/status
+    const getStatusColor = grade => {
+        if (!grade) return Colors.gray;
+        const g = grade.toLowerCase();
+        if (g.includes('licenciado') || g.includes('bachelor')) return '#4CAF50'; // Green
+        if (g.includes('mestre') || g.includes('master')) return '#2196F3'; // Blue
+        if (g.includes('doutor') || g.includes('phd')) return '#9C27B0'; // Purple
+        return Colors.primary;
     };
 
-    const formatInstitutionId = institutionId => {
-        if (typeof institutionId === 'number') {
-            return `Institution ${institutionId}`;
-        }
-        return institutionId || 'Unknown Institution';
-    };
+    const statusColor = getStatusColor(certificate.grade);
 
     return (
-        <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-            <Card style={styles.card} elevation={2}>
-                <Card.Content>
-                    <View style={styles.header}>
-                        <Avatar.Icon size={40} icon={Icons.certificate} style={styles.avatar} color={Colors.white} />
-                        <View style={styles.titleContainer}>
-                            <Title style={styles.title} numberOfLines={1}>
-                                {certificate.title}
-                            </Title>
-                            <Paragraph style={styles.registrationCode}>#{certificate.registrationCode}</Paragraph>
+        <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ marginBottom: 16 }}>
+            <Surface style={styles.card} elevation={2}>
+                {/* Left Colored Strip */}
+                <View style={[styles.colorStrip, { backgroundColor: statusColor }]} />
+
+                <View style={styles.contentContainer}>
+                    {/* Header: Icon + Institution */}
+                    <View style={styles.headerRow}>
+                        <View style={[styles.iconBox, { backgroundColor: statusColor + '20' }]}>
+                            <MaterialCommunityIcons name="certificate" size={24} color={statusColor} />
                         </View>
+                        <View style={styles.institutionInfo}>
+                            <Text style={styles.institutionName} numberOfLines={1}>
+                                {certificate.issuer || 'Unknown Institution'}
+                            </Text>
+                            <Text style={styles.dateText}>{certificate.date || 'Issued Recently'}</Text>
+                        </View>
+                        {/* Verified Badge */}
+                        <MaterialCommunityIcons name="check-decagram" size={20} color={statusColor} />
                     </View>
 
-                    <View style={styles.content}>
-                        <View style={styles.infoRow}>
-                            <Paragraph style={styles.label}>Institution:</Paragraph>
-                            <Paragraph style={styles.value} numberOfLines={1}>
-                                {formatInstitutionId(certificate.institution)}
-                            </Paragraph>
-                        </View>
+                    {/* Main Title */}
+                    <Text style={styles.title} numberOfLines={2}>
+                        {certificate.title}
+                    </Text>
 
-                        <View style={styles.infoRow}>
-                            <Paragraph style={styles.label}>Course:</Paragraph>
-                            <Paragraph style={styles.value} numberOfLines={1}>
-                                {certificate.course}
-                            </Paragraph>
+                    {/* Footer: Grade & ID */}
+                    <View style={styles.footer}>
+                        <View style={styles.tagContainer}>
+                            <Text style={[styles.tagText, { color: Colors.darkGray }]}>
+                                {certificate.grade || 'Certificate'}
+                            </Text>
                         </View>
-
-                        <View style={styles.footer}>
-                            <Chip
-                                mode="outlined"
-                                style={[styles.gradeChip, { borderColor: getGradeColor(certificate.grade) }]}
-                                textStyle={[styles.gradeText, { color: getGradeColor(certificate.grade) }]}
-                            >
-                                {certificate.grade}
-                            </Chip>
-
-                            <View style={styles.statusContainer}>
-                                <View style={[styles.statusDot, styles.verifiedDot]} />
-                                <Paragraph style={styles.statusText}>Verified</Paragraph>
-                            </View>
-                        </View>
+                        <Text style={styles.idText}>#{certificate.registrationCode || certificate.id}</Text>
                     </View>
-                </Card.Content>
-            </Card>
+                </View>
+            </Surface>
         </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
     card: {
-        marginBottom: 12,
-        backgroundColor: Colors.white,
-        borderRadius: 12,
+        backgroundColor: 'white',
+        borderRadius: 16,
+        overflow: 'hidden',
+        flexDirection: 'row',
+        minHeight: 110,
     },
-    header: {
+    colorStrip: {
+        width: 6,
+        height: '100%',
+    },
+    contentContainer: {
+        flex: 1,
+        padding: 16,
+    },
+    headerRow: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 12,
     },
-    avatar: {
-        backgroundColor: Colors.primary,
-        marginRight: 12,
+    iconBox: {
+        width: 36,
+        height: 36,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
     },
-    titleContainer: {
+    institutionInfo: {
         flex: 1,
     },
-    title: {
+    institutionName: {
         fontFamily: 'Poppins-SemiBold',
-        fontSize: 16,
-        color: Colors.primary,
-        marginBottom: 2,
-    },
-    registrationCode: {
-        fontFamily: 'Poppins-Regular',
         fontSize: 12,
         color: Colors.gray,
-        marginTop: 0,
+        textTransform: 'uppercase',
     },
-    content: {
-        marginLeft: 52, // Align with title
-    },
-    infoRow: {
-        flexDirection: 'row',
-        marginBottom: 4,
-    },
-    label: {
-        fontFamily: 'Poppins-Medium',
-        fontSize: 14,
-        color: Colors.darkGray,
-        width: 80,
-    },
-    value: {
+    dateText: {
         fontFamily: 'Poppins-Regular',
-        fontSize: 14,
+        fontSize: 10,
+        color: Colors.lightGray,
+    },
+    title: {
+        fontFamily: 'Poppins-Bold',
+        fontSize: 18,
         color: Colors.black,
-        flex: 1,
+        marginBottom: 12,
+        lineHeight: 24,
     },
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 12,
+        borderTopWidth: 1,
+        borderTopColor: '#F0F0F0',
+        paddingTop: 10,
     },
-    gradeChip: {
-        backgroundColor: Colors.white,
+    tagContainer: {
+        backgroundColor: '#F5F5F5',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
     },
-    gradeText: {
+    tagText: {
         fontFamily: 'Poppins-Medium',
-        fontSize: 12,
+        fontSize: 11,
     },
-    statusContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    statusDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        marginRight: 6,
-    },
-    verifiedDot: {
-        backgroundColor: Colors.success,
-    },
-    statusText: {
+    idText: {
         fontFamily: 'Poppins-Regular',
         fontSize: 12,
-        color: Colors.success,
+        color: Colors.gray,
     },
 });
 

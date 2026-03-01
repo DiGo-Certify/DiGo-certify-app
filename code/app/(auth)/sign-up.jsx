@@ -1,12 +1,17 @@
 import React, { useEffect, useReducer } from 'react';
-import { View, StyleSheet, Text, Alert, Dimensions } from 'react-native';
-import Colors from '@/constants/colors';
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 import { router } from 'expo-router';
+
+// Components
 import FormField from '@/components/FormField';
 import ActionButton from '@/components/ActionButton';
 import Background from '@/components/Background';
-import Images from '@/constants/images';
 import HeaderImage from '@/components/HeaderImage';
+
+// Constants & Services
+import Colors from '@/constants/colors';
+import Images from '@/constants/images';
 import { save } from '@/services/storage/storage';
 
 const ACTIONS = {
@@ -73,13 +78,15 @@ const firstState = {
     },
 };
 
+//TODO: REVIEW REGISTER METHODOLOGY
 function SignUp() {
     const [state, dispatch] = useReducer(reduce, firstState);
 
-    if (state.tag === STATES.REDIRECT) {
-        // Redirect to a specific page after successful registration
-        router.replace('/profile');
-    }
+    useEffect(() => {
+        if (state.tag === STATES.REDIRECT) {
+            router.replace('/profile');
+        }
+    }, [state.tag]);
 
     async function register(form) {
         try {
@@ -133,8 +140,10 @@ function SignUp() {
                 </View>
             }
             body={
-                <View style={{ width: '100%', paddingHorizontal: 30, marginTop: -35 }}>
-                    <Text style={styles.registerText}>Register</Text>
+                <View style={{ width: '100%' }}>
+                    <Text variant="displaySmall" style={styles.registerText}>
+                        Register
+                    </Text>
                     <FormField
                         label="Username"
                         icon="account"
@@ -149,11 +158,13 @@ function SignUp() {
                         value={email}
                         style={styles.inputField}
                     />
-                    {state.tag === STATES.EDITING && state.error && <Text style={{ color: 'red' }}>{state.error}</Text>}
+                    {state.tag === STATES.EDITING && state.error && (
+                        <Text style={styles.warningText}>{state.error}</Text>
+                    )}
                 </View>
             }
             footer={
-                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -150 }}>
+                <View style={{ width: '100%', alignItems: 'flex-end' }}>
                     <ActionButton
                         text="Register"
                         onPress={handleSubmit}
@@ -179,25 +190,22 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.sonicSilver,
     },
     registerText: {
-        fontSize: 40,
-        fontWeight: '900',
+        fontFamily: 'Poppins-Bold',
         alignSelf: 'flex-start',
-    },
-    forgotPasswordText: {
-        textDecorationLine: 'underline',
-        alignSelf: 'flex-end',
-        fontSize: 20,
     },
     registerButton: {
         alignSelf: 'flex-end',
         marginTop: 20,
         borderRadius: 10,
     },
-
     registerButtonText: {
         fontSize: 20,
         lineHeight: 50,
         fontFamily: 'Poppins-Bold',
-        color: '#FFF',
+        color: Colors.white,
+    },
+    warningText: {
+        fontFamily: 'Poppins-SemiBold',
+        color: 'red',
     },
 });

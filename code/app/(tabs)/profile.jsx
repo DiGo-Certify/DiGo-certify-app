@@ -1,231 +1,281 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
-import Icons from '@/constants/icons';
-import Images from '@/constants/images';
-import * as ImagePicker from 'expo-image-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Colors from '@/constants/colors';
-import { List, ActivityIndicator, Button } from 'react-native-paper';
-import { router } from 'expo-router';
-import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
-import useWalletConnect from '@/services/web3/wallet-connect';
-import SettingsScreen from '@/components/SettingsScreen';
+import React, { useState, useCallback } from 'react';
+import { View, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { Text, Surface, TouchableRipple, Avatar, Divider } from 'react-native-paper';
+import { router, useFocusEffect } from 'expo-router';
+
+// Components & Services
+import Background from '@/components/Background';
 import SettingsModal from '@/components/SettingsModal';
+import Colors from '@/constants/colors';
+import Images from '@/constants/images';
+import { getValueFor, removeValueFor } from '@/services/storage/storage';
+import { STORAGE_KEYS } from '@/constants/app';
+
+const { width } = Dimensions.get('window');
 
 const Profile = () => {
     const [showSettings, setShowSettings] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
-    const [profile, setProfile] = useState({
-        username: '',
-        image: Images.mockupProfileImage,
-        wallet: 'Not connected',
-        since: '2024',
+
+    // User State
+    const [userInfo, setUserInfo] = useState({
+        username: 'User',
+        email: 'Loading...',
+        walletAddress: '',
+        userType: 'Standard',
     });
 
-    // If settings is open, show SettingsScreen
-    if (showSettings) {
-        return <SettingsScreen onBack={() => setShowSettings(false)} />;
-    }
+    useFocusEffect(
+        useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            const userInfo = await getValueFor('user_info');
-            const profileImage = await getValueFor('profile_image');
-            const wallet = await getValueFor('wallet');
-            if (userInfo && wallet) {
-                setProfile(() => ({
-                    username: userInfo.username,
-                    since: userInfo.year,
-                    image: profileImage || Images.mockupProfileImage,
-                    wallet: wallet.address,
-                }));
+    const loadUserProfile = async () => {
+        try {
+            // Get Wallet
+            const walletData = await getValueFor(STORAGE_KEYS.WALLET);
+            let address = '';
+            if (walletData) {
+                const parsed = typeof walletData === 'string' ? JSON.parse(walletData) : walletData;
+                address = parsed.address || walletData;
             }
-        };
-        fetchUserInfo();
-    }, []);
 
-    const handleWalletConnect = async () => {
-        console.log('Connecting wallet...');
-        setIsSaving(true);
-        await handlePress();
+            // Get User Info
+            const storedUser = await getValueFor(STORAGE_KEYS.USER_INFO);
+            let name = 'User';
+            let email = 'No Email';
+
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                name = parsedUser.username || parsedUser.name || 'User';
+                email = parsedUser.email || 'No Email';
+            }
+
+            // Get User Type
+            const typeData = await getValueFor(STORAGE_KEYS.USER_TYPE);
+            const type = typeData && typeData.type ? typeData.type : typeData || 'Standard';
+
+            setUserInfo({
+                username: name,
+                email: email,
+                walletAddress: address,
+                userType: type,
+            });
+        } catch (error) {
+            console.log('Error loading profile:', error);
+        }
     };
 
-    // Handle logout
     const handleLogout = () => {
-        removeValueFor('OID').then(() =>
-            removeValueFor('user_info').then(() =>
-                removeValueFor('wallet').then(async () => {
-                    if (isConnected) {
-                        await handlePress();
-                    }
-                    return router.replace('/');
-                })
-            )
-        );
+        Alert.alert('Log Out', 'Are you sure you want to log out?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Log Out',
+                style: 'destructive',
+                onPress: async () => {
+                    await removeValueFor(STORAGE_KEYS.USER_INFO);
+                    await removeValueFor(STORAGE_KEYS.WALLET);
+                    await removeValueFor(STORAGE_KEYS.USER_TYPE);
+                    router.replace('/sign-in');
+                },
+            },
+        ]);
     };
 
-    useEffect(() => {
-        if (address) {
-            if (profile.wallet === address || profile.wallet === 'Not connected') {
-                setIsSaving(false);
-                return;
-            }
-            const saveWalletAddress = async () => {
-                await save('wallet', JSON.stringify({ address: address }));
-                setProfile(currentProfile => ({
-                    ...currentProfile,
-                    wallet: address,
-                }));
-                setIsSaving(false);
-            };
-            saveWalletAddress();
-        }
-    }, [address]);
-
-    const handlePickImage = async () => {
-        let result = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (result.granted === false) {
-            Alert.alert('Permission to access camera roll is required!');
-            return;
-        }
-
-        let pickerResult = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!pickerResult.canceled) {
-            setProfile(prevProfile => ({
-                ...prevProfile,
-                image: { uri: pickerResult.assets[0].uri },
-            }));
-            await save('profile_image', JSON.stringify({ uri: pickerResult.assets[0].uri }));
-        }
+    const formatAddress = addr => {
+        if (!addr || addr.length < 10) return 'Not Connected';
+        return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.profile}>
-                <ProfileImage source={profile.image} pickImage={handlePickImage} />
-                <ProfileInfo username={profile.username} since={profile.since} />
-            </View>
-            <View style={styles.walletAccount}>
-                <WalletInfo
-                    title="Your Wallet Address"
-                    info={profile.wallet}
-                    disabled={isConnected}
-                    isLoading={isSaving}
-                />
-            </View>
-            <View style={styles.options}>
-                <ListItem title="Your favorite" onPress={() => console.log('Favorite')} icon={Icons.favorite} />
-                <ListItem
-                    title="Tell your friends"
-                    onPress={() => console.log('Tell your friends')}
-                    icon={Icons.send}
-                />
-                <ListItem title="Settings" onPress={() => setShowSettings(true)} icon={Icons.settings} />
-                <ListItem title="Log out" onPress={handleLogout} icon={Icons.logOut} />
-            </View>
-            {WalletConnectModal}
-        </SafeAreaView>
+        <Background
+            noScroll={false}
+            header={
+                <View style={styles.headerContainer}>
+                    <Text style={styles.screenTitle}>My Profile</Text>
+                    <TouchableRipple onPress={() => setShowSettings(true)} borderless style={styles.settingsButton}>
+                        <Avatar.Icon size={44} icon="cog-outline" color={Colors.black} style={styles.settingsIcon} />
+                    </TouchableRipple>
+                </View>
+            }
+            body={
+                <View style={styles.container}>
+                    {/* --- 1. The "Side-by-Side" Layout --- */}
+                    <View style={styles.profileHeader}>
+                        {/* Left: Dynamic Avatar */}
+                        <View style={styles.imageContainer}>
+                            <Image
+                                source={Images.mockupProfileImage || Images.splashScreenImage}
+                                style={styles.profileImage}
+                            />
+                        </View>
+
+                        {/* Right: Info */}
+                        <View style={styles.profileInfo}>
+                            <View style={styles.badgeContainer}>
+                                <Text style={styles.badgeText}>{userInfo.userType}</Text>
+                            </View>
+                            <Text style={styles.username} numberOfLines={1} adjustsFontSizeToFit>
+                                {userInfo.username}
+                            </Text>
+                            <Text style={styles.email} numberOfLines={1}>
+                                {userInfo.email}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <Divider style={styles.divider} />
+
+                    {/* --- 2. Details Section --- */}
+                    <View style={styles.statsContainer}>
+                        <DetailItem
+                            label="Wallet Connected"
+                            value={formatAddress(userInfo.walletAddress)}
+                            icon="wallet-outline"
+                        />
+                        <DetailItem label="Member Since" value="2024" icon="calendar-account-outline" />
+                        <DetailItem
+                            label="Status"
+                            value="Active & Verified"
+                            icon="shield-check-outline"
+                            valueColor={Colors.success || '#4CAF50'}
+                        />
+                    </View>
+
+                    {/* Settings Overlay */}
+                    <SettingsModal
+                        isVisible={showSettings}
+                        onDismiss={() => setShowSettings(false)}
+                        onLogout={handleLogout}
+                        walletAddress={userInfo.walletAddress}
+                    />
+                </View>
+            }
+        />
     );
 };
 
-const ProfileImage = ({ source, pickImage }) => (
-    <TouchableOpacity onPress={pickImage}>
-        <Image source={{ uri: source?.uri || source }} style={styles.profileImage} />
-    </TouchableOpacity>
-);
-
-const ProfileInfo = ({ username, from, since }) => (
-    <View style={styles.profileInfo}>
-        <Text style={styles.username}>{username}</Text>
-        <Text style={styles.info}>{'Since ' + since}</Text>
+// Helper Component for the list items
+const DetailItem = ({ label, value, icon, valueColor }) => (
+    <View style={styles.detailRow}>
+        <View style={styles.detailIconBox}>
+            <Avatar.Icon size={24} icon={icon} color={Colors.darkGray} style={{ backgroundColor: 'transparent' }} />
+        </View>
+        <View style={styles.detailContent}>
+            <Text style={styles.detailLabel}>{label}</Text>
+            <Text style={[styles.detailValue, valueColor && { color: valueColor }]}>{value}</Text>
+        </View>
     </View>
 );
 
-const WalletInfo = ({ title, info, isLoading = false }) => (
-    <TouchableOpacity disabled={true} style={styles.walletInfo}>
-        <Text style={styles.title}>{title}</Text>
-        {isLoading ? <ActivityIndicator size="small" color={Colors.green} /> : <Text style={styles.info}>{info}</Text>}
-    </TouchableOpacity>
-);
-
-const ListItem = ({ title, onPress, icon }) => (
-    <List.Item
-        title={title}
-        style={styles.item}
-        titleStyle={styles.itemTitle}
-        onPress={onPress}
-        left={() => <List.Icon icon={icon} />}
-    />
-);
-
-const windowWidth = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 10,
+    },
+    screenTitle: {
+        fontFamily: 'Poppins-Bold',
+        fontSize: 28,
+        color: Colors.black,
+    },
+    settingsButton: {
+        borderRadius: 22,
+        paddingHorizontal: 16,
+    },
+    settingsIcon: {
+        backgroundColor: Colors.solitudeGrey,
+    },
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
-        padding: 20,
+        paddingHorizontal: 24,
+        marginTop: -30,
     },
-    profile: {
+    profileHeader: {
         flexDirection: 'row',
-        marginBottom: 50,
-        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 30,
+    },
+    imageContainer: {
+        width: width * 0.35,
+        height: width * 0.35,
+        borderRadius: (width * 0.35) / 2,
+        elevation: 8, // Android shadow
+        shadowColor: '#000', // iOS shadow
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: 'white',
+        marginRight: 24, // Space between image and text
     },
     profileImage: {
-        width: windowWidth * 0.4,
-        height: windowWidth * 0.4,
-        borderRadius: windowWidth * 0.2, // Half of width and height
-        paddingRight: 50,
+        width: '100%',
+        height: '100%',
+        borderRadius: 999,
     },
     profileInfo: {
-        marginLeft: 50,
+        flex: 1,
         justifyContent: 'center',
     },
+    badgeContainer: {
+        backgroundColor: Colors.primary,
+        alignSelf: 'flex-start',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+        marginBottom: 8,
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 10,
+        fontFamily: 'Poppins-Bold',
+        textTransform: 'uppercase',
+    },
     username: {
-        fontSize: 25,
-        fontFamily: 'Poppins-SemiBold',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 24,
+        color: Colors.black,
+        lineHeight: 30,
     },
-    info: {
-        paddingTop: 10,
-        fontSize: 15,
+    email: {
         fontFamily: 'Poppins-Regular',
+        fontSize: 13,
+        color: Colors.darkGray,
+        marginTop: 4,
     },
-    walletAccount: {
+    divider: {
+        backgroundColor: '#E0E0E0',
+        height: 1,
+        marginBottom: 24,
+    },
+    statsContainer: {
+        gap: 16,
+    },
+    // Details
+    detailRow: {
         flexDirection: 'row',
-        marginBottom: 20,
-        borderWidth: 1,
-        borderColor: Colors.black,
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F5F5F5',
     },
-    walletInfo: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: 'black',
-        padding: 10,
+    detailIconBox: {
+        width: 40,
         alignItems: 'center',
     },
-    title: {
-        fontSize: 20,
-        fontFamily: 'Poppins-SemiBold',
+    detailContent: {
+        marginLeft: 12,
     },
-    options: {
-        flex: 1,
-        marginHorizontal: 10,
-        marginBottom: 40,
-    },
-    item: {
-        padding: 20,
-        marginVertical: 8,
-    },
-    itemTitle: {
-        fontSize: 20,
+    detailLabel: {
         fontFamily: 'Poppins-Regular',
+        fontSize: 12,
+        color: Colors.darkGray,
+    },
+    detailValue: {
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 16,
+        color: Colors.black,
     },
 });
 

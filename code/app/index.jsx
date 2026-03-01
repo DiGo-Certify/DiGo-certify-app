@@ -1,4 +1,3 @@
-// Refactored main App component using new patterns
 import '@walletconnect/react-native-compat';
 import React, { useEffect } from 'react';
 import { router } from 'expo-router';
@@ -10,6 +9,7 @@ import { useUser, useAppStatus } from '@/contexts/AppContext';
 import { useWalletConnectionManager } from '@/hooks/useWalletConnectionManager';
 import InitialScreen from './initial-screen';
 import ErrorHandler from '@/services/errors/ErrorHandler';
+import Admin from './(tabs)/admin';
 
 function App() {
     const { isAuthenticated, hasWallet, userInfo } = useUser();
@@ -70,8 +70,9 @@ function App() {
     // Main app content
     return (
         <View style={styles.container}>
-            <InitialScreen onConnect={connectWallet} />
-            <WalletConnectModal />
+            {/* <InitialScreen onConnect={connectWallet} onGuest={() => router.push('/validation')} />
+            {WalletConnectModal} */}
+            <Admin />
         </View>
     );
 }

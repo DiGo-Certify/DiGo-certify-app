@@ -1,7 +1,12 @@
 import '@walletconnect/react-native-compat';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { WalletConnectModal, useWalletConnectModal } from '@walletconnect/modal-react-native';
-import { save } from '@/services/storage/storage';
+
+// For Developing and Testing purposes
+const USE_MOCK_WALLET = false;
+
+// Default Hardhat Account #0 (Useful for local testing)
+const MOCK_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
 const projectId = 'b57487c51107cc8b2509a12a8d028338';
 
@@ -16,57 +21,70 @@ const providerMetadata = {
     },
 };
 
-/**
- * Custom hook for WalletConnect that uses WalletConnectModal
- * @returns {Object} WalletConnectModal, isOpen, open, close, provider, isConnected, address, handlePress, error }
- */
 function useWalletConnect() {
-    const { isOpen, open, close, provider, isConnected, address } = useWalletConnectModal();
-    const [error, setError] = React.useState(null);
+    // 1. Rename the original hooks so we can wrap them
+    const {
+        isOpen,
+        open: wcOpen,
+        close,
+        provider: wcProvider,
+        isConnected: wcIsConnected,
+        address: wcAddress,
+    } = useWalletConnectModal();
 
-    React.useEffect(() => {
-        if (provider) {
-            provider.on('session_update', (error, payload) => {
-                if (error) {
-                    setError(error);
-                }
+    // 2. Create local state to mimic the wallet connection
+    const [mockConnected, setMockConnected] = useState(false);
+    const [error, setError] = useState(null);
+
+    // 3. Determine actual state based on Mode
+    const isConnected = USE_MOCK_WALLET ? mockConnected : wcIsConnected;
+    const address = USE_MOCK_WALLET && mockConnected ? MOCK_ADDRESS : wcAddress;
+    const provider = USE_MOCK_WALLET ? null : wcProvider; // Mock doesn't have a real WC provider
+
+    useEffect(() => {
+        if (!USE_MOCK_WALLET && wcProvider) {
+            wcProvider.on('session_update', (error, payload) => {
+                if (error) setError(error);
             });
 
-            provider.on('disconnect', (error, payload) => {
-                if (error) {
-                    setError(error);
-                } else {
-                    setError('Disconnected');
-                }
+            wcProvider.on('disconnect', (error, payload) => {
+                if (error) setError(error);
+                else setError('Disconnected');
             });
 
-            provider.on('error', error => {
+            wcProvider.on('error', error => {
                 console.error('Provider error:', error);
                 setError(error.message);
             });
-
-            provider.on('pairing_proposal', proposal => {
-                console.log('Pairing proposal:', proposal);
-            });
-
-            provider.on('pairing_created', pairing => {
-                console.log('Pairing created:', pairing);
-            });
-
-            provider.on('pairing_deleted', pairing => {
-                console.log('Pairing deleted:', pairing);
-            });
         }
-    }, [provider]);
+    }, [wcProvider]);
 
+    // 4. The Magic: Intercept the "Connect" press
     const handlePress = async () => {
         try {
-            setError(null); // Clear previous errors
+            setError(null);
+
+            // Handle Disconnect
             if (isConnected) {
                 console.log('Disconnecting wallet...');
-                return await provider?.disconnect();
+                if (USE_MOCK_WALLET) {
+                    setMockConnected(false);
+                    return;
+                }
+                return await wcProvider?.disconnect();
             }
-            open().catch(err => {
+
+            // Handle Connect
+            if (USE_MOCK_WALLET) {
+                console.log('⚡️ MOCK MODE: Connecting instantly...');
+                setTimeout(() => {
+                    setMockConnected(true);
+                }, 500); // Fake a small delay for realism
+                return;
+            }
+
+            // Real WalletConnect Flow
+            wcOpen().catch(err => {
                 console.error('Open modal error:', err);
                 setError(err.message);
             });
@@ -74,16 +92,20 @@ function useWalletConnect() {
             console.log('WalletConnect error:', error);
         }
     };
+
     return {
         isOpen,
-        open,
+        open: wcOpen,
         close,
         provider,
         isConnected,
         address,
         handlePress,
         error,
-        WalletConnectModal: <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />,
+        // Only render the modal if we are NOT mocking
+        WalletConnectModal: !USE_MOCK_WALLET ? (
+            <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
+        ) : null,
     };
 }
 

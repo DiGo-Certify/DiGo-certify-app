@@ -1,19 +1,20 @@
 // Empty State Component
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Title, Paragraph, Button, Avatar } from 'react-native-paper';
+import { Text, Button, Avatar } from 'react-native-paper';
 import Colors from '@/constants/colors';
 import Icons from '@/constants/icons';
 
 const EmptyState = ({ title, message, actionText, onAction, icon = Icons.certificate, showAction = true }) => {
     return (
         <View style={styles.container}>
-            <Avatar.Icon size={80} icon={icon} style={styles.icon} color={Colors.lightGray} />
-
-            <Title style={styles.title}>{title}</Title>
-
-            <Paragraph style={styles.message}>{message}</Paragraph>
-
+            <Avatar.Icon size={80} icon={icon} style={styles.icon} color={Colors.black} />
+            <Text variant="titleLarge" style={styles.title}>
+                {title}
+            </Text>
+            <Text variant="bodyMedium" style={styles.message}>
+                {message}
+            </Text>
             {showAction && actionText && onAction && (
                 <Button mode="contained" onPress={onAction} style={styles.button} labelStyle={styles.buttonLabel}>
                     {actionText}

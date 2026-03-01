@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Text } from 'react-native-paper';
 import React, { useReducer, useEffect } from 'react';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
@@ -73,7 +74,7 @@ function delay(delayInMs) {
         setTimeout(() => resolve(undefined), delayInMs);
     });
 }
-
+//TODO: IMPLEMENT THIS
 async function authenticate(email, password) {
     await delay(3000);
     if (email === 'admin' && password === 'admin') {
@@ -135,7 +136,9 @@ const SignIn = () => {
             }
             body={
                 <View style={styles.body}>
-                    <Text style={styles.loginText}>Login</Text>
+                    <Text variant="displaySmall" style={styles.loginText}>
+                        Login
+                    </Text>
                     <FormField
                         label="Email"
                         icon="email"
@@ -151,18 +154,18 @@ const SignIn = () => {
                         secure={true}
                         style={styles.inputField}
                     />
-                    {state.tag === STATES.EDITING && <Text style={{ color: 'red' }}>{state.error}</Text>}
+                    {state.tag === STATES.EDITING && <Text style={styles.warningText}>{state.error}</Text>}
                 </View>
             }
             footer={
                 <View style={styles.footer}>
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                         <ClickableText
                             text="Create an account"
                             onPress={() => router.replace('/sign-up')}
                             style={styles.dontHaveAccountText}
                         />
-                        <Text style={{ marginHorizontal: 3, fontSize: 20 }}> • </Text>
+                        <Text style={{ marginHorizontal: 3, fontSize: 20 }}> | </Text>
                         <ClickableText text="Can't Login?" onPress={() => {}} style={styles.forgotPasswordText} />
                     </View>
                     <ActionButton
@@ -183,24 +186,23 @@ export default SignIn;
 
 const styles = StyleSheet.create({
     header: { flex: 1, justifyContent: 'center' },
-    body: { width: '100%', paddingHorizontal: 30 },
-    footer: { width: '100%', alignItems: 'flex-end', paddingHorizontal: 30, marginTop: -230},
+    body: { width: '100%' },
+    footer: { width: '100% ' },
     inputField: {
         justifyContent: 'center',
-        marginTop: 20,
         borderRadius: 10,
         borderBottomWidth: 2,
         borderBottomColor: Colors.sonicSilver,
     },
     loginText: {
-        fontSize: 40,
-        fontWeight: '900',
+        fontFamily: 'Poppins-Bold',
         alignSelf: 'flex-start',
     },
     forgotPasswordText: {
         textDecorationLine: 'underline',
         alignSelf: 'flex-end',
-        fontSize: 20,
+        fontSize: 16,
+        fontFamily: 'Poppins-Regular',
     },
     loginButton: {
         alignSelf: 'flex-end',
@@ -211,11 +213,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         lineHeight: 50,
         fontFamily: 'Poppins-Bold',
-        color: '#FFF',
+        color: Colors.white,
     },
     dontHaveAccountText: {
         textDecorationLine: 'underline',
         alignSelf: 'flex-start',
-        fontSize: 20,
+        fontFamily: 'Poppins-Regular',
+        fontSize: 16,
+    },
+    warningText: {
+        fontFamily: 'Poppins-SemiBold',
+        color: 'red',
     },
 });

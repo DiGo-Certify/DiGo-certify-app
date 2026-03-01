@@ -14,7 +14,7 @@ const FormField = ({
     helperText,
     required = false,
     keyboardType = 'default',
-    autoCapitalize = 'sentences',
+    autoCapitalize = 'none',
     autoComplete = 'off',
     secureTextEntry = false,
     multiline = false,

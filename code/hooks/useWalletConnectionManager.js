@@ -1,119 +1,87 @@
-// Enhanced WalletConnect hook with better state management
 import { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
+import { useAppStatus, useUser } from '@/contexts/AppContext';
 import useWalletConnect from '@/services/web3/wallet-connect';
-import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
-import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
-import { useApp, useUser } from '@/contexts/AppContext';
-import { USER_TYPES } from '@/constants/app';
 import ErrorHandler from '@/services/errors/ErrorHandler';
 
 export const useWalletConnectionManager = () => {
-    const { isConnected, address, handlePress, error, WalletConnectModal } = useWalletConnect();
-    const { setUserWallet, setUserType, setAuthenticated } = useUser();
-    const { setLoading, setError } = useApp();
+    const appStatus = useAppStatus();
+    const setLoading = appStatus.setLoading || appStatus.setIsLoading; 
+    const setError = appStatus.setError;
+
+    const { setUserWallet } = useUser();
+    
+    // Get wallet connect logic
+    const { 
+        isConnected, 
+        address, 
+        handlePress, 
+        error: walletError, 
+        WalletConnectModal 
+    } = useWalletConnect();
 
     const [isInitializing, setIsInitializing] = useState(true);
-    const [shouldDeployIdentity, setShouldDeployIdentity] = useState(false);
 
-    // Handle wallet connection changes
+    // Sync WalletConnect errors to App Global Error
     useEffect(() => {
-        if (isConnected && address) {
-            handleWalletConnected(address);
+        if (walletError && setError) {
+            setError(walletError);
         }
+    }, [walletError, setError]);
+
+    // Handle successful connection
+    useEffect(() => {
+        const handleConnection = async () => {
+            if (isConnected && address) {
+                try {
+                    if (setLoading) setLoading(true);
+                    
+                    // Save wallet to global user state
+                    await setUserWallet({ address });
+                    
+                    // Here you could trigger other logic like checking user type
+                    console.log("Wallet connected & saved:", address);
+
+                } catch (err) {
+                    console.error("Connection setup failed:", err);
+                    if (setError) setError(err.message);
+                } finally {
+                    if (setLoading) setLoading(false);
+                }
+            }
+        };
+
+        handleConnection();
     }, [isConnected, address]);
 
-    // Handle wallet connection
-    const handleWalletConnected = useCallback(
-        async walletAddress => {
-            try {
-                setLoading(true);
-
-                // Save wallet info
-                const walletData = { address: walletAddress };
-                await setUserWallet(walletData);
-
-                // Determine user type
-                const userType = isAdminWallet(walletAddress) ? USER_TYPES.ADMIN : USER_TYPES.DEFAULT;
-                await setUserType({ type: userType });
-
-                // Deploy identity for non-admin users
-                if (userType === USER_TYPES.DEFAULT) {
-                    setShouldDeployIdentity(true);
-                    await deployUserIdentity(walletAddress);
-                }
-
-                setAuthenticated(true);
-            } catch (error) {
-                const processedError = ErrorHandler.processError(error, 'handleWalletConnected');
-                setError(processedError.userMessage);
-                Alert.alert('Connection Error', processedError.userMessage);
-            } finally {
-                setLoading(false);
-            }
-        },
-        [setUserWallet, setUserType, setAuthenticated, setLoading, setError]
-    );
-
-    // Deploy user identity
-    const deployUserIdentity = useCallback(async walletAddress => {
-        try {
-            console.log('Deploying identity for:', walletAddress);
-            await deployIdentity(walletAddress);
-            console.log('Identity deployed successfully');
-        } catch (error) {
-            ErrorHandler.logError(error, 'deployUserIdentity');
-            // Don't throw here - identity deployment can be retried later
-            console.warn('Identity deployment failed, but user can still proceed');
-        }
-    }, []);
-
-    // Connect wallet
+    // The Connect Function called by your UI
     const connectWallet = useCallback(async () => {
         try {
-            setLoading(true);
+            if (setLoading) setLoading(true);
+            
+            // Trigger the wallet connect modal (or Mock logic)
             await handlePress();
+            
         } catch (error) {
             const processedError = ErrorHandler.processError(error, 'connectWallet');
-            setError(processedError.userMessage);
+            if (setError) setError(processedError.userMessage);
             Alert.alert('Connection Error', processedError.userMessage);
         } finally {
-            setLoading(false);
+            if (setLoading) setLoading(false);
         }
     }, [handlePress, setLoading, setError]);
 
-    // Initialize connection state
-    const initializeConnection = useCallback(async () => {
-        try {
-            setIsInitializing(true);
-            // Check existing connection state
-            // This would be handled by the useWalletConnect hook
-        } catch (error) {
-            ErrorHandler.logError(error, 'initializeConnection');
-        } finally {
-            setIsInitializing(false);
-        }
+    // Initialization check (optional, prevents flickering)
+    useEffect(() => {
+        setIsInitializing(false);
     }, []);
 
-    // Initialize on mount
-    useEffect(() => {
-        initializeConnection();
-    }, [initializeConnection]);
-
     return {
-        // Connection state
         isConnected,
         address,
         isInitializing,
-        shouldDeployIdentity,
-
-        // Connection methods
         connectWallet,
-
-        // WalletConnect components
         WalletConnectModal,
-
-        // Error state
-        connectionError: error,
+        connectionError: walletError,
     };
 };

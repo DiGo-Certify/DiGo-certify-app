@@ -1,7 +1,7 @@
 // Refactored Emission Screen with better organization
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
-import { Appbar, Title, Button } from 'react-native-paper';
+import { Appbar, Button, Text } from 'react-native-paper';
 import { router } from 'expo-router';
 import Images from '@/constants/images';
 import Colors from '@/constants/colors';
@@ -10,12 +10,12 @@ import FormField from '@/components/FormField';
 import Background from '@/components/Background';
 import { useCertificateEmission } from '@/hooks/useCertificateEmission';
 import { validateCertificateForm } from '@/utils/validation';
-import { VALIDATION_MESSAGES } from '@/constants/app';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 
 const EmissionScreen = () => {
     const { form, fileInfo, isLoading, error, setField, setFile, emitCertificate } = useCertificateEmission();
+    const [showValidationErrors, setShowValidationErrors] = useState(false);
 
     // Handle file upload
     const handleUpload = async () => {
@@ -49,6 +49,8 @@ const EmissionScreen = () => {
 
     // Handle form submission
     const handleSubmit = async () => {
+        setShowValidationErrors(true);
+
         // Validate form before submission
         const validation = validateCertificateForm(form);
 
@@ -78,13 +80,14 @@ const EmissionScreen = () => {
 
     // Get validation errors for each field
     const validation = validateCertificateForm(form);
-    const fieldErrors = validation.errors || {};
+    const fieldErrors = showValidationErrors ? validation.errors || {} : {};
 
     return (
         <Background
+            noScroll
             header={
                 <View style={styles.header}>
-                    <Appbar.Header>
+                    <Appbar.Header style={styles.appbarHeader} statusBarHeight={0}>
                         <Appbar.BackAction onPress={() => router.back()} />
                         <Appbar.Content title="Certificate Emission" titleStyle={styles.headerTitle} />
                     </Appbar.Header>
@@ -96,7 +99,9 @@ const EmissionScreen = () => {
             }
             body={
                 <View style={styles.container}>
-                    <Title style={styles.title}>Issue New Certificate</Title>
+                    <Text variant="titleLarge" style={styles.title}>
+                        Issue New Certificate
+                    </Text>
 
                     <ScrollView
                         style={styles.scrollView}
@@ -105,7 +110,9 @@ const EmissionScreen = () => {
                     >
                         {/* Student Information */}
                         <View style={styles.section}>
-                            <Title style={styles.sectionTitle}>Student Information</Title>
+                            <Text variant="titleLarge" style={styles.sectionTitle}>
+                                Student Information
+                            </Text>
 
                             <FormField
                                 label="Student Wallet Address"
@@ -122,7 +129,9 @@ const EmissionScreen = () => {
 
                         {/* Academic Information */}
                         <View style={styles.section}>
-                            <Title style={styles.sectionTitle}>Academic Information</Title>
+                            <Text variant="titleLarge" style={styles.sectionTitle}>
+                                Academic Information
+                            </Text>
 
                             <FormField
                                 label="Course ID"
@@ -162,7 +171,9 @@ const EmissionScreen = () => {
 
                         {/* Certificate Information */}
                         <View style={styles.section}>
-                            <Title style={styles.sectionTitle}>Certificate Information</Title>
+                            <Text variant="titleLarge" style={styles.sectionTitle}>
+                                Certificate Information
+                            </Text>
 
                             <FormField
                                 label="Certificate URL"
@@ -188,10 +199,12 @@ const EmissionScreen = () => {
 
                                 {fileInfo && (
                                     <View style={styles.fileInfo}>
-                                        <Title style={styles.fileName}>{fileInfo.name}</Title>
-                                        <Paragraph style={styles.fileSize}>
+                                        <Text variant="titleLarge" style={styles.fileName}>
+                                            {fileInfo.name}
+                                        </Text>
+                                        <Text variant="bodyMedium" style={styles.fileSize}>
                                             {(fileInfo.size / 1024 / 1024).toFixed(2)} MB
-                                        </Paragraph>
+                                        </Text>
                                     </View>
                                 )}
                             </View>
@@ -211,7 +224,9 @@ const EmissionScreen = () => {
                         {/* Error Display */}
                         {error && (
                             <View style={styles.errorContainer}>
-                                <Paragraph style={styles.errorText}>{error}</Paragraph>
+                                <Text variant="bodyMedium" style={styles.errorText}>
+                                    {error}
+                                </Text>
                             </View>
                         )}
 
@@ -236,7 +251,14 @@ const EmissionScreen = () => {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.backgroundColor,
+        width: '100%',
+        alignSelf: 'stretch',
+    },
+    appbarHeader: {
+        width: '100%',
+        alignSelf: 'stretch',
+        backgroundColor: Colors.backgroundColor,
     },
     headerTitle: {
         fontFamily: 'Poppins-SemiBold',
