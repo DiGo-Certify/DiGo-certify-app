@@ -9,7 +9,6 @@ import { useUser, useAppStatus } from '@/contexts/AppContext';
 import { useWalletConnectionManager } from '@/hooks/useWalletConnectionManager';
 import InitialScreen from './initial-screen';
 import ErrorHandler from '@/services/errors/ErrorHandler';
-import Admin from './(tabs)/admin';
 
 function App() {
     const { isAuthenticated, hasWallet, userInfo } = useUser();
@@ -70,9 +69,8 @@ function App() {
     // Main app content
     return (
         <View style={styles.container}>
-            {/* <InitialScreen onConnect={connectWallet} onGuest={() => router.push('/validation')} />
-            {WalletConnectModal} */}
-            <Admin />
+            <InitialScreen onConnect={connectWallet} onGuest={() => router.push('/validation')} />
+            {WalletConnectModal}
         </View>
     );
 }
