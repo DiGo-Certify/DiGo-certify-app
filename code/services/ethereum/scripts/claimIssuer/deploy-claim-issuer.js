@@ -63,7 +63,7 @@ async function deployClaimIssuer(
         await claimIssuerContract.waitForDeployment();
 
         // Add keys for signing claims to the ClaimIssuer
-        await claimIssuerContract
+        const addKeyTx = await claimIssuerContract
             .connect(newIssuerWallet)
             .addKey(
                 ethers.keccak256(
@@ -75,6 +75,7 @@ async function deployClaimIssuer(
                 SIGN_CLAIM_PURPOSE,
                 ECDSA_KEY_TYPE
             );
+        await addKeyTx.wait();
 
         console.log(
             `[+] Deployed ClaimIssuer: ${await claimIssuerContract.getAddress()}`
