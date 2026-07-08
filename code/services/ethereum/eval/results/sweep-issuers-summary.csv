@@ -1,0 +1,10 @@
+network,registrySize,reps,resolveGas,resolveMs_med,resolveMs_p95,resolveMs_min,resolveMs_max
+hardhat,5,10,56337,1.3,1.6,0.9,1.6
+hardhat,10,10,67640,0.7,1.3,0.6,1.3
+hardhat,15,10,79070,1.2,5.1,1.1,5.1
+hardhat,20,10,90379,1.0,1.4,0.8,1.4
+hardhat,25,10,101700,1.3,1.6,1.2,1.6
+hardhat,30,10,113168,2.1,2.9,1.3,2.9
+hardhat,35,10,124458,3.8,5.7,1.7,5.7
+hardhat,40,10,136072,1.1,1.3,1.0,1.3
+hardhat,45,10,147053,1.6,6.0,1.1,6.0

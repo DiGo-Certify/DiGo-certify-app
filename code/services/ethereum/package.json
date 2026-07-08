@@ -3,7 +3,9 @@
     "scripts": {
         "compile": "hardhat compile",
         "node": "hardhat node",
-        "deploy": "hardhat run scripts/deploy-full-suite.js"
+        "deploy": "hardhat run scripts/deploy-full-suite.js",
+        "test": "hardhat test",
+        "test:security": "hardhat test test/security/negative.test.js"
     },
     "devDependencies": {
         "@nomicfoundation/hardhat-network-helpers": "^1.0.11",

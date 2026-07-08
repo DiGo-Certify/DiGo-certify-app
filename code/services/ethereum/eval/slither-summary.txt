@@ -1,0 +1,137 @@
+'npx hardhat clean' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+'npx hardhat clean --global' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+Problem executing hardhat: WARNING: You are currently using Node.js v25.2.1, which is not supported by Hardhat. This can lead to unexpected behavior. See https://v2.hardhat.org/nodejs-versions
+
+'npx hardhat compile --force' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+INFO:Printers:
+Compiled with Builder
+Total number of contracts in source files: 71
+Number of contracts in dependencies: 53
+Number of contracts in tests       : 7
+Source lines of code (SLOC) in source files: 4948
+Source lines of code (SLOC) in dependencies: 1090
+Source lines of code (SLOC) in tests       : 140
+Number of  assembly lines: 0
+Number of optimization issues: 4
+Number of informational issues: 705
+Number of low issues: 75
+Number of medium issues: 17
+Number of high issues: 15
+
+Use: Openzeppelin-Ownable, Openzeppelin-Ownable
+ERCs: ERC20
+
++------------------------------+-------------+-------+--------------------+--------------+--------------------+
+| Name                         | # functions | ERCS  | ERC20 info         | Complex code | Features           |
++------------------------------+-------------+-------+--------------------+--------------+--------------------+
+| FileStorage                  | 2           |       |                    | No           |                    |
+| DVATransferManager           | 33          |       |                    | No           | Ecrecover          |
+|                              |             |       |                    |              | Tokens interaction |
+| DVDTransferManager           | 20          |       |                    | No           | Tokens interaction |
+| DefaultCompliance            | 35          |       |                    | No           | Tokens interaction |
+| ModularCompliance            | 41          |       |                    | No           | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| AbstractModule               | 13          |       |                    | No           |                    |
+| ConditionalTransferModule    | 68          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| CountryAllowModule           | 67          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| CountryRestrictModule        | 67          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| ExchangeMonthlyLimitsModule  | 73          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| MaxBalanceModule             | 68          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| ModuleProxy                  | 21          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Proxy              |
+| SupplyLimitModule            | 63          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| TimeExchangeLimitsModule     | 72          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| TimeTransfersLimitsModule    | 68          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| TransferFeesModule           | 64          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| TransferRestrictModule       | 66          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+| TREXFactory                  | 31          |       |                    | Yes          | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+| TREXGateway                  | 51          |       |                    | No           | Tokens interaction |
+| ClaimTopicsRegistryProxy     | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| IdentityRegistryProxy        | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| IdentityRegistryStorageProxy | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| ModularComplianceProxy       | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| TokenProxy                   | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| TrustedIssuersRegistryProxy  | 10          |       |                    | No           | Receive ETH        |
+|                              |             |       |                    |              | Delegatecall       |
+|                              |             |       |                    |              | Assembly           |
+|                              |             |       |                    |              | Upgradeable        |
+|                              |             |       |                    |              | Proxy              |
+| IAFactory                    | 5           |       |                    | No           |                    |
+| TREXImplementationAuthority  | 47          |       |                    | Yes          | Tokens interaction |
+| ClaimTopicsRegistry          | 22          |       |                    | No           | Upgradeable        |
+| IdentityRegistry             | 49          |       |                    | Yes          | Upgradeable        |
+| IdentityRegistryStorage      | 37          |       |                    | No           | Upgradeable        |
+| TrustedIssuersRegistry       | 32          |       |                    | No           | Upgradeable        |
+| Roles                        | 3           |       |                    | No           |                    |
+| AgentManager                 | 50          |       |                    | No           | Tokens interaction |
+| AgentRolesUpgradeable        | 36          |       |                    | No           | Upgradeable        |
+| OwnerManager                 | 54          |       |                    | No           | Tokens interaction |
+|                              |             |       |                    |              | Assembly           |
+| OwnerRolesUpgradeable        | 36          |       |                    | No           | Upgradeable        |
+| Token                        | 102         | ERC20 | Pausable           | No           | Upgradeable        |
+|                              |             |       | ∞ Minting          |              |                    |
+|                              |             |       | Approve Race Cond. |              |                    |
+|                              |             |       |                    |              |                    |
++------------------------------+-------------+-------+--------------------+--------------+--------------------+
+INFO:Slither:. analyzed (131 contracts)

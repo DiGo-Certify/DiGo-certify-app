@@ -1,0 +1,1313 @@
+'npx hardhat clean' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+'npx hardhat clean --global' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+Problem executing hardhat: WARNING: You are currently using Node.js v25.2.1, which is not supported by Hardhat. This can lead to unexpected behavior. See https://v2.hardhat.org/nodejs-versions
+
+'npx hardhat compile --force' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+INFO:Detectors:
+Detector: arbitrary-send-erc20
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
+ApproveTransfer.approveAndTransfer(address,address,uint256) (contracts/compliance/legacy/features/ApproveTransfer.sol#125-128) uses arbitrary from in transferFrom: tokenBound.transferFrom(_from,_to,_amount) (contracts/compliance/legacy/features/ApproveTransfer.sol#127)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom
+INFO:Detectors:
+Detector: encode-packed-collision
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) calls abi.encodePacked() with multiple dynamic arguments:
+	- _salt = string(abi.encodePacked(Strings.toHexString(_tokenDetails.owner),_tokenDetails.name)) (contracts/factory/TREXGateway.sol#358)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#abi-encodePacked-collision
+INFO:Detectors:
+Detector: unchecked-transfer
+DVATransferManager.initiateTransfer(address,address,uint256) (contracts/DVA/DVATransferManager.sol#131-164) ignores return value by token.transferFrom(msg.sender,address(this),amount) (contracts/DVA/DVATransferManager.sol#142)
+DVATransferManager._transferTokensTo(IDVATransferManager.Transfer,address) (contracts/DVA/DVATransferManager.sol#415-417) ignores return value by IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token1Contract.transferFrom(token1.counterpart,token2.counterpart,(token1.amount - fees.txFee1)) (contracts/DVD/DVDTransferManager.sol#327)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token1Contract.transferFrom(token1.counterpart,fees.fee1Wallet,fees.txFee1) (contracts/DVD/DVDTransferManager.sol#328)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token1Contract.transferFrom(token1.counterpart,token2.counterpart,token1.amount) (contracts/DVD/DVDTransferManager.sol#331)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
+ApproveTransfer.approveAndTransfer(address,address,uint256) (contracts/compliance/legacy/features/ApproveTransfer.sol#125-128) ignores return value by tokenBound.transferFrom(_from,_to,_amount) (contracts/compliance/legacy/features/ApproveTransfer.sol#127)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) ignores return value by IERC20(_deploymentFee.feeToken).transferFrom(msg.sender,_deploymentFee.feeCollector,feeApplied) (contracts/factory/TREXGateway.sol#351-355)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-transfer
+INFO:Detectors:
+Detector: reentrancy-no-eth
+Reentrancy in ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126):
+	External calls:
+	- module.bindCompliance(address(this)) (contracts/compliance/modular/ModularCompliance.sol#122)
+	State variables written after the call(s):
+	- _moduleBound[_module] = true (contracts/compliance/modular/ModularCompliance.sol#124)
+	MCStorage._moduleBound (contracts/compliance/modular/MCStorage.sol#74) can be used in cross function reentrancies:
+	- ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126)
+	- ModularCompliance.callModuleFunction(bytes,address) (contracts/compliance/modular/ModularCompliance.sol#189-219)
+	- ModularCompliance.isModuleBound(address) (contracts/compliance/modular/ModularCompliance.sol#224-226)
+	- ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145)
+	- _modules.push(_module) (contracts/compliance/modular/ModularCompliance.sol#123)
+	MCStorage._modules (contracts/compliance/modular/MCStorage.sol#71) can be used in cross function reentrancies:
+	- ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126)
+	- ModularCompliance.canTransfer(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#245-253)
+	- ModularCompliance.created(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#165-172)
+	- ModularCompliance.destroyed(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#177-184)
+	- ModularCompliance.getModules() (contracts/compliance/modular/ModularCompliance.sol#231-233)
+	- ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145)
+	- ModularCompliance.transferred(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#150-160)
+Reentrancy in TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177):
+	External calls:
+	- _tokenID = IIdFactory(_idFactory).createTokenIdentity(address(token),_tokenDetails.owner,_salt) (contracts/factory/TREXFactory.sol#145)
+	- token.setOnchainID(_tokenID) (contracts/factory/TREXFactory.sol#146)
+	- ctr.addClaimTopic(_claimDetails.claimTopics[i]) (contracts/factory/TREXFactory.sol#149)
+	- tir.addTrustedIssuer(IClaimIssuer((_claimDetails).issuers[i_scope_0]),_claimDetails.issuerClaims[i_scope_0]) (contracts/factory/TREXFactory.sol#152)
+	- irs.bindIdentityRegistry(address(ir)) (contracts/factory/TREXFactory.sol#154)
+	- AgentRole(address(ir)).addAgent(address(token)) (contracts/factory/TREXFactory.sol#155)
+	- AgentRole(address(ir)).addAgent(_tokenDetails.irAgents[i_scope_1]) (contracts/factory/TREXFactory.sol#157)
+	- AgentRole(address(token)).addAgent(_tokenDetails.tokenAgents[i_scope_2]) (contracts/factory/TREXFactory.sol#160)
+	- mc.addModule(_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#164)
+	- mc.callModuleFunction(_tokenDetails.complianceSettings[i_scope_3],_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#167)
+	State variables written after the call(s):
+	- tokenDeployed[_salt] = address(token) (contracts/factory/TREXFactory.sol#170)
+	TREXFactory.tokenDeployed (contracts/factory/TREXFactory.sol#91) can be used in cross function reentrancies:
+	- TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177)
+	- TREXFactory.getToken(string) (contracts/factory/TREXFactory.sol#203-205)
+	- TREXFactory.tokenDeployed (contracts/factory/TREXFactory.sol#91)
+Reentrancy in Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322):
+	External calls:
+	- _tokenIdentityRegistry.registerIdentity(_newWallet,_onchainID,_tokenIdentityRegistry.investorCountry(_lostWallet)) (contracts/token/Token.sol#308-309)
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _tokenCompliance.transferred(_from,_to,_amount) (contracts/token/Token.sol#445)
+	State variables written after the call(s):
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _balances[_from] = _balances[_from] - _amount (contracts/token/Token.sol#544)
+		- _balances[_to] = _balances[_to] + _amount (contracts/token/Token.sol#545)
+	TokenStorage._balances (contracts/token/TokenStorage.sol#70) can be used in cross function reentrancies:
+	- Token._burn(address,uint256) (contracts/token/Token.sol#565-573)
+	- Token._mint(address,uint256) (contracts/token/Token.sol#552-560)
+	- Token._transfer(address,address,uint256) (contracts/token/Token.sol#534-547)
+	- Token.balanceOf(address) (contracts/token/Token.sol#527-529)
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _frozenTokens[_from] = _frozenTokens[_from] - (tokensToUnfreeze) (contracts/token/Token.sol#440)
+	TokenStorage._frozenTokens (contracts/token/TokenStorage.sol#83) can be used in cross function reentrancies:
+	- Token.burn(address,uint256) (contracts/token/Token.sol#464-474)
+	- Token.forcedTransfer(address,address,uint256) (contracts/token/Token.sol#431-449)
+	- Token.freezePartialTokens(address,uint256) (contracts/token/Token.sol#488-493)
+	- Token.getFrozenTokens(address) (contracts/token/Token.sol#369-371)
+	- Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322)
+	- Token.transfer(address,uint256) (contracts/token/Token.sol#417-426)
+	- Token.transferFrom(address,address,uint256) (contracts/token/Token.sol#220-234)
+	- Token.unfreezePartialTokens(address,uint256) (contracts/token/Token.sol#498-502)
+	- freezePartialTokens(_newWallet,frozenTokens) (contracts/token/Token.sol#312)
+		- _frozenTokens[_userAddress] = _frozenTokens[_userAddress] + (_amount) (contracts/token/Token.sol#491)
+	TokenStorage._frozenTokens (contracts/token/TokenStorage.sol#83) can be used in cross function reentrancies:
+	- Token.burn(address,uint256) (contracts/token/Token.sol#464-474)
+	- Token.forcedTransfer(address,address,uint256) (contracts/token/Token.sol#431-449)
+	- Token.freezePartialTokens(address,uint256) (contracts/token/Token.sol#488-493)
+	- Token.getFrozenTokens(address) (contracts/token/Token.sol#369-371)
+	- Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322)
+	- Token.transfer(address,uint256) (contracts/token/Token.sol#417-426)
+	- Token.transferFrom(address,address,uint256) (contracts/token/Token.sol#220-234)
+	- Token.unfreezePartialTokens(address,uint256) (contracts/token/Token.sol#498-502)
+Reentrancy in ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145):
+	External calls:
+	- IModule(_module).unbindCompliance(address(this)) (contracts/compliance/modular/ModularCompliance.sol#137)
+	State variables written after the call(s):
+	- _moduleBound[_module] = false (contracts/compliance/modular/ModularCompliance.sol#140)
+	MCStorage._moduleBound (contracts/compliance/modular/MCStorage.sol#74) can be used in cross function reentrancies:
+	- ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126)
+	- ModularCompliance.callModuleFunction(bytes,address) (contracts/compliance/modular/ModularCompliance.sol#189-219)
+	- ModularCompliance.isModuleBound(address) (contracts/compliance/modular/ModularCompliance.sol#224-226)
+	- ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145)
+	- _modules[i] = _modules[length - 1] (contracts/compliance/modular/ModularCompliance.sol#138)
+	MCStorage._modules (contracts/compliance/modular/MCStorage.sol#71) can be used in cross function reentrancies:
+	- ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126)
+	- ModularCompliance.canTransfer(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#245-253)
+	- ModularCompliance.created(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#165-172)
+	- ModularCompliance.destroyed(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#177-184)
+	- ModularCompliance.getModules() (contracts/compliance/modular/ModularCompliance.sol#231-233)
+	- ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145)
+	- ModularCompliance.transferred(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#150-160)
+	- _modules.pop() (contracts/compliance/modular/ModularCompliance.sol#139)
+	MCStorage._modules (contracts/compliance/modular/MCStorage.sol#71) can be used in cross function reentrancies:
+	- ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126)
+	- ModularCompliance.canTransfer(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#245-253)
+	- ModularCompliance.created(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#165-172)
+	- ModularCompliance.destroyed(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#177-184)
+	- ModularCompliance.getModules() (contracts/compliance/modular/ModularCompliance.sol#231-233)
+	- ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145)
+	- ModularCompliance.transferred(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#150-160)
+Reentrancy in Token.setCompliance(address) (contracts/token/Token.sol#515-522):
+	External calls:
+	- _tokenCompliance.unbindToken(address(this)) (contracts/token/Token.sol#517)
+	State variables written after the call(s):
+	- _tokenCompliance = IModularCompliance(_compliance) (contracts/token/Token.sol#519)
+	TokenStorage._tokenCompliance (contracts/token/TokenStorage.sol#91) can be used in cross function reentrancies:
+	- Token.burn(address,uint256) (contracts/token/Token.sol#464-474)
+	- Token.compliance() (contracts/token/Token.sol#348-350)
+	- Token.forcedTransfer(address,address,uint256) (contracts/token/Token.sol#431-449)
+	- Token.mint(address,uint256) (contracts/token/Token.sol#454-459)
+	- Token.setCompliance(address) (contracts/token/Token.sol#515-522)
+	- Token.transfer(address,uint256) (contracts/token/Token.sol#417-426)
+	- Token.transferFrom(address,address,uint256) (contracts/token/Token.sol#220-234)
+Reentrancy in DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343):
+	External calls:
+	- token1Contract.transferFrom(token1.counterpart,token2.counterpart,(token1.amount - fees.txFee1)) (contracts/DVD/DVDTransferManager.sol#327)
+	- token1Contract.transferFrom(token1.counterpart,fees.fee1Wallet,fees.txFee1) (contracts/DVD/DVDTransferManager.sol#328)
+	- token1Contract.transferFrom(token1.counterpart,token2.counterpart,token1.amount) (contracts/DVD/DVDTransferManager.sol#331)
+	- token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
+	- token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)
+	- token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
+	State variables written after the call(s):
+	- delete token1ToDeliver[_transferID] (contracts/DVD/DVDTransferManager.sol#340)
+	DVDTransferManager.token1ToDeliver (contracts/DVD/DVDTransferManager.sol#100) can be used in cross function reentrancies:
+	- DVDTransferManager.calculateFee(bytes32) (contracts/DVD/DVDTransferManager.sol#429-456)
+	- DVDTransferManager.cancelDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#356-370)
+	- DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256) (contracts/DVD/DVDTransferManager.sol#241-281)
+	- DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343)
+	- DVDTransferManager.token1ToDeliver (contracts/DVD/DVDTransferManager.sol#100)
+	- delete token2ToDeliver[_transferID] (contracts/DVD/DVDTransferManager.sol#341)
+	DVDTransferManager.token2ToDeliver (contracts/DVD/DVDTransferManager.sol#103) can be used in cross function reentrancies:
+	- DVDTransferManager.calculateFee(bytes32) (contracts/DVD/DVDTransferManager.sol#429-456)
+	- DVDTransferManager.cancelDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#356-370)
+	- DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256) (contracts/DVD/DVDTransferManager.sol#241-281)
+	- DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343)
+	- DVDTransferManager.token2ToDeliver (contracts/DVD/DVDTransferManager.sol#103)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
+INFO:Detectors:
+Detector: tautology
+DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address) (contracts/DVD/DVDTransferManager.sol#178-225) contains a tautology or contradiction:
+	- require(bool,string)(_fee1 <= 10 ** _feeBase && _fee1 >= 0 && _fee2 <= 10 ** _feeBase && _fee2 >= 0 && _feeBase <= 5 && _feeBase >= 2,invalid fee settings) (contracts/DVD/DVDTransferManager.sol#195-200)
+TokenProxy.constructor(address,address,address,string,string,uint8,address) (contracts/proxy/TokenProxy.sol#69-107) contains a tautology or contradiction:
+	- require(bool,string)(0 <= _decimals && _decimals <= 18,decimals between 0 and 18) (contracts/proxy/TokenProxy.sol#88)
+Token.init(address,address,string,string,uint8,address) (contracts/token/Token.sol#100-132) contains a tautology or contradiction:
+	- require(bool,string)(0 <= _decimals && _decimals <= 18,decimals between 0 and 18) (contracts/token/Token.sol#122)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#tautology-or-contradiction
+INFO:Detectors:
+Detector: uninitialized-local
+DVDTransferManager.calculateFee(bytes32).fees (contracts/DVD/DVDTransferManager.sol#430) is a local variable never initialized
+DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256).token2 (contracts/DVD/DVDTransferManager.sol#257) is a local variable never initialized
+DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address).reflectParityFee (contracts/DVD/DVDTransferManager.sol#217) is a local variable never initialized
+DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address).parityFee (contracts/DVD/DVDTransferManager.sol#208) is a local variable never initialized
+DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256).token1 (contracts/DVD/DVDTransferManager.sol#253) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+INFO:Detectors:
+Detector: unused-return
+IdentityRegistry.isVerified(address) (contracts/registry/implementation/IdentityRegistry.sol#173-223) ignores return value by (foundClaimTopic,scheme,issuer,sig,data,None) = identity(_userAddress).getClaim(claimIds[j]) (contracts/registry/implementation/IdentityRegistry.sol#198)
+AgentManager.callForcedTransfer(address,address,uint256,IIdentity) (contracts/roles/permissioning/agent/AgentManager.sol#88-100) ignores return value by token.forcedTransfer(_from,_to,_amount) (contracts/roles/permissioning/agent/AgentManager.sol#99)
+AgentManager.callRecoveryAddress(address,address,address,IIdentity) (contracts/roles/permissioning/agent/AgentManager.sol#369-381) ignores return value by token.recoveryAddress(_lostWallet,_newWallet,_onchainID) (contracts/roles/permissioning/agent/AgentManager.sol#380)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors:
+Detector: missing-zero-check
+TREXGateway.constructor(address,bool).factory (contracts/factory/TREXGateway.sol#128) lacks a zero-check on :
+		- _factory = factory (contracts/factory/TREXGateway.sol#129)
+TokenProxy.constructor(address,address,address,string,string,uint8,address)._onchainID (contracts/proxy/TokenProxy.sol#77) lacks a zero-check on :
+		- (success,None) = logic.delegatecall(abi.encodeWithSignature(init(address,address,string,string,uint8,address),_identityRegistry,_compliance,_name,_symbol,_decimals,_onchainID)) (contracts/proxy/TokenProxy.sol#95-105)
+IAFactory.constructor(address).trexFactory (contracts/proxy/authority/IAFactory.sol#79) lacks a zero-check on :
+		- _trexFactory = trexFactory (contracts/proxy/authority/IAFactory.sol#80)
+TREXImplementationAuthority.constructor(bool,address,address).trexFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#104) lacks a zero-check on :
+		- _trexFactory = trexFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#106)
+TREXImplementationAuthority.constructor(bool,address,address).iaFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#104) lacks a zero-check on :
+		- _iaFactory = iaFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#107)
+TREXImplementationAuthority.setIAFactory(address).iaFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#127) lacks a zero-check on :
+		- _iaFactory = iaFactory (contracts/proxy/authority/TREXImplementationAuthority.sol#132)
+Token.init(address,address,string,string,uint8,address)._onchainID (contracts/token/Token.sol#107) lacks a zero-check on :
+		- _tokenOnchainID = _onchainID (contracts/token/Token.sol#127)
+Token.setOnchainID(address)._onchainID (contracts/token/Token.sol#180) lacks a zero-check on :
+		- _tokenOnchainID = _onchainID (contracts/token/Token.sol#181)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+INFO:Detectors:
+Detector: calls-loop
+DVATransferManager._canApprove(IDVATransferManager.Transfer,IDVATransferManager.Approver,address) (contracts/DVA/DVATransferManager.sol#419-422) has external calls inside a loop: approver.wallet == caller || (approver.anyTokenAgent && approver.wallet == address(0) && AgentRole(transfer.tokenAddress).isAgent(caller)) (contracts/DVA/DVATransferManager.sol#420-421)
+	Calls stack containing the loop:
+		DVATransferManager.approveTransfer(bytes32)
+		DVATransferManager._approveTransfer(bytes32,IDVATransferManager.Transfer,address)
+DVATransferManager._canApprove(IDVATransferManager.Transfer,IDVATransferManager.Approver,address) (contracts/DVA/DVATransferManager.sol#419-422) has external calls inside a loop: approver.wallet == caller || (approver.anyTokenAgent && approver.wallet == address(0) && AgentRole(transfer.tokenAddress).isAgent(caller)) (contracts/DVA/DVATransferManager.sol#420-421)
+	Calls stack containing the loop:
+		DVATransferManager.delegateApproveTransfer(bytes32,IDVATransferManager.Signature[])
+		DVATransferManager._approveTransfer(bytes32,IDVATransferManager.Transfer,address)
+DVATransferManager._transferTokensTo(IDVATransferManager.Transfer,address) (contracts/DVA/DVATransferManager.sol#415-417) has external calls inside a loop: IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
+	Calls stack containing the loop:
+		DVATransferManager.delegateApproveTransfer(bytes32,IDVATransferManager.Signature[])
+		DVATransferManager._completeTransfer(bytes32,IDVATransferManager.Transfer)
+DVATransferManager._canApprove(IDVATransferManager.Transfer,IDVATransferManager.Approver,address) (contracts/DVA/DVATransferManager.sol#419-422) has external calls inside a loop: approver.wallet == caller || (approver.anyTokenAgent && approver.wallet == address(0) && AgentRole(transfer.tokenAddress).isAgent(caller)) (contracts/DVA/DVATransferManager.sol#420-421)
+	Calls stack containing the loop:
+		DVATransferManager.rejectTransfer(bytes32)
+ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145) has external calls inside a loop: IModule(_module).unbindCompliance(address(this)) (contracts/compliance/modular/ModularCompliance.sol#137)
+ModularCompliance.transferred(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#150-160) has external calls inside a loop: IModule(_modules[i]).moduleTransferAction(_from,_to,_value) (contracts/compliance/modular/ModularCompliance.sol#158)
+ModularCompliance.created(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#165-172) has external calls inside a loop: IModule(_modules[i]).moduleMintAction(_to,_value) (contracts/compliance/modular/ModularCompliance.sol#170)
+ModularCompliance.destroyed(address,uint256) (contracts/compliance/modular/ModularCompliance.sol#177-184) has external calls inside a loop: IModule(_modules[i]).moduleBurnAction(_from,_value) (contracts/compliance/modular/ModularCompliance.sol#182)
+ModularCompliance.canTransfer(address,address,uint256) (contracts/compliance/modular/ModularCompliance.sol#245-253) has external calls inside a loop: ! IModule(_modules[i]).moduleCheck(_from,_to,_value,address(this)) (contracts/compliance/modular/ModularCompliance.sol#248)
+ConditionalTransferModule.approveTransfer(address,address,uint256) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#210-214) has external calls inside a loop: transferHash = calculateTransferHash(_from,_to,_amount,IModularCompliance(msg.sender).getTokenBound()) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#211)
+	Calls stack containing the loop:
+		ConditionalTransferModule.batchApproveTransfers(address[],address[],uint256[])
+ConditionalTransferModule.approveTransfer(address,address,uint256) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#210-214) has external calls inside a loop: TransferApproved(_from,_to,_amount,IModularCompliance(msg.sender).getTokenBound()) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#213)
+	Calls stack containing the loop:
+		ConditionalTransferModule.batchApproveTransfers(address[],address[],uint256[])
+ConditionalTransferModule.unApproveTransfer(address,address,uint256) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#226-232) has external calls inside a loop: transferHash = calculateTransferHash(_from,_to,_amount,IModularCompliance(msg.sender).getTokenBound()) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#227)
+	Calls stack containing the loop:
+		ConditionalTransferModule.batchUnApproveTransfers(address[],address[],uint256[])
+ConditionalTransferModule.unApproveTransfer(address,address,uint256) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#226-232) has external calls inside a loop: ApprovalRemoved(_from,_to,_amount,IModularCompliance(msg.sender).getTokenBound()) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#230)
+	Calls stack containing the loop:
+		ConditionalTransferModule.batchUnApproveTransfers(address[],address[],uint256[])
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: ctr.addClaimTopic(_claimDetails.claimTopics[i]) (contracts/factory/TREXFactory.sol#149)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: tir.addTrustedIssuer(IClaimIssuer((_claimDetails).issuers[i_scope_0]),_claimDetails.issuerClaims[i_scope_0]) (contracts/factory/TREXFactory.sol#152)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: AgentRole(address(ir)).addAgent(_tokenDetails.irAgents[i_scope_1]) (contracts/factory/TREXFactory.sol#157)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: AgentRole(address(token)).addAgent(_tokenDetails.tokenAgents[i_scope_2]) (contracts/factory/TREXFactory.sol#160)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: ! mc.isModuleBound(_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#163)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: mc.addModule(_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#164)
+TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177) has external calls inside a loop: mc.callModuleFunction(_tokenDetails.complianceSettings[i_scope_3],_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#167)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) has external calls inside a loop: IERC20(_deploymentFee.feeToken).transferFrom(msg.sender,_deploymentFee.feeCollector,feeApplied) (contracts/factory/TREXGateway.sol#351-355)
+	Calls stack containing the loop:
+		TREXGateway.batchDeployTREXSuite(ITREXFactory.TokenDetails[],ITREXFactory.ClaimDetails[])
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) has external calls inside a loop: ITREXFactory(_factory).deployTREXSuite(_salt,_tokenDetails,_claimDetails) (contracts/factory/TREXGateway.sol#359)
+	Calls stack containing the loop:
+		TREXGateway.batchDeployTREXSuite(ITREXFactory.TokenDetails[],ITREXFactory.ClaimDetails[])
+IdentityRegistry.registerIdentity(address,IIdentity,uint16) (contracts/registry/implementation/IdentityRegistry.sol#266-273) has external calls inside a loop: _tokenIdentityStorage.addIdentityToStorage(_userAddress,_identity,_country) (contracts/registry/implementation/IdentityRegistry.sol#271)
+	Calls stack containing the loop:
+		IdentityRegistry.batchRegisterIdentity(address[],IIdentity[],uint16[])
+IdentityRegistry.isVerified(address) (contracts/registry/implementation/IdentityRegistry.sol#173-223) has external calls inside a loop: trustedIssuers = _tokenIssuersRegistry.getTrustedIssuersForClaimTopic(requiredClaimTopics[claimTopic]) (contracts/registry/implementation/IdentityRegistry.sol#187-188)
+IdentityRegistry.isVerified(address) (contracts/registry/implementation/IdentityRegistry.sol#173-223) has external calls inside a loop: (foundClaimTopic,scheme,issuer,sig,data,None) = identity(_userAddress).getClaim(claimIds[j]) (contracts/registry/implementation/IdentityRegistry.sol#198)
+IdentityRegistry.isVerified(address) (contracts/registry/implementation/IdentityRegistry.sol#173-223) has external calls inside a loop: _validity = IClaimIssuer(issuer).isClaimValid(identity(_userAddress),requiredClaimTopics[claimTopic],sig,data) (contracts/registry/implementation/IdentityRegistry.sol#201-216)
+Token.transfer(address,uint256) (contracts/token/Token.sol#417-426) has external calls inside a loop: _tokenIdentityRegistry.isVerified(_to) && _tokenCompliance.canTransfer(msg.sender,_to,_amount) (contracts/token/Token.sol#420)
+	Calls stack containing the loop:
+		Token.batchTransfer(address[],uint256[])
+Token.transfer(address,uint256) (contracts/token/Token.sol#417-426) has external calls inside a loop: _tokenCompliance.transferred(msg.sender,_to,_amount) (contracts/token/Token.sol#422)
+	Calls stack containing the loop:
+		Token.batchTransfer(address[],uint256[])
+Token.forcedTransfer(address,address,uint256) (contracts/token/Token.sol#431-449) has external calls inside a loop: _tokenIdentityRegistry.isVerified(_to) (contracts/token/Token.sol#443)
+	Calls stack containing the loop:
+		Token.batchForcedTransfer(address[],address[],uint256[])
+Token.forcedTransfer(address,address,uint256) (contracts/token/Token.sol#431-449) has external calls inside a loop: _tokenCompliance.transferred(_from,_to,_amount) (contracts/token/Token.sol#445)
+	Calls stack containing the loop:
+		Token.batchForcedTransfer(address[],address[],uint256[])
+Token.mint(address,uint256) (contracts/token/Token.sol#454-459) has external calls inside a loop: require(bool,string)(_tokenIdentityRegistry.isVerified(_to),Identity is not verified.) (contracts/token/Token.sol#455)
+	Calls stack containing the loop:
+		Token.batchMint(address[],uint256[])
+Token.mint(address,uint256) (contracts/token/Token.sol#454-459) has external calls inside a loop: require(bool,string)(_tokenCompliance.canTransfer(address(0),_to,_amount),Compliance not followed) (contracts/token/Token.sol#456)
+	Calls stack containing the loop:
+		Token.batchMint(address[],uint256[])
+Token.mint(address,uint256) (contracts/token/Token.sol#454-459) has external calls inside a loop: _tokenCompliance.created(_to,_amount) (contracts/token/Token.sol#458)
+	Calls stack containing the loop:
+		Token.batchMint(address[],uint256[])
+Token.burn(address,uint256) (contracts/token/Token.sol#464-474) has external calls inside a loop: _tokenCompliance.destroyed(_userAddress,_amount) (contracts/token/Token.sol#473)
+	Calls stack containing the loop:
+		Token.batchBurn(address[],uint256[])
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Detector: reentrancy-benign
+Reentrancy in IAFactory.deployIA(address) (contracts/proxy/authority/IAFactory.sol#86-97):
+	External calls:
+	- _newIA.fetchVersion(ITREXImplementationAuthority(msg.sender).getCurrentVersion()) (contracts/proxy/authority/IAFactory.sol#91)
+	- _newIA.useTREXVersion(ITREXImplementationAuthority(msg.sender).getCurrentVersion()) (contracts/proxy/authority/IAFactory.sol#92)
+	- Ownable(_newIA).transferOwnership(Ownable(_token).owner()) (contracts/proxy/authority/IAFactory.sol#93)
+	State variables written after the call(s):
+	- _deployedByFactory[address(_newIA)] = true (contracts/proxy/authority/IAFactory.sol#94)
+Reentrancy in DVATransferManager.initiateTransfer(address,address,uint256) (contracts/DVA/DVATransferManager.sol#131-164):
+	External calls:
+	- token.transferFrom(msg.sender,address(this),amount) (contracts/DVA/DVATransferManager.sol#142)
+	State variables written after the call(s):
+	- transfer.tokenAddress = tokenAddress (contracts/DVA/DVATransferManager.sol#148)
+	- transfer.sender = msg.sender (contracts/DVA/DVATransferManager.sol#149)
+	- transfer.recipient = recipient (contracts/DVA/DVATransferManager.sol#150)
+	- transfer.amount = amount (contracts/DVA/DVATransferManager.sol#151)
+	- transfer.status = TransferStatus.PENDING (contracts/DVA/DVATransferManager.sol#152)
+	- transfer.approvalCriteriaHash = approvalCriteria.hash (contracts/DVA/DVATransferManager.sol#153)
+	- _addApproversToTransfer(transfer,approvalCriteria) (contracts/DVA/DVATransferManager.sol#155)
+		- transfer.approvers.push(Approver(transfer.recipient,false,false)) (contracts/DVA/DVATransferManager.sol#403)
+		- transfer.approvers.push(Approver(address(0),true,false)) (contracts/DVA/DVATransferManager.sol#407)
+		- transfer.approvers.push(Approver(approvalCriteria.additionalApprovers[i],false,false)) (contracts/DVA/DVATransferManager.sol#411)
+	- nonce = _txNonce ++ (contracts/DVA/DVATransferManager.sol#144)
+Reentrancy in Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322):
+	External calls:
+	- _tokenIdentityRegistry.registerIdentity(_newWallet,_onchainID,_tokenIdentityRegistry.investorCountry(_lostWallet)) (contracts/token/Token.sol#308-309)
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _tokenCompliance.transferred(_from,_to,_amount) (contracts/token/Token.sol#445)
+	State variables written after the call(s):
+	- setAddressFrozen(_newWallet,true) (contracts/token/Token.sol#315)
+		- _frozen[_userAddress] = _freeze (contracts/token/Token.sol#480)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+Detector: reentrancy-events
+Reentrancy in DVATransferManager._completeTransfer(bytes32,IDVATransferManager.Transfer) (contracts/DVA/DVATransferManager.sol#372-382):
+	External calls:
+	- _transferTokensTo(transfer,transfer.recipient) (contracts/DVA/DVATransferManager.sol#374)
+		- IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
+	Event emitted after the call(s):
+	- TransferCompleted(transferID,transfer.tokenAddress,transfer.sender,transfer.recipient,transfer.amount) (contracts/DVA/DVATransferManager.sol#375-381)
+Reentrancy in ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126):
+	External calls:
+	- module.bindCompliance(address(this)) (contracts/compliance/modular/ModularCompliance.sol#122)
+	Event emitted after the call(s):
+	- ModuleAdded(_module) (contracts/compliance/modular/ModularCompliance.sol#125)
+Reentrancy in DVATransferManager.cancelTransfer(bytes32) (contracts/DVA/DVATransferManager.sol#210-219):
+	External calls:
+	- _transferTokensTo(transfer,transfer.sender) (contracts/DVA/DVATransferManager.sol#217)
+		- IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
+	Event emitted after the call(s):
+	- TransferCancelled(transferID) (contracts/DVA/DVATransferManager.sol#218)
+Reentrancy in TREXImplementationAuthority.changeImplementationAuthority(address,address) (contracts/proxy/authority/TREXImplementationAuthority.sol#161-214):
+	External calls:
+	- _newImplementationAuthority = IIAFactory(_iaFactory).deployIA(_token) (contracts/proxy/authority/TREXImplementationAuthority.sol#184)
+	- IProxy(_token).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#204)
+	- IProxy(_ir).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#205)
+	- IProxy(_mc).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#206)
+	- IProxy(_ctr).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#207)
+	- IProxy(_tir).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#208)
+	- IProxy(_irs).setImplementationAuthority(_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#211)
+	Event emitted after the call(s):
+	- ImplementationAuthorityChanged(_token,_newImplementationAuthority) (contracts/proxy/authority/TREXImplementationAuthority.sol#213)
+Reentrancy in IdentityRegistry.deleteIdentity(address) (contracts/registry/implementation/IdentityRegistry.sol#139-143):
+	External calls:
+	- _tokenIdentityStorage.removeIdentityFromStorage(_userAddress) (contracts/registry/implementation/IdentityRegistry.sol#141)
+	Event emitted after the call(s):
+	- IdentityRemoved(_userAddress,oldIdentity) (contracts/registry/implementation/IdentityRegistry.sol#142)
+Reentrancy in IAFactory.deployIA(address) (contracts/proxy/authority/IAFactory.sol#86-97):
+	External calls:
+	- _newIA.fetchVersion(ITREXImplementationAuthority(msg.sender).getCurrentVersion()) (contracts/proxy/authority/IAFactory.sol#91)
+	- _newIA.useTREXVersion(ITREXImplementationAuthority(msg.sender).getCurrentVersion()) (contracts/proxy/authority/IAFactory.sol#92)
+	- Ownable(_newIA).transferOwnership(Ownable(_token).owner()) (contracts/proxy/authority/IAFactory.sol#93)
+	Event emitted after the call(s):
+	- ImplementationAuthorityDeployed(address(_newIA)) (contracts/proxy/authority/IAFactory.sol#95)
+Reentrancy in TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXFactory.sol#103-177):
+	External calls:
+	- _tokenID = IIdFactory(_idFactory).createTokenIdentity(address(token),_tokenDetails.owner,_salt) (contracts/factory/TREXFactory.sol#145)
+	- token.setOnchainID(_tokenID) (contracts/factory/TREXFactory.sol#146)
+	- ctr.addClaimTopic(_claimDetails.claimTopics[i]) (contracts/factory/TREXFactory.sol#149)
+	- tir.addTrustedIssuer(IClaimIssuer((_claimDetails).issuers[i_scope_0]),_claimDetails.issuerClaims[i_scope_0]) (contracts/factory/TREXFactory.sol#152)
+	- irs.bindIdentityRegistry(address(ir)) (contracts/factory/TREXFactory.sol#154)
+	- AgentRole(address(ir)).addAgent(address(token)) (contracts/factory/TREXFactory.sol#155)
+	- AgentRole(address(ir)).addAgent(_tokenDetails.irAgents[i_scope_1]) (contracts/factory/TREXFactory.sol#157)
+	- AgentRole(address(token)).addAgent(_tokenDetails.tokenAgents[i_scope_2]) (contracts/factory/TREXFactory.sol#160)
+	- mc.addModule(_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#164)
+	- mc.callModuleFunction(_tokenDetails.complianceSettings[i_scope_3],_tokenDetails.complianceModules[i_scope_3]) (contracts/factory/TREXFactory.sol#167)
+	- (Ownable(address(token))).transferOwnership(_tokenDetails.owner) (contracts/factory/TREXFactory.sol#171)
+	- (Ownable(address(ir))).transferOwnership(_tokenDetails.owner) (contracts/factory/TREXFactory.sol#172)
+	- (Ownable(address(tir))).transferOwnership(_tokenDetails.owner) (contracts/factory/TREXFactory.sol#173)
+	- (Ownable(address(ctr))).transferOwnership(_tokenDetails.owner) (contracts/factory/TREXFactory.sol#174)
+	- (Ownable(address(mc))).transferOwnership(_tokenDetails.owner) (contracts/factory/TREXFactory.sol#175)
+	Event emitted after the call(s):
+	- TREXSuiteDeployed(address(token),address(ir),address(irs),address(tir),address(ctr),address(mc),_salt) (contracts/factory/TREXFactory.sol#176)
+Reentrancy in TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361):
+	External calls:
+	- IERC20(_deploymentFee.feeToken).transferFrom(msg.sender,_deploymentFee.feeCollector,feeApplied) (contracts/factory/TREXGateway.sol#351-355)
+	- ITREXFactory(_factory).deployTREXSuite(_salt,_tokenDetails,_claimDetails) (contracts/factory/TREXGateway.sol#359)
+	Event emitted after the call(s):
+	- GatewaySuiteDeploymentProcessed(msg.sender,_tokenDetails.owner,feeApplied) (contracts/factory/TREXGateway.sol#360)
+Reentrancy in Token.init(address,address,string,string,uint8,address) (contracts/token/Token.sol#100-132):
+	External calls:
+	- setCompliance(_compliance) (contracts/token/Token.sol#130)
+		- _tokenCompliance.unbindToken(address(this)) (contracts/token/Token.sol#517)
+		- _tokenCompliance.bindToken(address(this)) (contracts/token/Token.sol#520)
+	Event emitted after the call(s):
+	- UpdatedTokenInformation(_tokenName,_tokenSymbol,_tokenDecimals,_TOKEN_VERSION,_tokenOnchainID) (contracts/token/Token.sol#131)
+Reentrancy in DVATransferManager.initiateTransfer(address,address,uint256) (contracts/DVA/DVATransferManager.sol#131-164):
+	External calls:
+	- token.transferFrom(msg.sender,address(this),amount) (contracts/DVA/DVATransferManager.sol#142)
+	Event emitted after the call(s):
+	- TransferInitiated(transferID,tokenAddress,msg.sender,recipient,amount,approvalCriteria.hash) (contracts/DVA/DVATransferManager.sol#156-163)
+Reentrancy in Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322):
+	External calls:
+	- _tokenIdentityRegistry.registerIdentity(_newWallet,_onchainID,_tokenIdentityRegistry.investorCountry(_lostWallet)) (contracts/token/Token.sol#308-309)
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _tokenCompliance.transferred(_from,_to,_amount) (contracts/token/Token.sol#445)
+	Event emitted after the call(s):
+	- AddressFrozen(_userAddress,_freeze,msg.sender) (contracts/token/Token.sol#482)
+		- setAddressFrozen(_newWallet,true) (contracts/token/Token.sol#315)
+	- TokensFrozen(_userAddress,_amount) (contracts/token/Token.sol#492)
+		- freezePartialTokens(_newWallet,frozenTokens) (contracts/token/Token.sol#312)
+	- TokensUnfrozen(_from,tokensToUnfreeze) (contracts/token/Token.sol#441)
+		- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+	- Transfer(_from,_to,_amount) (contracts/token/Token.sol#546)
+		- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+Reentrancy in Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322):
+	External calls:
+	- _tokenIdentityRegistry.registerIdentity(_newWallet,_onchainID,_tokenIdentityRegistry.investorCountry(_lostWallet)) (contracts/token/Token.sol#308-309)
+	- forcedTransfer(_lostWallet,_newWallet,investorTokens) (contracts/token/Token.sol#310)
+		- _tokenCompliance.transferred(_from,_to,_amount) (contracts/token/Token.sol#445)
+	- _tokenIdentityRegistry.deleteIdentity(_lostWallet) (contracts/token/Token.sol#317)
+	Event emitted after the call(s):
+	- RecoverySuccess(_lostWallet,_newWallet,_investorOnchainID) (contracts/token/Token.sol#318)
+Reentrancy in IdentityRegistry.registerIdentity(address,IIdentity,uint16) (contracts/registry/implementation/IdentityRegistry.sol#266-273):
+	External calls:
+	- _tokenIdentityStorage.addIdentityToStorage(_userAddress,_identity,_country) (contracts/registry/implementation/IdentityRegistry.sol#271)
+	Event emitted after the call(s):
+	- IdentityRegistered(_userAddress,_identity) (contracts/registry/implementation/IdentityRegistry.sol#272)
+Reentrancy in DVATransferManager.rejectTransfer(bytes32) (contracts/DVA/DVATransferManager.sol#224-255):
+	External calls:
+	- _transferTokensTo(transfer,transfer.sender) (contracts/DVA/DVATransferManager.sol#253)
+		- IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
+	Event emitted after the call(s):
+	- TransferRejected(transferID,msg.sender) (contracts/DVA/DVATransferManager.sol#254)
+Reentrancy in ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145):
+	External calls:
+	- IModule(_module).unbindCompliance(address(this)) (contracts/compliance/modular/ModularCompliance.sol#137)
+	Event emitted after the call(s):
+	- ModuleRemoved(_module) (contracts/compliance/modular/ModularCompliance.sol#141)
+Reentrancy in Token.setCompliance(address) (contracts/token/Token.sol#515-522):
+	External calls:
+	- _tokenCompliance.unbindToken(address(this)) (contracts/token/Token.sol#517)
+	- _tokenCompliance.bindToken(address(this)) (contracts/token/Token.sol#520)
+	Event emitted after the call(s):
+	- ComplianceAdded(_compliance) (contracts/token/Token.sol#521)
+Reentrancy in DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343):
+	External calls:
+	- token1Contract.transferFrom(token1.counterpart,token2.counterpart,(token1.amount - fees.txFee1)) (contracts/DVD/DVDTransferManager.sol#327)
+	- token1Contract.transferFrom(token1.counterpart,fees.fee1Wallet,fees.txFee1) (contracts/DVD/DVDTransferManager.sol#328)
+	- token1Contract.transferFrom(token1.counterpart,token2.counterpart,token1.amount) (contracts/DVD/DVDTransferManager.sol#331)
+	- token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
+	- token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)
+	- token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
+	Event emitted after the call(s):
+	- DVDTransferExecuted(_transferID) (contracts/DVD/DVDTransferManager.sol#342)
+Reentrancy in IdentityRegistry.updateCountry(address,uint16) (contracts/registry/implementation/IdentityRegistry.sol#131-134):
+	External calls:
+	- _tokenIdentityStorage.modifyStoredInvestorCountry(_userAddress,_country) (contracts/registry/implementation/IdentityRegistry.sol#132)
+	Event emitted after the call(s):
+	- CountryUpdated(_userAddress,_country) (contracts/registry/implementation/IdentityRegistry.sol#133)
+Reentrancy in IdentityRegistry.updateIdentity(address,IIdentity) (contracts/registry/implementation/IdentityRegistry.sol#122-126):
+	External calls:
+	- _tokenIdentityStorage.modifyStoredIdentity(_userAddress,_identity) (contracts/registry/implementation/IdentityRegistry.sol#124)
+	Event emitted after the call(s):
+	- IdentityUpdated(oldIdentity,_identity) (contracts/registry/implementation/IdentityRegistry.sol#125)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4
+INFO:Detectors:
+Detector: timestamp
+DayMonthLimits.complianceCheckOnDayMonthLimits(address,address,uint256) (contracts/compliance/legacy/features/DayMonthLimits.sol#134-150) uses timestamp for comparisons
+	Dangerous comparisons:
+	- ! _isDayFinished(senderIdentity) && ((usersCounters[senderIdentity].dailyCount + _value > dailyLimit) || (usersCounters[senderIdentity].monthlyCount + _value > monthlyLimit)) (contracts/compliance/legacy/features/DayMonthLimits.sol#140-142)
+	- _isDayFinished(senderIdentity) && _value + usersCounters[senderIdentity].monthlyCount > monthlyLimit (contracts/compliance/legacy/features/DayMonthLimits.sol#145)
+DayMonthLimits._isDayFinished(address) (contracts/compliance/legacy/features/DayMonthLimits.sol#227-229) uses timestamp for comparisons
+	Dangerous comparisons:
+	- (usersCounters[_identity].dailyTimer <= block.timestamp) (contracts/compliance/legacy/features/DayMonthLimits.sol#228)
+DayMonthLimits._isMonthFinished(address) (contracts/compliance/legacy/features/DayMonthLimits.sol#235-237) uses timestamp for comparisons
+	Dangerous comparisons:
+	- (usersCounters[_identity].monthlyTimer <= block.timestamp) (contracts/compliance/legacy/features/DayMonthLimits.sol#236)
+ExchangeMonthlyLimits.complianceCheckOnExchangeMonthlyLimits(address,address,uint256) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#198-214) uses timestamp for comparisons
+	Dangerous comparisons:
+	- ! _isExchangeMonthFinished(receiverIdentity,senderIdentity) && ((getMonthlyCounter(receiverIdentity,senderIdentity) + _value > _exchangeMonthlyLimit[receiverIdentity])) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#207-208)
+ExchangeMonthlyLimits._isExchangeMonthFinished(address,address) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#287-289) uses timestamp for comparisons
+	Dangerous comparisons:
+	- (getMonthlyTimer(_exchangeID,_investorID) <= block.timestamp) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#288)
+ExchangeMonthlyLimitsModule.moduleCheck(address,address,uint256,address) (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#190-224) uses timestamp for comparisons
+	Dangerous comparisons:
+	- getMonthlyCounter(_compliance,receiverIdentity,senderIdentity) + _value > _exchangeMonthlyLimit[_compliance][receiverIdentity] (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#218-219)
+ExchangeMonthlyLimitsModule._isExchangeMonthFinished(address,address,address) (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#325-327) uses timestamp for comparisons
+	Dangerous comparisons:
+	- getMonthlyTimer(compliance,_exchangeID,_investorID) <= block.timestamp (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#326)
+TimeExchangeLimitsModule.moduleCheck(address,address,uint256,address) (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#220-254) uses timestamp for comparisons
+	Dangerous comparisons:
+	- ! _isExchangeCounterFinished(_compliance,receiverIdentity,senderIdentity,limitTime) && _exchangeCounters[_compliance][receiverIdentity][senderIdentity][limitTime].value + _value > _exchangeLimits[_compliance][receiverIdentity][i].limitValue (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#246-248)
+TimeExchangeLimitsModule._isExchangeCounterFinished(address,address,address,uint32) (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#354-357) uses timestamp for comparisons
+	Dangerous comparisons:
+	- _exchangeCounters[_compliance][_exchangeID][_identity][_limitTime].timer <= block.timestamp (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#356)
+TimeTransfersLimitsModule.moduleCheck(address,address,uint256,address) (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#158-186) uses timestamp for comparisons
+	Dangerous comparisons:
+	- ! _isUserCounterFinished(_compliance,senderIdentity,transferLimits[_compliance][i].limitTime) && usersCounters[_compliance][senderIdentity][transferLimits[_compliance][i].limitTime].value + _value > transferLimits[_compliance][i].limitValue (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#178-180)
+TimeTransfersLimitsModule._isUserCounterFinished(address,address,uint32) (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#255-257) uses timestamp for comparisons
+	Dangerous comparisons:
+	- usersCounters[_compliance][_identity][_limitTime].timer <= block.timestamp (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#256)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: assembly
+ModularCompliance.callModuleFunction(bytes,address) (contracts/compliance/modular/ModularCompliance.sol#189-219) uses assembly
+	- INLINE ASM (contracts/compliance/modular/ModularCompliance.sol#198-215)
+ModularCompliance._selector(bytes) (contracts/compliance/modular/ModularCompliance.sol#259-272) uses assembly
+	- INLINE ASM (contracts/compliance/modular/ModularCompliance.sol#268-270)
+AbstractModuleUpgradeable._getAbstractModuleStorage() (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#141-146) uses assembly
+	- INLINE ASM (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#143-145)
+TREXFactory._deploy(string,bytes) (contracts/factory/TREXFactory.sol#236-250) uses assembly
+	- INLINE ASM (contracts/factory/TREXFactory.sol#240-247)
+AbstractProxy.getImplementationAuthority() (contracts/proxy/AbstractProxy.sol#92-99) uses assembly
+	- INLINE ASM (contracts/proxy/AbstractProxy.sol#95-97)
+AbstractProxy._storeImplementationAuthority(address) (contracts/proxy/AbstractProxy.sol#105-110) uses assembly
+	- INLINE ASM (contracts/proxy/AbstractProxy.sol#107-109)
+ClaimTopicsRegistryProxy.fallback() (contracts/proxy/ClaimTopicsRegistryProxy.sol#82-99) uses assembly
+	- INLINE ASM (contracts/proxy/ClaimTopicsRegistryProxy.sol#86-98)
+IdentityRegistryProxy.fallback() (contracts/proxy/IdentityRegistryProxy.sol#97-114) uses assembly
+	- INLINE ASM (contracts/proxy/IdentityRegistryProxy.sol#101-113)
+IdentityRegistryStorageProxy.fallback() (contracts/proxy/IdentityRegistryStorageProxy.sol#82-99) uses assembly
+	- INLINE ASM (contracts/proxy/IdentityRegistryStorageProxy.sol#86-98)
+ModularComplianceProxy.fallback() (contracts/proxy/ModularComplianceProxy.sol#82-99) uses assembly
+	- INLINE ASM (contracts/proxy/ModularComplianceProxy.sol#86-98)
+TokenProxy.fallback() (contracts/proxy/TokenProxy.sol#110-127) uses assembly
+	- INLINE ASM (contracts/proxy/TokenProxy.sol#114-126)
+TrustedIssuersRegistryProxy.fallback() (contracts/proxy/TrustedIssuersRegistryProxy.sol#83-100) uses assembly
+	- INLINE ASM (contracts/proxy/TrustedIssuersRegistryProxy.sol#87-99)
+OwnerManager.callComplianceFunction(bytes,IIdentity) (contracts/roles/permissioning/owner/OwnerManager.sol#135-169) uses assembly
+	- INLINE ASM (contracts/roles/permissioning/owner/OwnerManager.sol#148-165)
+OwnerManager._selector(bytes) (contracts/roles/permissioning/owner/OwnerManager.sol#433-446) uses assembly
+	- INLINE ASM (contracts/roles/permissioning/owner/OwnerManager.sol#442-444)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+Detector: boolean-equal
+CountryAllowModule.addAllowedCountry(uint16) (contracts/compliance/modular/modules/CountryAllowModule.sol#140-144) compares to a boolean constant:
+	-(_allowedCountries[msg.sender])[_country] == true (contracts/compliance/modular/modules/CountryAllowModule.sol#141)
+CountryAllowModule.removeAllowedCountry(uint16) (contracts/compliance/modular/modules/CountryAllowModule.sol#154-158) compares to a boolean constant:
+	-(_allowedCountries[msg.sender])[_country] == false (contracts/compliance/modular/modules/CountryAllowModule.sol#155)
+CountryRestrictModule.addCountryRestriction(uint16) (contracts/compliance/modular/modules/CountryRestrictModule.sol#102-106) compares to a boolean constant:
+	-require(bool,string)((_restrictedCountries[msg.sender])[_country] == false,country already restricted) (contracts/compliance/modular/modules/CountryRestrictModule.sol#103)
+CountryRestrictModule.removeCountryRestriction(uint16) (contracts/compliance/modular/modules/CountryRestrictModule.sol#116-120) compares to a boolean constant:
+	-require(bool,string)((_restrictedCountries[msg.sender])[_country] == true,country not restricted) (contracts/compliance/modular/modules/CountryRestrictModule.sol#117)
+CountryRestrictModule.batchRestrictCountries(uint16[]) (contracts/compliance/modular/modules/CountryRestrictModule.sol#131-138) compares to a boolean constant:
+	-require(bool,string)((_restrictedCountries[msg.sender])[_countries[i]] == false,country already restricted) (contracts/compliance/modular/modules/CountryRestrictModule.sol#134)
+CountryRestrictModule.batchUnrestrictCountries(uint16[]) (contracts/compliance/modular/modules/CountryRestrictModule.sol#149-156) compares to a boolean constant:
+	-require(bool,string)((_restrictedCountries[msg.sender])[_countries[i]] == true,country not restricted) (contracts/compliance/modular/modules/CountryRestrictModule.sol#152)
+TREXGateway.setPublicDeploymentStatus(bool) (contracts/factory/TREXGateway.sol#149-158) compares to a boolean constant:
+	-_isEnabled == _publicDeploymentStatus && _isEnabled == true (contracts/factory/TREXGateway.sol#150)
+TREXGateway.setPublicDeploymentStatus(bool) (contracts/factory/TREXGateway.sol#149-158) compares to a boolean constant:
+	-_isEnabled == _publicDeploymentStatus && _isEnabled == false (contracts/factory/TREXGateway.sol#153)
+TREXGateway.enableDeploymentFee(bool) (contracts/factory/TREXGateway.sol#170-179) compares to a boolean constant:
+	-_isEnabled == _deploymentFeeEnabled && _isEnabled == false (contracts/factory/TREXGateway.sol#174)
+TREXGateway.enableDeploymentFee(bool) (contracts/factory/TREXGateway.sol#170-179) compares to a boolean constant:
+	-_isEnabled == _deploymentFeeEnabled && _isEnabled == true (contracts/factory/TREXGateway.sol#171)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
+	-_deploymentFeeEnabled == true (contracts/factory/TREXGateway.sol#348)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
+	-_publicDeploymentStatus == true && msg.sender != _tokenDetails.owner && ! isDeployer(msg.sender) (contracts/factory/TREXGateway.sol#344)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
+	-_publicDeploymentStatus == false && ! isDeployer(msg.sender) (contracts/factory/TREXGateway.sol#341)
+Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322) compares to a boolean constant:
+	-_frozen[_lostWallet] == true (contracts/token/Token.sol#314)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#boolean-equality
+INFO:Detectors:
+Detector: costly-loop
+ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145) has costly operations inside a loop:
+	- _modules.pop() (contracts/compliance/modular/ModularCompliance.sol#139)
+TREXGateway.batchRemoveDeployer(address[]) (contracts/factory/TREXGateway.sol#230-244) has costly operations inside a loop:
+	- delete _deployers[deployers[i]] (contracts/factory/TREXGateway.sol#241)
+ClaimTopicsRegistry.removeClaimTopic(uint256) (contracts/registry/implementation/ClaimTopicsRegistry.sol#91-101) has costly operations inside a loop:
+	- _claimTopics.pop() (contracts/registry/implementation/ClaimTopicsRegistry.sol#96)
+IdentityRegistryStorage.unbindIdentityRegistry(address) (contracts/registry/implementation/IdentityRegistryStorage.sol#144-157) has costly operations inside a loop:
+	- _identityRegistries.pop() (contracts/registry/implementation/IdentityRegistryStorage.sol#151)
+TrustedIssuersRegistry.removeTrustedIssuer(IClaimIssuer) (contracts/registry/implementation/TrustedIssuersRegistry.sol#98-126) has costly operations inside a loop:
+	- _trustedIssuers.pop() (contracts/registry/implementation/TrustedIssuersRegistry.sol#105)
+Token._mint(address,uint256) (contracts/token/Token.sol#552-560) has costly operations inside a loop:
+	- _totalSupply = _totalSupply + _amount (contracts/token/Token.sol#557)
+	Calls stack containing the loop:
+		Token.batchMint(address[],uint256[])
+		Token.mint(address,uint256)
+Token._burn(address,uint256) (contracts/token/Token.sol#565-573) has costly operations inside a loop:
+	- _totalSupply = _totalSupply - _amount (contracts/token/Token.sol#571)
+	Calls stack containing the loop:
+		Token.batchBurn(address[],uint256[])
+		Token.burn(address,uint256)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop
+INFO:Detectors:
+Detector: solc-version
+Version constraint ^0.8.17 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.17 (contracts/compliance/modular/modules/SupplyLimitModule.sol#63)
+	- ^0.8.17 (contracts/compliance/modular/modules/TransferRestrictModule.sol#63)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in ClaimTopicsRegistryProxy.constructor(address) (contracts/proxy/ClaimTopicsRegistryProxy.sol#69-79):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/ClaimTopicsRegistryProxy.sol#77)
+Low level call in IdentityRegistryProxy.constructor(address,address,address,address) (contracts/proxy/IdentityRegistryProxy.sol#69-94):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init(address,address,address),_trustedIssuersRegistry,_claimTopicsRegistry,_identityStorage)) (contracts/proxy/IdentityRegistryProxy.sol#87-92)
+Low level call in IdentityRegistryStorageProxy.constructor(address) (contracts/proxy/IdentityRegistryStorageProxy.sol#69-79):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/IdentityRegistryStorageProxy.sol#77)
+Low level call in ModularComplianceProxy.constructor(address) (contracts/proxy/ModularComplianceProxy.sol#69-79):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/ModularComplianceProxy.sol#77)
+Low level call in TokenProxy.constructor(address,address,address,string,string,uint8,address) (contracts/proxy/TokenProxy.sol#69-107):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init(address,address,string,string,uint8,address),_identityRegistry,_compliance,_name,_symbol,_decimals,_onchainID)) (contracts/proxy/TokenProxy.sol#95-105)
+Low level call in TrustedIssuersRegistryProxy.constructor(address) (contracts/proxy/TrustedIssuersRegistryProxy.sol#70-80):
+	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/TrustedIssuersRegistryProxy.sol#78)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Parameter FileStorage.storeFileHash(bytes32)._fileHash (contracts/config/FileStorage.sol#12) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Detector: naming-convention
+Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._nonce (contracts/DVA/DVATransferManager.sol#319) is not in mixedCase
+Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._sender (contracts/DVA/DVATransferManager.sol#320) is not in mixedCase
+Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._recipient (contracts/DVA/DVATransferManager.sol#321) is not in mixedCase
+Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._amount (contracts/DVA/DVATransferManager.sol#322) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._token1 (contracts/DVD/DVDTransferManager.sol#179) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._token2 (contracts/DVD/DVDTransferManager.sol#180) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._fee1 (contracts/DVD/DVDTransferManager.sol#181) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._fee2 (contracts/DVD/DVDTransferManager.sol#182) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._feeBase (contracts/DVD/DVDTransferManager.sol#183) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._fee1Wallet (contracts/DVD/DVDTransferManager.sol#184) is not in mixedCase
+Parameter DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address)._fee2Wallet (contracts/DVD/DVDTransferManager.sol#185) is not in mixedCase
+Parameter DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256)._token1 (contracts/DVD/DVDTransferManager.sol#242) is not in mixedCase
+Parameter DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256)._token1Amount (contracts/DVD/DVDTransferManager.sol#243) is not in mixedCase
+Parameter DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256)._counterpart (contracts/DVD/DVDTransferManager.sol#244) is not in mixedCase
+Parameter DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256)._token2 (contracts/DVD/DVDTransferManager.sol#245) is not in mixedCase
+Parameter DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256)._token2Amount (contracts/DVD/DVDTransferManager.sol#246) is not in mixedCase
+Parameter DVDTransferManager.takeDVDTransfer(bytes32)._transferID (contracts/DVD/DVDTransferManager.sol#306) is not in mixedCase
+Parameter DVDTransferManager.cancelDVDTransfer(bytes32)._transferID (contracts/DVD/DVDTransferManager.sol#356) is not in mixedCase
+Parameter DVDTransferManager.isTREX(address)._token (contracts/DVD/DVDTransferManager.sol#381) is not in mixedCase
+Parameter DVDTransferManager.isTREXAgent(address,address)._token (contracts/DVD/DVDTransferManager.sol#400) is not in mixedCase
+Parameter DVDTransferManager.isTREXAgent(address,address)._user (contracts/DVD/DVDTransferManager.sol#400) is not in mixedCase
+Parameter DVDTransferManager.isTREXOwner(address,address)._token (contracts/DVD/DVDTransferManager.sol#414) is not in mixedCase
+Parameter DVDTransferManager.isTREXOwner(address,address)._user (contracts/DVD/DVDTransferManager.sol#414) is not in mixedCase
+Parameter DVDTransferManager.calculateFee(bytes32)._transferID (contracts/DVD/DVDTransferManager.sol#429) is not in mixedCase
+Parameter DVDTransferManager.calculateParity(address,address)._token1 (contracts/DVD/DVDTransferManager.sol#464) is not in mixedCase
+Parameter DVDTransferManager.calculateParity(address,address)._token2 (contracts/DVD/DVDTransferManager.sol#464) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._nonce (contracts/DVD/DVDTransferManager.sol#481) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._maker (contracts/DVD/DVDTransferManager.sol#482) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._token1 (contracts/DVD/DVDTransferManager.sol#483) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._token1Amount (contracts/DVD/DVDTransferManager.sol#484) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._taker (contracts/DVD/DVDTransferManager.sol#485) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._token2 (contracts/DVD/DVDTransferManager.sol#486) is not in mixedCase
+Parameter DVDTransferManager.calculateTransferID(uint256,address,address,uint256,address,address,uint256)._token2Amount (contracts/DVD/DVDTransferManager.sol#487) is not in mixedCase
+Parameter BasicCompliance.addTokenAgent(address)._agentAddress (contracts/compliance/legacy/BasicCompliance.sol#98) is not in mixedCase
+Parameter BasicCompliance.removeTokenAgent(address)._agentAddress (contracts/compliance/legacy/BasicCompliance.sol#107) is not in mixedCase
+Parameter BasicCompliance.bindToken(address)._token (contracts/compliance/legacy/BasicCompliance.sol#116) is not in mixedCase
+Parameter BasicCompliance.unbindToken(address)._token (contracts/compliance/legacy/BasicCompliance.sol#126) is not in mixedCase
+Parameter BasicCompliance.isTokenAgent(address)._agentAddress (contracts/compliance/legacy/BasicCompliance.sol#136) is not in mixedCase
+Parameter BasicCompliance.isTokenBound(address)._token (contracts/compliance/legacy/BasicCompliance.sol#146) is not in mixedCase
+Parameter ApproveTransfer.removeApproval(address,address,uint256)._from (contracts/compliance/legacy/features/ApproveTransfer.sol#107) is not in mixedCase
+Parameter ApproveTransfer.removeApproval(address,address,uint256)._to (contracts/compliance/legacy/features/ApproveTransfer.sol#107) is not in mixedCase
+Parameter ApproveTransfer.removeApproval(address,address,uint256)._amount (contracts/compliance/legacy/features/ApproveTransfer.sol#107) is not in mixedCase
+Parameter ApproveTransfer.approveAndTransfer(address,address,uint256)._from (contracts/compliance/legacy/features/ApproveTransfer.sol#125) is not in mixedCase
+Parameter ApproveTransfer.approveAndTransfer(address,address,uint256)._to (contracts/compliance/legacy/features/ApproveTransfer.sol#125) is not in mixedCase
+Parameter ApproveTransfer.approveAndTransfer(address,address,uint256)._amount (contracts/compliance/legacy/features/ApproveTransfer.sol#125) is not in mixedCase
+Parameter ApproveTransfer.approveTransfer(address,address,uint256)._from (contracts/compliance/legacy/features/ApproveTransfer.sol#139) is not in mixedCase
+Parameter ApproveTransfer.approveTransfer(address,address,uint256)._to (contracts/compliance/legacy/features/ApproveTransfer.sol#139) is not in mixedCase
+Parameter ApproveTransfer.approveTransfer(address,address,uint256)._amount (contracts/compliance/legacy/features/ApproveTransfer.sol#139) is not in mixedCase
+Parameter ApproveTransfer.complianceCheckOnApproveTransfer(address,address,uint256)._from (contracts/compliance/legacy/features/ApproveTransfer.sol#158) is not in mixedCase
+Parameter ApproveTransfer.complianceCheckOnApproveTransfer(address,address,uint256)._to (contracts/compliance/legacy/features/ApproveTransfer.sol#158) is not in mixedCase
+Parameter ApproveTransfer.complianceCheckOnApproveTransfer(address,address,uint256)._value (contracts/compliance/legacy/features/ApproveTransfer.sol#158) is not in mixedCase
+Parameter CountryRestrictions.batchRestrictCountries(uint16[])._countries (contracts/compliance/legacy/features/CountryRestrictions.sol#97) is not in mixedCase
+Parameter CountryRestrictions.batchUnrestrictCountries(uint16[])._countries (contracts/compliance/legacy/features/CountryRestrictions.sol#110) is not in mixedCase
+Parameter CountryRestrictions.addCountryRestriction(uint16)._country (contracts/compliance/legacy/features/CountryRestrictions.sol#123) is not in mixedCase
+Parameter CountryRestrictions.removeCountryRestriction(uint16)._country (contracts/compliance/legacy/features/CountryRestrictions.sol#136) is not in mixedCase
+Parameter CountryRestrictions.isCountryRestricted(uint16)._country (contracts/compliance/legacy/features/CountryRestrictions.sol#146) is not in mixedCase
+Parameter CountryRestrictions.complianceCheckOnCountryRestrictions(address,address,uint256)._to (contracts/compliance/legacy/features/CountryRestrictions.sol#158) is not in mixedCase
+Parameter CountryWhitelisting.batchWhitelistCountries(uint16[])._countries (contracts/compliance/legacy/features/CountryWhitelisting.sol#97) is not in mixedCase
+Parameter CountryWhitelisting.batchUnWhitelistCountries(uint16[])._countries (contracts/compliance/legacy/features/CountryWhitelisting.sol#110) is not in mixedCase
+Parameter CountryWhitelisting.whitelistCountry(uint16)._country (contracts/compliance/legacy/features/CountryWhitelisting.sol#123) is not in mixedCase
+Parameter CountryWhitelisting.unWhitelistCountry(uint16)._country (contracts/compliance/legacy/features/CountryWhitelisting.sol#137) is not in mixedCase
+Parameter CountryWhitelisting.isCountryWhitelisted(uint16)._country (contracts/compliance/legacy/features/CountryWhitelisting.sol#147) is not in mixedCase
+Parameter CountryWhitelisting.complianceCheckOnCountryWhitelisting(address,address,uint256)._to (contracts/compliance/legacy/features/CountryWhitelisting.sol#159) is not in mixedCase
+Parameter DayMonthLimits.setDailyLimit(uint256)._newDailyLimit (contracts/compliance/legacy/features/DayMonthLimits.sol#109) is not in mixedCase
+Parameter DayMonthLimits.setMonthlyLimit(uint256)._newMonthlyLimit (contracts/compliance/legacy/features/DayMonthLimits.sol#119) is not in mixedCase
+Parameter DayMonthLimits.complianceCheckOnDayMonthLimits(address,address,uint256)._from (contracts/compliance/legacy/features/DayMonthLimits.sol#134) is not in mixedCase
+Parameter DayMonthLimits.complianceCheckOnDayMonthLimits(address,address,uint256)._value (contracts/compliance/legacy/features/DayMonthLimits.sol#134) is not in mixedCase
+Parameter ExchangeMonthlyLimits.setExchangeMonthlyLimit(address,uint256)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#116) is not in mixedCase
+Parameter ExchangeMonthlyLimits.setExchangeMonthlyLimit(address,uint256)._newExchangeMonthlyLimit (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#116) is not in mixedCase
+Parameter ExchangeMonthlyLimits.addExchangeID(address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#128) is not in mixedCase
+Parameter ExchangeMonthlyLimits.removeExchangeID(address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#141) is not in mixedCase
+Parameter ExchangeMonthlyLimits.isExchangeID(address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#153) is not in mixedCase
+Parameter ExchangeMonthlyLimits.getMonthlyCounter(address,address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#163) is not in mixedCase
+Parameter ExchangeMonthlyLimits.getMonthlyCounter(address,address)._investorID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#163) is not in mixedCase
+Parameter ExchangeMonthlyLimits.getMonthlyTimer(address,address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#173) is not in mixedCase
+Parameter ExchangeMonthlyLimits.getMonthlyTimer(address,address)._investorID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#173) is not in mixedCase
+Parameter ExchangeMonthlyLimits.getExchangeMonthlyLimit(address)._exchangeID (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#182) is not in mixedCase
+Parameter ExchangeMonthlyLimits.complianceCheckOnExchangeMonthlyLimits(address,address,uint256)._from (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#198) is not in mixedCase
+Parameter ExchangeMonthlyLimits.complianceCheckOnExchangeMonthlyLimits(address,address,uint256)._to (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#198) is not in mixedCase
+Parameter ExchangeMonthlyLimits.complianceCheckOnExchangeMonthlyLimits(address,address,uint256)._value (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#198) is not in mixedCase
+Parameter MaxBalance.setMaxBalance(uint256)._max (contracts/compliance/legacy/features/MaxBalance.sol#91) is not in mixedCase
+Parameter MaxBalance.complianceCheckOnMaxBalance(address,address,uint256)._to (contracts/compliance/legacy/features/MaxBalance.sol#105) is not in mixedCase
+Parameter MaxBalance.complianceCheckOnMaxBalance(address,address,uint256)._value (contracts/compliance/legacy/features/MaxBalance.sol#105) is not in mixedCase
+Variable MaxBalance.IDBalance (contracts/compliance/legacy/features/MaxBalance.sol#77) is not in mixedCase
+Parameter SupplyLimit.setSupplyLimit(uint256)._limit (contracts/compliance/legacy/features/SupplyLimit.sol#89) is not in mixedCase
+Parameter ApproveTransferTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/ApproveTransferTest.sol#71) is not in mixedCase
+Parameter ApproveTransferTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/ApproveTransferTest.sol#71) is not in mixedCase
+Parameter ApproveTransferTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/ApproveTransferTest.sol#71) is not in mixedCase
+Parameter ApproveTransferTest.created(address,uint256)._to (contracts/compliance/legacy/test/ApproveTransferTest.sol#78) is not in mixedCase
+Parameter ApproveTransferTest.created(address,uint256)._value (contracts/compliance/legacy/test/ApproveTransferTest.sol#78) is not in mixedCase
+Parameter ApproveTransferTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/ApproveTransferTest.sol#85) is not in mixedCase
+Parameter ApproveTransferTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/ApproveTransferTest.sol#85) is not in mixedCase
+Parameter ApproveTransferTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/ApproveTransferTest.sol#92) is not in mixedCase
+Parameter ApproveTransferTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/ApproveTransferTest.sol#92) is not in mixedCase
+Parameter ApproveTransferTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/ApproveTransferTest.sol#92) is not in mixedCase
+Parameter CountryRestrictionsTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#71) is not in mixedCase
+Parameter CountryRestrictionsTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#71) is not in mixedCase
+Parameter CountryRestrictionsTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#71) is not in mixedCase
+Parameter CountryRestrictionsTest.created(address,uint256)._to (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#78) is not in mixedCase
+Parameter CountryRestrictionsTest.created(address,uint256)._value (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#78) is not in mixedCase
+Parameter CountryRestrictionsTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#85) is not in mixedCase
+Parameter CountryRestrictionsTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#85) is not in mixedCase
+Parameter CountryRestrictionsTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#92) is not in mixedCase
+Parameter CountryRestrictionsTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#92) is not in mixedCase
+Parameter CountryRestrictionsTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#92) is not in mixedCase
+Parameter CountryWhitelistingTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#71) is not in mixedCase
+Parameter CountryWhitelistingTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#71) is not in mixedCase
+Parameter CountryWhitelistingTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#71) is not in mixedCase
+Parameter CountryWhitelistingTest.created(address,uint256)._to (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#78) is not in mixedCase
+Parameter CountryWhitelistingTest.created(address,uint256)._value (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#78) is not in mixedCase
+Parameter CountryWhitelistingTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#85) is not in mixedCase
+Parameter CountryWhitelistingTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#85) is not in mixedCase
+Parameter CountryWhitelistingTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#92) is not in mixedCase
+Parameter CountryWhitelistingTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#92) is not in mixedCase
+Parameter CountryWhitelistingTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#92) is not in mixedCase
+Parameter DayMonthLimitsTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#71) is not in mixedCase
+Parameter DayMonthLimitsTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#71) is not in mixedCase
+Parameter DayMonthLimitsTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#71) is not in mixedCase
+Parameter DayMonthLimitsTest.created(address,uint256)._to (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#78) is not in mixedCase
+Parameter DayMonthLimitsTest.created(address,uint256)._value (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#78) is not in mixedCase
+Parameter DayMonthLimitsTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#85) is not in mixedCase
+Parameter DayMonthLimitsTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#85) is not in mixedCase
+Parameter DayMonthLimitsTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#92) is not in mixedCase
+Parameter DayMonthLimitsTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#92) is not in mixedCase
+Parameter DayMonthLimitsTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#92) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#71) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#71) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#71) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.created(address,uint256)._to (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#78) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.created(address,uint256)._value (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#78) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#85) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#85) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#92) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#92) is not in mixedCase
+Parameter ExchangeMonthlyLimitsTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#92) is not in mixedCase
+Parameter MaxBalanceTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/MaxBalanceTest.sol#71) is not in mixedCase
+Parameter MaxBalanceTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/MaxBalanceTest.sol#71) is not in mixedCase
+Parameter MaxBalanceTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/MaxBalanceTest.sol#71) is not in mixedCase
+Parameter MaxBalanceTest.created(address,uint256)._to (contracts/compliance/legacy/test/MaxBalanceTest.sol#78) is not in mixedCase
+Parameter MaxBalanceTest.created(address,uint256)._value (contracts/compliance/legacy/test/MaxBalanceTest.sol#78) is not in mixedCase
+Parameter MaxBalanceTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/MaxBalanceTest.sol#85) is not in mixedCase
+Parameter MaxBalanceTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/MaxBalanceTest.sol#85) is not in mixedCase
+Parameter MaxBalanceTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/MaxBalanceTest.sol#92) is not in mixedCase
+Parameter MaxBalanceTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/MaxBalanceTest.sol#92) is not in mixedCase
+Parameter MaxBalanceTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/MaxBalanceTest.sol#92) is not in mixedCase
+Parameter SupplyLimitTest.transferred(address,address,uint256)._from (contracts/compliance/legacy/test/SupplyLimitTest.sol#71) is not in mixedCase
+Parameter SupplyLimitTest.transferred(address,address,uint256)._to (contracts/compliance/legacy/test/SupplyLimitTest.sol#71) is not in mixedCase
+Parameter SupplyLimitTest.transferred(address,address,uint256)._value (contracts/compliance/legacy/test/SupplyLimitTest.sol#71) is not in mixedCase
+Parameter SupplyLimitTest.created(address,uint256)._to (contracts/compliance/legacy/test/SupplyLimitTest.sol#78) is not in mixedCase
+Parameter SupplyLimitTest.created(address,uint256)._value (contracts/compliance/legacy/test/SupplyLimitTest.sol#78) is not in mixedCase
+Parameter SupplyLimitTest.destroyed(address,uint256)._from (contracts/compliance/legacy/test/SupplyLimitTest.sol#85) is not in mixedCase
+Parameter SupplyLimitTest.destroyed(address,uint256)._value (contracts/compliance/legacy/test/SupplyLimitTest.sol#85) is not in mixedCase
+Parameter SupplyLimitTest.canTransfer(address,address,uint256)._from (contracts/compliance/legacy/test/SupplyLimitTest.sol#92) is not in mixedCase
+Parameter SupplyLimitTest.canTransfer(address,address,uint256)._to (contracts/compliance/legacy/test/SupplyLimitTest.sol#92) is not in mixedCase
+Parameter SupplyLimitTest.canTransfer(address,address,uint256)._value (contracts/compliance/legacy/test/SupplyLimitTest.sol#92) is not in mixedCase
+Variable MCStorage.__gap (contracts/compliance/modular/MCStorage.sol#80) is not in mixedCase
+Parameter ModularCompliance.bindToken(address)._token (contracts/compliance/modular/ModularCompliance.sol#91) is not in mixedCase
+Parameter ModularCompliance.unbindToken(address)._token (contracts/compliance/modular/ModularCompliance.sol#102) is not in mixedCase
+Parameter ModularCompliance.addModule(address)._module (contracts/compliance/modular/ModularCompliance.sol#113) is not in mixedCase
+Parameter ModularCompliance.removeModule(address)._module (contracts/compliance/modular/ModularCompliance.sol#131) is not in mixedCase
+Parameter ModularCompliance.transferred(address,address,uint256)._from (contracts/compliance/modular/ModularCompliance.sol#150) is not in mixedCase
+Parameter ModularCompliance.transferred(address,address,uint256)._to (contracts/compliance/modular/ModularCompliance.sol#150) is not in mixedCase
+Parameter ModularCompliance.transferred(address,address,uint256)._value (contracts/compliance/modular/ModularCompliance.sol#150) is not in mixedCase
+Parameter ModularCompliance.created(address,uint256)._to (contracts/compliance/modular/ModularCompliance.sol#165) is not in mixedCase
+Parameter ModularCompliance.created(address,uint256)._value (contracts/compliance/modular/ModularCompliance.sol#165) is not in mixedCase
+Parameter ModularCompliance.destroyed(address,uint256)._from (contracts/compliance/modular/ModularCompliance.sol#177) is not in mixedCase
+Parameter ModularCompliance.destroyed(address,uint256)._value (contracts/compliance/modular/ModularCompliance.sol#177) is not in mixedCase
+Parameter ModularCompliance.callModuleFunction(bytes,address)._module (contracts/compliance/modular/ModularCompliance.sol#189) is not in mixedCase
+Parameter ModularCompliance.isModuleBound(address)._module (contracts/compliance/modular/ModularCompliance.sol#224) is not in mixedCase
+Parameter ModularCompliance.canTransfer(address,address,uint256)._from (contracts/compliance/modular/ModularCompliance.sol#245) is not in mixedCase
+Parameter ModularCompliance.canTransfer(address,address,uint256)._to (contracts/compliance/modular/ModularCompliance.sol#245) is not in mixedCase
+Parameter ModularCompliance.canTransfer(address,address,uint256)._value (contracts/compliance/modular/ModularCompliance.sol#245) is not in mixedCase
+Parameter AbstractModule.bindCompliance(address)._compliance (contracts/compliance/modular/modules/AbstractModule.sol#91) is not in mixedCase
+Parameter AbstractModule.unbindCompliance(address)._compliance (contracts/compliance/modular/modules/AbstractModule.sol#102) is not in mixedCase
+Parameter AbstractModule.isComplianceBound(address)._compliance (contracts/compliance/modular/modules/AbstractModule.sol#112) is not in mixedCase
+Parameter AbstractModuleUpgradeable.bindCompliance(address)._compliance (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#101) is not in mixedCase
+Parameter AbstractModuleUpgradeable.unbindCompliance(address)._compliance (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#113) is not in mixedCase
+Parameter AbstractModuleUpgradeable.isComplianceBound(address)._compliance (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#124) is not in mixedCase
+Function AbstractModuleUpgradeable.__AbstractModule_init() (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#130-133) is not in mixedCase
+Function AbstractModuleUpgradeable.__AbstractModule_init_unchained() (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#136) is not in mixedCase
+Parameter ConditionalTransferModule.batchApproveTransfers(address[],address[],uint256[])._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#116) is not in mixedCase
+Parameter ConditionalTransferModule.batchApproveTransfers(address[],address[],uint256[])._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#116) is not in mixedCase
+Parameter ConditionalTransferModule.batchApproveTransfers(address[],address[],uint256[])._amount (contracts/compliance/modular/modules/ConditionalTransferModule.sol#116) is not in mixedCase
+Parameter ConditionalTransferModule.batchUnApproveTransfers(address[],address[],uint256[])._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#135) is not in mixedCase
+Parameter ConditionalTransferModule.batchUnApproveTransfers(address[],address[],uint256[])._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#135) is not in mixedCase
+Parameter ConditionalTransferModule.batchUnApproveTransfers(address[],address[],uint256[])._amount (contracts/compliance/modular/modules/ConditionalTransferModule.sol#135) is not in mixedCase
+Parameter ConditionalTransferModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#148) is not in mixedCase
+Parameter ConditionalTransferModule.moduleTransferAction(address,address,uint256)._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#149) is not in mixedCase
+Parameter ConditionalTransferModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/ConditionalTransferModule.sol#150) is not in mixedCase
+Parameter ConditionalTransferModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#178) is not in mixedCase
+Parameter ConditionalTransferModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#179) is not in mixedCase
+Parameter ConditionalTransferModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/ConditionalTransferModule.sol#180) is not in mixedCase
+Parameter ConditionalTransferModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/ConditionalTransferModule.sol#181) is not in mixedCase
+Parameter ConditionalTransferModule.approveTransfer(address,address,uint256)._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#210) is not in mixedCase
+Parameter ConditionalTransferModule.approveTransfer(address,address,uint256)._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#210) is not in mixedCase
+Parameter ConditionalTransferModule.approveTransfer(address,address,uint256)._amount (contracts/compliance/modular/modules/ConditionalTransferModule.sol#210) is not in mixedCase
+Parameter ConditionalTransferModule.unApproveTransfer(address,address,uint256)._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#226) is not in mixedCase
+Parameter ConditionalTransferModule.unApproveTransfer(address,address,uint256)._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#226) is not in mixedCase
+Parameter ConditionalTransferModule.unApproveTransfer(address,address,uint256)._amount (contracts/compliance/modular/modules/ConditionalTransferModule.sol#226) is not in mixedCase
+Parameter ConditionalTransferModule.isTransferApproved(address,bytes32)._compliance (contracts/compliance/modular/modules/ConditionalTransferModule.sol#240) is not in mixedCase
+Parameter ConditionalTransferModule.isTransferApproved(address,bytes32)._transferHash (contracts/compliance/modular/modules/ConditionalTransferModule.sol#240) is not in mixedCase
+Parameter ConditionalTransferModule.getTransferApprovals(address,bytes32)._compliance (contracts/compliance/modular/modules/ConditionalTransferModule.sol#253) is not in mixedCase
+Parameter ConditionalTransferModule.getTransferApprovals(address,bytes32)._transferHash (contracts/compliance/modular/modules/ConditionalTransferModule.sol#253) is not in mixedCase
+Parameter ConditionalTransferModule.calculateTransferHash(address,address,uint256,address)._from (contracts/compliance/modular/modules/ConditionalTransferModule.sol#266) is not in mixedCase
+Parameter ConditionalTransferModule.calculateTransferHash(address,address,uint256,address)._to (contracts/compliance/modular/modules/ConditionalTransferModule.sol#267) is not in mixedCase
+Parameter ConditionalTransferModule.calculateTransferHash(address,address,uint256,address)._amount (contracts/compliance/modular/modules/ConditionalTransferModule.sol#268) is not in mixedCase
+Parameter ConditionalTransferModule.calculateTransferHash(address,address,uint256,address)._token (contracts/compliance/modular/modules/ConditionalTransferModule.sol#269) is not in mixedCase
+Parameter CountryAllowModule.batchAllowCountries(uint16[])._countries (contracts/compliance/modular/modules/CountryAllowModule.sol#111) is not in mixedCase
+Parameter CountryAllowModule.batchDisallowCountries(uint16[])._countries (contracts/compliance/modular/modules/CountryAllowModule.sol#126) is not in mixedCase
+Parameter CountryAllowModule.addAllowedCountry(uint16)._country (contracts/compliance/modular/modules/CountryAllowModule.sol#140) is not in mixedCase
+Parameter CountryAllowModule.removeAllowedCountry(uint16)._country (contracts/compliance/modular/modules/CountryAllowModule.sol#154) is not in mixedCase
+Parameter CountryAllowModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/CountryAllowModule.sol#189) is not in mixedCase
+Parameter CountryAllowModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/CountryAllowModule.sol#191) is not in mixedCase
+Parameter CountryAllowModule.isCountryAllowed(address,uint16)._compliance (contracts/compliance/modular/modules/CountryAllowModule.sol#215) is not in mixedCase
+Parameter CountryAllowModule.isCountryAllowed(address,uint16)._country (contracts/compliance/modular/modules/CountryAllowModule.sol#215) is not in mixedCase
+Parameter CountryRestrictModule.addCountryRestriction(uint16)._country (contracts/compliance/modular/modules/CountryRestrictModule.sol#102) is not in mixedCase
+Parameter CountryRestrictModule.removeCountryRestriction(uint16)._country (contracts/compliance/modular/modules/CountryRestrictModule.sol#116) is not in mixedCase
+Parameter CountryRestrictModule.batchRestrictCountries(uint16[])._countries (contracts/compliance/modular/modules/CountryRestrictModule.sol#131) is not in mixedCase
+Parameter CountryRestrictModule.batchUnrestrictCountries(uint16[])._countries (contracts/compliance/modular/modules/CountryRestrictModule.sol#149) is not in mixedCase
+Parameter CountryRestrictModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/CountryRestrictModule.sol#187) is not in mixedCase
+Parameter CountryRestrictModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/CountryRestrictModule.sol#189) is not in mixedCase
+Parameter CountryRestrictModule.isCountryRestricted(address,uint16)._compliance (contracts/compliance/modular/modules/CountryRestrictModule.sol#216) is not in mixedCase
+Parameter CountryRestrictModule.isCountryRestricted(address,uint16)._country (contracts/compliance/modular/modules/CountryRestrictModule.sol#216) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.setExchangeMonthlyLimit(address,uint256)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#127) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.setExchangeMonthlyLimit(address,uint256)._newExchangeMonthlyLimit (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#127) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.addExchangeID(address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#139) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.removeExchangeID(address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#155) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#166) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleTransferAction(address,address,uint256)._to (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#166) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#166) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#191) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#192) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#193) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#194) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.isExchangeID(address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#246) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.getMonthlyCounter(address,address,address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#257) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.getMonthlyCounter(address,address,address)._investorID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#257) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.getMonthlyTimer(address,address,address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#268) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.getMonthlyTimer(address,address,address)._investorID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#268) is not in mixedCase
+Parameter ExchangeMonthlyLimitsModule.getExchangeMonthlyLimit(address,address)._exchangeID (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#278) is not in mixedCase
+Parameter MaxBalanceModule.setMaxBalance(uint256)._max (contracts/compliance/modular/modules/MaxBalanceModule.sol#120) is not in mixedCase
+Parameter MaxBalanceModule.preSetModuleState(address,address,uint256)._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#133) is not in mixedCase
+Parameter MaxBalanceModule.preSetModuleState(address,address,uint256)._id (contracts/compliance/modular/modules/MaxBalanceModule.sol#133) is not in mixedCase
+Parameter MaxBalanceModule.preSetModuleState(address,address,uint256)._balance (contracts/compliance/modular/modules/MaxBalanceModule.sol#133) is not in mixedCase
+Parameter MaxBalanceModule.batchPreSetModuleState(address,address[],uint256[])._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#154) is not in mixedCase
+Parameter MaxBalanceModule.batchPreSetModuleState(address,address[],uint256[])._id (contracts/compliance/modular/modules/MaxBalanceModule.sol#155) is not in mixedCase
+Parameter MaxBalanceModule.batchPreSetModuleState(address,address[],uint256[])._balance (contracts/compliance/modular/modules/MaxBalanceModule.sol#156) is not in mixedCase
+Parameter MaxBalanceModule.presetCompleted(address)._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#181) is not in mixedCase
+Parameter MaxBalanceModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/MaxBalanceModule.sol#193) is not in mixedCase
+Parameter MaxBalanceModule.moduleTransferAction(address,address,uint256)._to (contracts/compliance/modular/modules/MaxBalanceModule.sol#193) is not in mixedCase
+Parameter MaxBalanceModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/MaxBalanceModule.sol#193) is not in mixedCase
+Parameter MaxBalanceModule.moduleMintAction(address,uint256)._to (contracts/compliance/modular/modules/MaxBalanceModule.sol#205) is not in mixedCase
+Parameter MaxBalanceModule.moduleMintAction(address,uint256)._value (contracts/compliance/modular/modules/MaxBalanceModule.sol#205) is not in mixedCase
+Parameter MaxBalanceModule.moduleBurnAction(address,uint256)._from (contracts/compliance/modular/modules/MaxBalanceModule.sol#215) is not in mixedCase
+Parameter MaxBalanceModule.moduleBurnAction(address,uint256)._value (contracts/compliance/modular/modules/MaxBalanceModule.sol#215) is not in mixedCase
+Parameter MaxBalanceModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/MaxBalanceModule.sol#228) is not in mixedCase
+Parameter MaxBalanceModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/MaxBalanceModule.sol#229) is not in mixedCase
+Parameter MaxBalanceModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#230) is not in mixedCase
+Parameter MaxBalanceModule.getIDBalance(address,address)._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#247) is not in mixedCase
+Parameter MaxBalanceModule.getIDBalance(address,address)._identity (contracts/compliance/modular/modules/MaxBalanceModule.sol#247) is not in mixedCase
+Parameter MaxBalanceModule.canComplianceBind(address)._compliance (contracts/compliance/modular/modules/MaxBalanceModule.sol#254) is not in mixedCase
+Variable MaxBalanceModule._IDBalance (contracts/compliance/modular/modules/MaxBalanceModule.sol#82) is not in mixedCase
+Parameter SupplyLimitModule.setSupplyLimit(uint256)._limit (contracts/compliance/modular/modules/SupplyLimitModule.sol#95) is not in mixedCase
+Parameter SupplyLimitModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/SupplyLimitModule.sol#125) is not in mixedCase
+Parameter SupplyLimitModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/SupplyLimitModule.sol#127) is not in mixedCase
+Parameter SupplyLimitModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/SupplyLimitModule.sol#128) is not in mixedCase
+Parameter SupplyLimitModule.getSupplyLimit(address)._compliance (contracts/compliance/modular/modules/SupplyLimitModule.sol#141) is not in mixedCase
+Parameter TimeExchangeLimitsModule.setExchangeLimit(address,TimeExchangeLimitsModule.Limit)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#145) is not in mixedCase
+Parameter TimeExchangeLimitsModule.setExchangeLimit(address,TimeExchangeLimitsModule.Limit)._limit (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#145) is not in mixedCase
+Parameter TimeExchangeLimitsModule.addExchangeID(address)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#169) is not in mixedCase
+Parameter TimeExchangeLimitsModule.removeExchangeID(address)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#185) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#196) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleTransferAction(address,address,uint256)._to (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#196) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#196) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#221) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#222) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#223) is not in mixedCase
+Parameter TimeExchangeLimitsModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#224) is not in mixedCase
+Parameter TimeExchangeLimitsModule.getExchangeCounter(address,address,address,uint32)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#264) is not in mixedCase
+Parameter TimeExchangeLimitsModule.getExchangeCounter(address,address,address,uint32)._investorID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#264) is not in mixedCase
+Parameter TimeExchangeLimitsModule.getExchangeCounter(address,address,address,uint32)._limitTime (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#264) is not in mixedCase
+Parameter TimeExchangeLimitsModule.getExchangeLimits(address,address)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#275) is not in mixedCase
+Parameter TimeExchangeLimitsModule.isExchangeID(address)._exchangeID (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#299) is not in mixedCase
+Parameter TimeTransfersLimitsModule.setTimeTransferLimit(TimeTransfersLimitsModule.Limit)._limit (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#120) is not in mixedCase
+Parameter TimeTransfersLimitsModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#139) is not in mixedCase
+Parameter TimeTransfersLimitsModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#139) is not in mixedCase
+Parameter TimeTransfersLimitsModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#159) is not in mixedCase
+Parameter TimeTransfersLimitsModule.moduleCheck(address,address,uint256,address)._value (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#161) is not in mixedCase
+Parameter TimeTransfersLimitsModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#162) is not in mixedCase
+Parameter TimeTransfersLimitsModule.getTimeTransferLimits(address)._compliance (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#193) is not in mixedCase
+Parameter TransferFeesModule.setFee(uint256,address)._rate (contracts/compliance/modular/modules/TransferFeesModule.sol#108) is not in mixedCase
+Parameter TransferFeesModule.setFee(uint256,address)._collector (contracts/compliance/modular/modules/TransferFeesModule.sol#108) is not in mixedCase
+Parameter TransferFeesModule.moduleTransferAction(address,address,uint256)._from (contracts/compliance/modular/modules/TransferFeesModule.sol#127) is not in mixedCase
+Parameter TransferFeesModule.moduleTransferAction(address,address,uint256)._to (contracts/compliance/modular/modules/TransferFeesModule.sol#127) is not in mixedCase
+Parameter TransferFeesModule.moduleTransferAction(address,address,uint256)._value (contracts/compliance/modular/modules/TransferFeesModule.sol#127) is not in mixedCase
+Parameter TransferFeesModule.getFee(address)._compliance (contracts/compliance/modular/modules/TransferFeesModule.sol#175) is not in mixedCase
+Parameter TransferFeesModule.canComplianceBind(address)._compliance (contracts/compliance/modular/modules/TransferFeesModule.sol#182) is not in mixedCase
+Parameter TransferRestrictModule.allowUser(address)._userAddress (contracts/compliance/modular/modules/TransferRestrictModule.sol#99) is not in mixedCase
+Parameter TransferRestrictModule.batchAllowUsers(address[])._userAddresses (contracts/compliance/modular/modules/TransferRestrictModule.sol#110) is not in mixedCase
+Parameter TransferRestrictModule.disallowUser(address)._userAddress (contracts/compliance/modular/modules/TransferRestrictModule.sol#125) is not in mixedCase
+Parameter TransferRestrictModule.batchDisallowUsers(address[])._userAddresses (contracts/compliance/modular/modules/TransferRestrictModule.sol#136) is not in mixedCase
+Parameter TransferRestrictModule.moduleCheck(address,address,uint256,address)._from (contracts/compliance/modular/modules/TransferRestrictModule.sol#170) is not in mixedCase
+Parameter TransferRestrictModule.moduleCheck(address,address,uint256,address)._to (contracts/compliance/modular/modules/TransferRestrictModule.sol#171) is not in mixedCase
+Parameter TransferRestrictModule.moduleCheck(address,address,uint256,address)._compliance (contracts/compliance/modular/modules/TransferRestrictModule.sol#173) is not in mixedCase
+Parameter TransferRestrictModule.isUserAllowed(address,address)._compliance (contracts/compliance/modular/modules/TransferRestrictModule.sol#188) is not in mixedCase
+Parameter TransferRestrictModule.isUserAllowed(address,address)._userAddress (contracts/compliance/modular/modules/TransferRestrictModule.sol#188) is not in mixedCase
+Parameter TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails)._salt (contracts/factory/TREXFactory.sol#103) is not in mixedCase
+Parameter TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails)._tokenDetails (contracts/factory/TREXFactory.sol#103) is not in mixedCase
+Parameter TREXFactory.deployTREXSuite(string,ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails)._claimDetails (contracts/factory/TREXFactory.sol#103-104) is not in mixedCase
+Parameter TREXFactory.recoverContractOwnership(address,address)._contract (contracts/factory/TREXFactory.sol#182) is not in mixedCase
+Parameter TREXFactory.recoverContractOwnership(address,address)._newOwner (contracts/factory/TREXFactory.sol#182) is not in mixedCase
+Parameter TREXFactory.getToken(string)._salt (contracts/factory/TREXFactory.sol#203) is not in mixedCase
+Parameter TREXGateway.setPublicDeploymentStatus(bool)._isEnabled (contracts/factory/TREXGateway.sol#149) is not in mixedCase
+Parameter TREXGateway.transferFactoryOwnership(address)._newOwner (contracts/factory/TREXGateway.sol#163) is not in mixedCase
+Parameter TREXGateway.enableDeploymentFee(bool)._isEnabled (contracts/factory/TREXGateway.sol#170) is not in mixedCase
+Parameter TREXGateway.setDeploymentFee(uint256,address,address)._fee (contracts/factory/TREXGateway.sol#184) is not in mixedCase
+Parameter TREXGateway.setDeploymentFee(uint256,address,address)._feeToken (contracts/factory/TREXGateway.sol#184) is not in mixedCase
+Parameter TREXGateway.setDeploymentFee(uint256,address,address)._feeCollector (contracts/factory/TREXGateway.sol#184) is not in mixedCase
+Parameter TREXGateway.batchDeployTREXSuite(ITREXFactory.TokenDetails[],ITREXFactory.ClaimDetails[])._tokenDetails (contracts/factory/TREXGateway.sol#297) is not in mixedCase
+Parameter TREXGateway.batchDeployTREXSuite(ITREXFactory.TokenDetails[],ITREXFactory.ClaimDetails[])._claimDetails (contracts/factory/TREXGateway.sol#298) is not in mixedCase
+Parameter TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails)._tokenDetails (contracts/factory/TREXGateway.sol#339) is not in mixedCase
+Parameter TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails)._claimDetails (contracts/factory/TREXGateway.sol#339) is not in mixedCase
+Parameter AbstractProxy.setImplementationAuthority(address)._newImplementationAuthority (contracts/proxy/AbstractProxy.sol#74) is not in mixedCase
+Parameter IAFactory.deployIA(address)._token (contracts/proxy/authority/IAFactory.sol#86) is not in mixedCase
+Parameter IAFactory.deployedByFactory(address)._ia (contracts/proxy/authority/IAFactory.sol#102) is not in mixedCase
+Parameter TREXImplementationAuthority.addAndUseTREXVersion(ITREXImplementationAuthority.Version,ITREXImplementationAuthority.TREXContracts)._version (contracts/proxy/authority/TREXImplementationAuthority.sol#139) is not in mixedCase
+Parameter TREXImplementationAuthority.addAndUseTREXVersion(ITREXImplementationAuthority.Version,ITREXImplementationAuthority.TREXContracts)._trex (contracts/proxy/authority/TREXImplementationAuthority.sol#139) is not in mixedCase
+Parameter TREXImplementationAuthority.fetchVersion(ITREXImplementationAuthority.Version)._version (contracts/proxy/authority/TREXImplementationAuthority.sol#147) is not in mixedCase
+Parameter TREXImplementationAuthority.changeImplementationAuthority(address,address)._token (contracts/proxy/authority/TREXImplementationAuthority.sol#161) is not in mixedCase
+Parameter TREXImplementationAuthority.changeImplementationAuthority(address,address)._newImplementationAuthority (contracts/proxy/authority/TREXImplementationAuthority.sol#161) is not in mixedCase
+Parameter TREXImplementationAuthority.getContracts(ITREXImplementationAuthority.Version)._version (contracts/proxy/authority/TREXImplementationAuthority.sol#226) is not in mixedCase
+Parameter TREXImplementationAuthority.addTREXVersion(ITREXImplementationAuthority.Version,ITREXImplementationAuthority.TREXContracts)._version (contracts/proxy/authority/TREXImplementationAuthority.sol#282) is not in mixedCase
+Parameter TREXImplementationAuthority.addTREXVersion(ITREXImplementationAuthority.Version,ITREXImplementationAuthority.TREXContracts)._trex (contracts/proxy/authority/TREXImplementationAuthority.sol#282) is not in mixedCase
+Parameter TREXImplementationAuthority.useTREXVersion(ITREXImplementationAuthority.Version)._version (contracts/proxy/authority/TREXImplementationAuthority.sol#302) is not in mixedCase
+Parameter ClaimTopicsRegistry.addClaimTopic(uint256)._claimTopic (contracts/registry/implementation/ClaimTopicsRegistry.sol#78) is not in mixedCase
+Parameter ClaimTopicsRegistry.removeClaimTopic(uint256)._claimTopic (contracts/registry/implementation/ClaimTopicsRegistry.sol#91) is not in mixedCase
+Parameter IdentityRegistry.init(address,address,address)._trustedIssuersRegistry (contracts/registry/implementation/IdentityRegistry.sol#88) is not in mixedCase
+Parameter IdentityRegistry.init(address,address,address)._claimTopicsRegistry (contracts/registry/implementation/IdentityRegistry.sol#89) is not in mixedCase
+Parameter IdentityRegistry.init(address,address,address)._identityStorage (contracts/registry/implementation/IdentityRegistry.sol#90) is not in mixedCase
+Parameter IdentityRegistry.batchRegisterIdentity(address[],IIdentity[],uint16[])._userAddresses (contracts/registry/implementation/IdentityRegistry.sol#110) is not in mixedCase
+Parameter IdentityRegistry.batchRegisterIdentity(address[],IIdentity[],uint16[])._identities (contracts/registry/implementation/IdentityRegistry.sol#111) is not in mixedCase
+Parameter IdentityRegistry.batchRegisterIdentity(address[],IIdentity[],uint16[])._countries (contracts/registry/implementation/IdentityRegistry.sol#112) is not in mixedCase
+Parameter IdentityRegistry.updateIdentity(address,IIdentity)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#122) is not in mixedCase
+Parameter IdentityRegistry.updateIdentity(address,IIdentity)._identity (contracts/registry/implementation/IdentityRegistry.sol#122) is not in mixedCase
+Parameter IdentityRegistry.updateCountry(address,uint16)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#131) is not in mixedCase
+Parameter IdentityRegistry.updateCountry(address,uint16)._country (contracts/registry/implementation/IdentityRegistry.sol#131) is not in mixedCase
+Parameter IdentityRegistry.deleteIdentity(address)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#139) is not in mixedCase
+Parameter IdentityRegistry.setIdentityRegistryStorage(address)._identityRegistryStorage (contracts/registry/implementation/IdentityRegistry.sol#148) is not in mixedCase
+Parameter IdentityRegistry.setClaimTopicsRegistry(address)._claimTopicsRegistry (contracts/registry/implementation/IdentityRegistry.sol#156) is not in mixedCase
+Parameter IdentityRegistry.setTrustedIssuersRegistry(address)._trustedIssuersRegistry (contracts/registry/implementation/IdentityRegistry.sol#164) is not in mixedCase
+Parameter IdentityRegistry.isVerified(address)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#173) is not in mixedCase
+Parameter IdentityRegistry.investorCountry(address)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#228) is not in mixedCase
+Parameter IdentityRegistry.contains(address)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#256) is not in mixedCase
+Parameter IdentityRegistry.registerIdentity(address,IIdentity,uint16)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#267) is not in mixedCase
+Parameter IdentityRegistry.registerIdentity(address,IIdentity,uint16)._identity (contracts/registry/implementation/IdentityRegistry.sol#268) is not in mixedCase
+Parameter IdentityRegistry.registerIdentity(address,IIdentity,uint16)._country (contracts/registry/implementation/IdentityRegistry.sol#269) is not in mixedCase
+Parameter IdentityRegistry.identity(address)._userAddress (contracts/registry/implementation/IdentityRegistry.sol#278) is not in mixedCase
+Parameter IdentityRegistryStorage.addIdentityToStorage(address,IIdentity,uint16)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#81) is not in mixedCase
+Parameter IdentityRegistryStorage.addIdentityToStorage(address,IIdentity,uint16)._identity (contracts/registry/implementation/IdentityRegistryStorage.sol#82) is not in mixedCase
+Parameter IdentityRegistryStorage.addIdentityToStorage(address,IIdentity,uint16)._country (contracts/registry/implementation/IdentityRegistryStorage.sol#83) is not in mixedCase
+Parameter IdentityRegistryStorage.modifyStoredIdentity(address,IIdentity)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#98) is not in mixedCase
+Parameter IdentityRegistryStorage.modifyStoredIdentity(address,IIdentity)._identity (contracts/registry/implementation/IdentityRegistryStorage.sol#98) is not in mixedCase
+Parameter IdentityRegistryStorage.modifyStoredInvestorCountry(address,uint16)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#112) is not in mixedCase
+Parameter IdentityRegistryStorage.modifyStoredInvestorCountry(address,uint16)._country (contracts/registry/implementation/IdentityRegistryStorage.sol#112) is not in mixedCase
+Parameter IdentityRegistryStorage.removeIdentityFromStorage(address)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#122) is not in mixedCase
+Parameter IdentityRegistryStorage.bindIdentityRegistry(address)._identityRegistry (contracts/registry/implementation/IdentityRegistryStorage.sol#133) is not in mixedCase
+Parameter IdentityRegistryStorage.unbindIdentityRegistry(address)._identityRegistry (contracts/registry/implementation/IdentityRegistryStorage.sol#144) is not in mixedCase
+Parameter IdentityRegistryStorage.storedIdentity(address)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#169) is not in mixedCase
+Parameter IdentityRegistryStorage.storedInvestorCountry(address)._userAddress (contracts/registry/implementation/IdentityRegistryStorage.sol#176) is not in mixedCase
+Parameter TrustedIssuersRegistry.addTrustedIssuer(IClaimIssuer,uint256[])._trustedIssuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#81) is not in mixedCase
+Parameter TrustedIssuersRegistry.addTrustedIssuer(IClaimIssuer,uint256[])._claimTopics (contracts/registry/implementation/TrustedIssuersRegistry.sol#81) is not in mixedCase
+Parameter TrustedIssuersRegistry.removeTrustedIssuer(IClaimIssuer)._trustedIssuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#98) is not in mixedCase
+Parameter TrustedIssuersRegistry.updateIssuerClaimTopics(IClaimIssuer,uint256[])._trustedIssuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#131) is not in mixedCase
+Parameter TrustedIssuersRegistry.updateIssuerClaimTopics(IClaimIssuer,uint256[])._claimTopics (contracts/registry/implementation/TrustedIssuersRegistry.sol#131) is not in mixedCase
+Parameter TrustedIssuersRegistry.isTrustedIssuer(address)._issuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#173) is not in mixedCase
+Parameter TrustedIssuersRegistry.getTrustedIssuerClaimTopics(IClaimIssuer)._trustedIssuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#183) is not in mixedCase
+Parameter TrustedIssuersRegistry.hasClaimTopic(address,uint256)._issuer (contracts/registry/implementation/TrustedIssuersRegistry.sol#191) is not in mixedCase
+Parameter TrustedIssuersRegistry.hasClaimTopic(address,uint256)._claimTopic (contracts/registry/implementation/TrustedIssuersRegistry.sol#191) is not in mixedCase
+Variable CTRStorage.__gap (contracts/registry/storage/CTRStorage.sol#74) is not in mixedCase
+Variable IRSStorage.__gap (contracts/registry/storage/IRSStorage.sol#84) is not in mixedCase
+Variable IRStorage.__gap (contracts/registry/storage/IRStorage.sol#84) is not in mixedCase
+Variable TIRStorage.__gap (contracts/registry/storage/TIRStorage.sol#82) is not in mixedCase
+Parameter AgentRole.addAgent(address)._agent (contracts/roles/AgentRole.sol#83) is not in mixedCase
+Parameter AgentRole.removeAgent(address)._agent (contracts/roles/AgentRole.sol#89) is not in mixedCase
+Parameter AgentRole.isAgent(address)._agent (contracts/roles/AgentRole.sol#95) is not in mixedCase
+Parameter AgentRoleUpgradeable.addAgent(address)._agent (contracts/roles/AgentRoleUpgradeable.sol#83) is not in mixedCase
+Parameter AgentRoleUpgradeable.removeAgent(address)._agent (contracts/roles/AgentRoleUpgradeable.sol#89) is not in mixedCase
+Parameter AgentRoleUpgradeable.isAgent(address)._agent (contracts/roles/AgentRoleUpgradeable.sol#95) is not in mixedCase
+Parameter AgentManager.callForcedTransfer(address,address,uint256,IIdentity)._from (contracts/roles/permissioning/agent/AgentManager.sol#89) is not in mixedCase
+Parameter AgentManager.callForcedTransfer(address,address,uint256,IIdentity)._to (contracts/roles/permissioning/agent/AgentManager.sol#90) is not in mixedCase
+Parameter AgentManager.callForcedTransfer(address,address,uint256,IIdentity)._amount (contracts/roles/permissioning/agent/AgentManager.sol#91) is not in mixedCase
+Parameter AgentManager.callForcedTransfer(address,address,uint256,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#92) is not in mixedCase
+Parameter AgentManager.callBatchForcedTransfer(address[],address[],uint256[],IIdentity)._fromList (contracts/roles/permissioning/agent/AgentManager.sol#111) is not in mixedCase
+Parameter AgentManager.callBatchForcedTransfer(address[],address[],uint256[],IIdentity)._toList (contracts/roles/permissioning/agent/AgentManager.sol#112) is not in mixedCase
+Parameter AgentManager.callBatchForcedTransfer(address[],address[],uint256[],IIdentity)._amounts (contracts/roles/permissioning/agent/AgentManager.sol#113) is not in mixedCase
+Parameter AgentManager.callBatchForcedTransfer(address[],address[],uint256[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#114) is not in mixedCase
+Parameter AgentManager.callPause(IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#132) is not in mixedCase
+Parameter AgentManager.callUnpause(IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#148) is not in mixedCase
+Parameter AgentManager.callMint(address,uint256,IIdentity)._to (contracts/roles/permissioning/agent/AgentManager.sol#165) is not in mixedCase
+Parameter AgentManager.callMint(address,uint256,IIdentity)._amount (contracts/roles/permissioning/agent/AgentManager.sol#166) is not in mixedCase
+Parameter AgentManager.callMint(address,uint256,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#167) is not in mixedCase
+Parameter AgentManager.callBatchMint(address[],uint256[],IIdentity)._toList (contracts/roles/permissioning/agent/AgentManager.sol#186) is not in mixedCase
+Parameter AgentManager.callBatchMint(address[],uint256[],IIdentity)._amounts (contracts/roles/permissioning/agent/AgentManager.sol#187) is not in mixedCase
+Parameter AgentManager.callBatchMint(address[],uint256[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#188) is not in mixedCase
+Parameter AgentManager.callBurn(address,uint256,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#207) is not in mixedCase
+Parameter AgentManager.callBurn(address,uint256,IIdentity)._amount (contracts/roles/permissioning/agent/AgentManager.sol#208) is not in mixedCase
+Parameter AgentManager.callBurn(address,uint256,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#209) is not in mixedCase
+Parameter AgentManager.callBatchBurn(address[],uint256[],IIdentity)._userAddresses (contracts/roles/permissioning/agent/AgentManager.sol#229) is not in mixedCase
+Parameter AgentManager.callBatchBurn(address[],uint256[],IIdentity)._amounts (contracts/roles/permissioning/agent/AgentManager.sol#230) is not in mixedCase
+Parameter AgentManager.callBatchBurn(address[],uint256[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#231) is not in mixedCase
+Parameter AgentManager.callSetAddressFrozen(address,bool,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#250) is not in mixedCase
+Parameter AgentManager.callSetAddressFrozen(address,bool,IIdentity)._freeze (contracts/roles/permissioning/agent/AgentManager.sol#251) is not in mixedCase
+Parameter AgentManager.callSetAddressFrozen(address,bool,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#252) is not in mixedCase
+Parameter AgentManager.callBatchSetAddressFrozen(address[],bool[],IIdentity)._userAddresses (contracts/roles/permissioning/agent/AgentManager.sol#270) is not in mixedCase
+Parameter AgentManager.callBatchSetAddressFrozen(address[],bool[],IIdentity)._freeze (contracts/roles/permissioning/agent/AgentManager.sol#271) is not in mixedCase
+Parameter AgentManager.callBatchSetAddressFrozen(address[],bool[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#272) is not in mixedCase
+Parameter AgentManager.callFreezePartialTokens(address,uint256,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#290) is not in mixedCase
+Parameter AgentManager.callFreezePartialTokens(address,uint256,IIdentity)._amount (contracts/roles/permissioning/agent/AgentManager.sol#291) is not in mixedCase
+Parameter AgentManager.callFreezePartialTokens(address,uint256,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#292) is not in mixedCase
+Parameter AgentManager.callBatchFreezePartialTokens(address[],uint256[],IIdentity)._userAddresses (contracts/roles/permissioning/agent/AgentManager.sol#310) is not in mixedCase
+Parameter AgentManager.callBatchFreezePartialTokens(address[],uint256[],IIdentity)._amounts (contracts/roles/permissioning/agent/AgentManager.sol#311) is not in mixedCase
+Parameter AgentManager.callBatchFreezePartialTokens(address[],uint256[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#312) is not in mixedCase
+Parameter AgentManager.callUnfreezePartialTokens(address,uint256,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#330) is not in mixedCase
+Parameter AgentManager.callUnfreezePartialTokens(address,uint256,IIdentity)._amount (contracts/roles/permissioning/agent/AgentManager.sol#331) is not in mixedCase
+Parameter AgentManager.callUnfreezePartialTokens(address,uint256,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#332) is not in mixedCase
+Parameter AgentManager.callBatchUnfreezePartialTokens(address[],uint256[],IIdentity)._userAddresses (contracts/roles/permissioning/agent/AgentManager.sol#350) is not in mixedCase
+Parameter AgentManager.callBatchUnfreezePartialTokens(address[],uint256[],IIdentity)._amounts (contracts/roles/permissioning/agent/AgentManager.sol#351) is not in mixedCase
+Parameter AgentManager.callBatchUnfreezePartialTokens(address[],uint256[],IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#352) is not in mixedCase
+Parameter AgentManager.callRecoveryAddress(address,address,address,IIdentity)._lostWallet (contracts/roles/permissioning/agent/AgentManager.sol#370) is not in mixedCase
+Parameter AgentManager.callRecoveryAddress(address,address,address,IIdentity)._newWallet (contracts/roles/permissioning/agent/AgentManager.sol#371) is not in mixedCase
+Parameter AgentManager.callRecoveryAddress(address,address,address,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#372) is not in mixedCase
+Parameter AgentManager.callRecoveryAddress(address,address,address,IIdentity)._managerOnchainID (contracts/roles/permissioning/agent/AgentManager.sol#373) is not in mixedCase
+Parameter AgentManager.callRegisterIdentity(address,IIdentity,uint16,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#392) is not in mixedCase
+Parameter AgentManager.callRegisterIdentity(address,IIdentity,uint16,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#393) is not in mixedCase
+Parameter AgentManager.callRegisterIdentity(address,IIdentity,uint16,IIdentity)._country (contracts/roles/permissioning/agent/AgentManager.sol#394) is not in mixedCase
+Parameter AgentManager.callRegisterIdentity(address,IIdentity,uint16,IIdentity)._managerOnchainID (contracts/roles/permissioning/agent/AgentManager.sol#395) is not in mixedCase
+Parameter AgentManager.callUpdateIdentity(address,IIdentity,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#414) is not in mixedCase
+Parameter AgentManager.callUpdateIdentity(address,IIdentity,IIdentity)._identity (contracts/roles/permissioning/agent/AgentManager.sol#415) is not in mixedCase
+Parameter AgentManager.callUpdateIdentity(address,IIdentity,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#416) is not in mixedCase
+Parameter AgentManager.callUpdateCountry(address,uint16,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#435) is not in mixedCase
+Parameter AgentManager.callUpdateCountry(address,uint16,IIdentity)._country (contracts/roles/permissioning/agent/AgentManager.sol#436) is not in mixedCase
+Parameter AgentManager.callUpdateCountry(address,uint16,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#437) is not in mixedCase
+Parameter AgentManager.callDeleteIdentity(address,IIdentity)._userAddress (contracts/roles/permissioning/agent/AgentManager.sol#455) is not in mixedCase
+Parameter AgentManager.callDeleteIdentity(address,IIdentity)._onchainID (contracts/roles/permissioning/agent/AgentManager.sol#455) is not in mixedCase
+Parameter AgentRoles.addAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#99) is not in mixedCase
+Parameter AgentRoles.removeAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#105) is not in mixedCase
+Parameter AgentRoles.addSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#111) is not in mixedCase
+Parameter AgentRoles.removeSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#117) is not in mixedCase
+Parameter AgentRoles.addFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#123) is not in mixedCase
+Parameter AgentRoles.removeFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#129) is not in mixedCase
+Parameter AgentRoles.addTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#135) is not in mixedCase
+Parameter AgentRoles.removeTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#141) is not in mixedCase
+Parameter AgentRoles.addRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#147) is not in mixedCase
+Parameter AgentRoles.removeRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#153) is not in mixedCase
+Parameter AgentRoles.addComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#159) is not in mixedCase
+Parameter AgentRoles.removeComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#165) is not in mixedCase
+Parameter AgentRoles.addWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#171) is not in mixedCase
+Parameter AgentRoles.removeWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#177) is not in mixedCase
+Parameter AgentRoles.isAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#183) is not in mixedCase
+Parameter AgentRoles.isWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#187) is not in mixedCase
+Parameter AgentRoles.isComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#191) is not in mixedCase
+Parameter AgentRoles.isRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#195) is not in mixedCase
+Parameter AgentRoles.isTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#199) is not in mixedCase
+Parameter AgentRoles.isFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#203) is not in mixedCase
+Parameter AgentRoles.isSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRoles.sol#207) is not in mixedCase
+Parameter AgentRolesUpgradeable.addAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#101) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#107) is not in mixedCase
+Parameter AgentRolesUpgradeable.addSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#113) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#119) is not in mixedCase
+Parameter AgentRolesUpgradeable.addFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#125) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#131) is not in mixedCase
+Parameter AgentRolesUpgradeable.addTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#137) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#143) is not in mixedCase
+Parameter AgentRolesUpgradeable.addRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#149) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#155) is not in mixedCase
+Parameter AgentRolesUpgradeable.addComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#161) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#167) is not in mixedCase
+Parameter AgentRolesUpgradeable.addWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#173) is not in mixedCase
+Parameter AgentRolesUpgradeable.removeWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#179) is not in mixedCase
+Parameter AgentRolesUpgradeable.isAgentAdmin(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#185) is not in mixedCase
+Parameter AgentRolesUpgradeable.isWhiteListManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#189) is not in mixedCase
+Parameter AgentRolesUpgradeable.isComplianceAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#193) is not in mixedCase
+Parameter AgentRolesUpgradeable.isRecoveryAgent(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#197) is not in mixedCase
+Parameter AgentRolesUpgradeable.isTransferManager(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#201) is not in mixedCase
+Parameter AgentRolesUpgradeable.isFreezer(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#205) is not in mixedCase
+Parameter AgentRolesUpgradeable.isSupplyModifier(address)._agent (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#209) is not in mixedCase
+Parameter OwnerManager.callSetIdentityRegistry(address,IIdentity)._identityRegistry (contracts/roles/permissioning/owner/OwnerManager.sol#104) is not in mixedCase
+Parameter OwnerManager.callSetIdentityRegistry(address,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#104) is not in mixedCase
+Parameter OwnerManager.callSetCompliance(address,IIdentity)._compliance (contracts/roles/permissioning/owner/OwnerManager.sol#120) is not in mixedCase
+Parameter OwnerManager.callSetCompliance(address,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#120) is not in mixedCase
+Parameter OwnerManager.callComplianceFunction(bytes,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#135) is not in mixedCase
+Parameter OwnerManager.callSetTokenName(string,IIdentity)._name (contracts/roles/permissioning/owner/OwnerManager.sol#179) is not in mixedCase
+Parameter OwnerManager.callSetTokenName(string,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#179) is not in mixedCase
+Parameter OwnerManager.callSetTokenSymbol(string,IIdentity)._symbol (contracts/roles/permissioning/owner/OwnerManager.sol#195) is not in mixedCase
+Parameter OwnerManager.callSetTokenSymbol(string,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#195) is not in mixedCase
+Parameter OwnerManager.callSetTokenOnchainID(address,IIdentity)._tokenOnchainID (contracts/roles/permissioning/owner/OwnerManager.sol#211) is not in mixedCase
+Parameter OwnerManager.callSetTokenOnchainID(address,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#211) is not in mixedCase
+Parameter OwnerManager.callSetClaimTopicsRegistry(address,IIdentity)._claimTopicsRegistry (contracts/roles/permissioning/owner/OwnerManager.sol#227) is not in mixedCase
+Parameter OwnerManager.callSetClaimTopicsRegistry(address,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#227) is not in mixedCase
+Parameter OwnerManager.callSetTrustedIssuersRegistry(address,IIdentity)._trustedIssuersRegistry (contracts/roles/permissioning/owner/OwnerManager.sol#243) is not in mixedCase
+Parameter OwnerManager.callSetTrustedIssuersRegistry(address,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#243) is not in mixedCase
+Parameter OwnerManager.callAddTrustedIssuer(IClaimIssuer,uint256[],IIdentity)._trustedIssuer (contracts/roles/permissioning/owner/OwnerManager.sol#260) is not in mixedCase
+Parameter OwnerManager.callAddTrustedIssuer(IClaimIssuer,uint256[],IIdentity)._claimTopics (contracts/roles/permissioning/owner/OwnerManager.sol#261) is not in mixedCase
+Parameter OwnerManager.callAddTrustedIssuer(IClaimIssuer,uint256[],IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#262) is not in mixedCase
+Parameter OwnerManager.callRemoveTrustedIssuer(IClaimIssuer,IIdentity)._trustedIssuer (contracts/roles/permissioning/owner/OwnerManager.sol#279) is not in mixedCase
+Parameter OwnerManager.callRemoveTrustedIssuer(IClaimIssuer,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#279) is not in mixedCase
+Parameter OwnerManager.callUpdateIssuerClaimTopics(IClaimIssuer,uint256[],IIdentity)._trustedIssuer (contracts/roles/permissioning/owner/OwnerManager.sol#296) is not in mixedCase
+Parameter OwnerManager.callUpdateIssuerClaimTopics(IClaimIssuer,uint256[],IIdentity)._claimTopics (contracts/roles/permissioning/owner/OwnerManager.sol#297) is not in mixedCase
+Parameter OwnerManager.callUpdateIssuerClaimTopics(IClaimIssuer,uint256[],IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#298) is not in mixedCase
+Parameter OwnerManager.callAddClaimTopic(uint256,IIdentity)._claimTopic (contracts/roles/permissioning/owner/OwnerManager.sol#315) is not in mixedCase
+Parameter OwnerManager.callAddClaimTopic(uint256,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#315) is not in mixedCase
+Parameter OwnerManager.callRemoveClaimTopic(uint256,IIdentity)._claimTopic (contracts/roles/permissioning/owner/OwnerManager.sol#331) is not in mixedCase
+Parameter OwnerManager.callRemoveClaimTopic(uint256,IIdentity)._onchainID (contracts/roles/permissioning/owner/OwnerManager.sol#331) is not in mixedCase
+Parameter OwnerManager.callTransferOwnershipOnTokenContract(address)._newOwner (contracts/roles/permissioning/owner/OwnerManager.sol#345) is not in mixedCase
+Parameter OwnerManager.callTransferOwnershipOnIdentityRegistryContract(address)._newOwner (contracts/roles/permissioning/owner/OwnerManager.sol#355) is not in mixedCase
+Parameter OwnerManager.callTransferOwnershipOnComplianceContract(address)._newOwner (contracts/roles/permissioning/owner/OwnerManager.sol#365) is not in mixedCase
+Parameter OwnerManager.callTransferOwnershipOnClaimTopicsRegistryContract(address)._newOwner (contracts/roles/permissioning/owner/OwnerManager.sol#375) is not in mixedCase
+Parameter OwnerManager.callTransferOwnershipOnIssuersRegistryContract(address)._newOwner (contracts/roles/permissioning/owner/OwnerManager.sol#385) is not in mixedCase
+Parameter OwnerManager.callAddAgentOnTokenContract(address)._agent (contracts/roles/permissioning/owner/OwnerManager.sol#395) is not in mixedCase
+Parameter OwnerManager.callRemoveAgentOnTokenContract(address)._agent (contracts/roles/permissioning/owner/OwnerManager.sol#405) is not in mixedCase
+Parameter OwnerManager.callAddAgentOnIdentityRegistryContract(address)._agent (contracts/roles/permissioning/owner/OwnerManager.sol#415) is not in mixedCase
+Parameter OwnerManager.callRemoveAgentOnIdentityRegistryContract(address)._agent (contracts/roles/permissioning/owner/OwnerManager.sol#425) is not in mixedCase
+Parameter OwnerRoles.addOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#97) is not in mixedCase
+Parameter OwnerRoles.removeOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#103) is not in mixedCase
+Parameter OwnerRoles.addRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#109) is not in mixedCase
+Parameter OwnerRoles.removeRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#115) is not in mixedCase
+Parameter OwnerRoles.addComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#121) is not in mixedCase
+Parameter OwnerRoles.removeComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#127) is not in mixedCase
+Parameter OwnerRoles.addComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#133) is not in mixedCase
+Parameter OwnerRoles.removeComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#139) is not in mixedCase
+Parameter OwnerRoles.addClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#145) is not in mixedCase
+Parameter OwnerRoles.removeClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#151) is not in mixedCase
+Parameter OwnerRoles.addIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#157) is not in mixedCase
+Parameter OwnerRoles.removeIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#163) is not in mixedCase
+Parameter OwnerRoles.addTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#169) is not in mixedCase
+Parameter OwnerRoles.removeTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#175) is not in mixedCase
+Parameter OwnerRoles.isOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#181) is not in mixedCase
+Parameter OwnerRoles.isTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#185) is not in mixedCase
+Parameter OwnerRoles.isIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#189) is not in mixedCase
+Parameter OwnerRoles.isClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#193) is not in mixedCase
+Parameter OwnerRoles.isComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#197) is not in mixedCase
+Parameter OwnerRoles.isComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#201) is not in mixedCase
+Parameter OwnerRoles.isRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#205) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#99) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#105) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#111) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#117) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#123) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#129) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#135) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#141) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#147) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#153) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#159) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#165) is not in mixedCase
+Parameter OwnerRolesUpgradeable.addTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#171) is not in mixedCase
+Parameter OwnerRolesUpgradeable.removeTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#177) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#183) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#187) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#191) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#195) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#199) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#203) is not in mixedCase
+Parameter OwnerRolesUpgradeable.isRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#207) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._identityRegistry (contracts/token/Token.sol#101) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._compliance (contracts/token/Token.sol#102) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._name (contracts/token/Token.sol#103) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._symbol (contracts/token/Token.sol#104) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._decimals (contracts/token/Token.sol#105) is not in mixedCase
+Parameter Token.init(address,address,string,string,uint8,address)._onchainID (contracts/token/Token.sol#107) is not in mixedCase
+Parameter Token.approve(address,uint256)._spender (contracts/token/Token.sol#137) is not in mixedCase
+Parameter Token.approve(address,uint256)._amount (contracts/token/Token.sol#137) is not in mixedCase
+Parameter Token.increaseAllowance(address,uint256)._spender (contracts/token/Token.sol#145) is not in mixedCase
+Parameter Token.increaseAllowance(address,uint256)._addedValue (contracts/token/Token.sol#145) is not in mixedCase
+Parameter Token.decreaseAllowance(address,uint256)._spender (contracts/token/Token.sol#153) is not in mixedCase
+Parameter Token.decreaseAllowance(address,uint256)._subtractedValue (contracts/token/Token.sol#153) is not in mixedCase
+Parameter Token.setName(string)._name (contracts/token/Token.sol#161) is not in mixedCase
+Parameter Token.setSymbol(string)._symbol (contracts/token/Token.sol#170) is not in mixedCase
+Parameter Token.setOnchainID(address)._onchainID (contracts/token/Token.sol#180) is not in mixedCase
+Parameter Token.batchTransfer(address[],uint256[])._toList (contracts/token/Token.sol#204) is not in mixedCase
+Parameter Token.batchTransfer(address[],uint256[])._amounts (contracts/token/Token.sol#204) is not in mixedCase
+Parameter Token.transferFrom(address,address,uint256)._from (contracts/token/Token.sol#221) is not in mixedCase
+Parameter Token.transferFrom(address,address,uint256)._to (contracts/token/Token.sol#222) is not in mixedCase
+Parameter Token.transferFrom(address,address,uint256)._amount (contracts/token/Token.sol#223) is not in mixedCase
+Parameter Token.batchForcedTransfer(address[],address[],uint256[])._fromList (contracts/token/Token.sol#240) is not in mixedCase
+Parameter Token.batchForcedTransfer(address[],address[],uint256[])._toList (contracts/token/Token.sol#241) is not in mixedCase
+Parameter Token.batchForcedTransfer(address[],address[],uint256[])._amounts (contracts/token/Token.sol#242) is not in mixedCase
+Parameter Token.batchMint(address[],uint256[])._toList (contracts/token/Token.sol#252) is not in mixedCase
+Parameter Token.batchMint(address[],uint256[])._amounts (contracts/token/Token.sol#252) is not in mixedCase
+Parameter Token.batchBurn(address[],uint256[])._userAddresses (contracts/token/Token.sol#261) is not in mixedCase
+Parameter Token.batchBurn(address[],uint256[])._amounts (contracts/token/Token.sol#261) is not in mixedCase
+Parameter Token.batchSetAddressFrozen(address[],bool[])._userAddresses (contracts/token/Token.sol#270) is not in mixedCase
+Parameter Token.batchSetAddressFrozen(address[],bool[])._freeze (contracts/token/Token.sol#270) is not in mixedCase
+Parameter Token.batchFreezePartialTokens(address[],uint256[])._userAddresses (contracts/token/Token.sol#279) is not in mixedCase
+Parameter Token.batchFreezePartialTokens(address[],uint256[])._amounts (contracts/token/Token.sol#279) is not in mixedCase
+Parameter Token.batchUnfreezePartialTokens(address[],uint256[])._userAddresses (contracts/token/Token.sol#288) is not in mixedCase
+Parameter Token.batchUnfreezePartialTokens(address[],uint256[])._amounts (contracts/token/Token.sol#288) is not in mixedCase
+Parameter Token.recoveryAddress(address,address,address)._lostWallet (contracts/token/Token.sol#298) is not in mixedCase
+Parameter Token.recoveryAddress(address,address,address)._newWallet (contracts/token/Token.sol#299) is not in mixedCase
+Parameter Token.recoveryAddress(address,address,address)._investorOnchainID (contracts/token/Token.sol#300) is not in mixedCase
+Parameter Token.allowance(address,address)._owner (contracts/token/Token.sol#334) is not in mixedCase
+Parameter Token.allowance(address,address)._spender (contracts/token/Token.sol#334) is not in mixedCase
+Parameter Token.isFrozen(address)._userAddress (contracts/token/Token.sol#362) is not in mixedCase
+Parameter Token.getFrozenTokens(address)._userAddress (contracts/token/Token.sol#369) is not in mixedCase
+Parameter Token.transfer(address,uint256)._to (contracts/token/Token.sol#417) is not in mixedCase
+Parameter Token.transfer(address,uint256)._amount (contracts/token/Token.sol#417) is not in mixedCase
+Parameter Token.forcedTransfer(address,address,uint256)._from (contracts/token/Token.sol#432) is not in mixedCase
+Parameter Token.forcedTransfer(address,address,uint256)._to (contracts/token/Token.sol#433) is not in mixedCase
+Parameter Token.forcedTransfer(address,address,uint256)._amount (contracts/token/Token.sol#434) is not in mixedCase
+Parameter Token.mint(address,uint256)._to (contracts/token/Token.sol#454) is not in mixedCase
+Parameter Token.mint(address,uint256)._amount (contracts/token/Token.sol#454) is not in mixedCase
+Parameter Token.burn(address,uint256)._userAddress (contracts/token/Token.sol#464) is not in mixedCase
+Parameter Token.burn(address,uint256)._amount (contracts/token/Token.sol#464) is not in mixedCase
+Parameter Token.setAddressFrozen(address,bool)._userAddress (contracts/token/Token.sol#479) is not in mixedCase
+Parameter Token.setAddressFrozen(address,bool)._freeze (contracts/token/Token.sol#479) is not in mixedCase
+Parameter Token.freezePartialTokens(address,uint256)._userAddress (contracts/token/Token.sol#488) is not in mixedCase
+Parameter Token.freezePartialTokens(address,uint256)._amount (contracts/token/Token.sol#488) is not in mixedCase
+Parameter Token.unfreezePartialTokens(address,uint256)._userAddress (contracts/token/Token.sol#498) is not in mixedCase
+Parameter Token.unfreezePartialTokens(address,uint256)._amount (contracts/token/Token.sol#498) is not in mixedCase
+Parameter Token.setIdentityRegistry(address)._identityRegistry (contracts/token/Token.sol#507) is not in mixedCase
+Parameter Token.setCompliance(address)._compliance (contracts/token/Token.sol#515) is not in mixedCase
+Parameter Token.balanceOf(address)._userAddress (contracts/token/Token.sol#527) is not in mixedCase
+Variable TokenStorage.__gap (contracts/token/TokenStorage.sol#97) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Detector: too-many-digits
+TREXFactory._deployTIR(string,address) (contracts/factory/TREXFactory.sol#253-262) uses literals with too many digits:
+	- _code = type()(TrustedIssuersRegistryProxy).creationCode (contracts/factory/TREXFactory.sol#258)
+TREXFactory._deployCTR(string,address) (contracts/factory/TREXFactory.sol#265-274) uses literals with too many digits:
+	- _code = type()(ClaimTopicsRegistryProxy).creationCode (contracts/factory/TREXFactory.sol#270)
+TREXFactory._deployMC(string,address) (contracts/factory/TREXFactory.sol#277-286) uses literals with too many digits:
+	- _code = type()(ModularComplianceProxy).creationCode (contracts/factory/TREXFactory.sol#282)
+TREXFactory._deployIRS(string,address) (contracts/factory/TREXFactory.sol#289-298) uses literals with too many digits:
+	- _code = type()(IdentityRegistryStorageProxy).creationCode (contracts/factory/TREXFactory.sol#294)
+TREXFactory._deployIR(string,address,address,address,address) (contracts/factory/TREXFactory.sol#301-319) uses literals with too many digits:
+	- _code = type()(IdentityRegistryProxy).creationCode (contracts/factory/TREXFactory.sol#309)
+TREXFactory._deployToken(string,address,address,address,string,string,uint8,address) (contracts/factory/TREXFactory.sol#322-346) uses literals with too many digits:
+	- _code = type()(TokenProxy).creationCode (contracts/factory/TREXFactory.sol#333)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits
+INFO:Detectors:
+Detector: unimplemented-functions
+AbstractModule (contracts/compliance/modular/modules/AbstractModule.sol#67-116) does not implement functions:
+	- IModule.canComplianceBind(address) (contracts/compliance/modular/modules/IModule.sol#161)
+	- IModule.isPlugAndPlay() (contracts/compliance/modular/modules/IModule.sol#166)
+	- IModule.moduleBurnAction(address,uint256) (contracts/compliance/modular/modules/IModule.sol#137)
+	- IModule.moduleCheck(address,address,uint256,address) (contracts/compliance/modular/modules/IModule.sol#149)
+	- IModule.moduleMintAction(address,uint256) (contracts/compliance/modular/modules/IModule.sol#126)
+	- IModule.moduleTransferAction(address,address,uint256) (contracts/compliance/modular/modules/IModule.sol#115)
+	- IModule.name() (contracts/compliance/modular/modules/IModule.sol#172)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions
+INFO:Detectors:
+Detector: unindexed-event-address
+Event IDVATransferManager.ApprovalCriteriaSet(address,bool,bool,bool,address[],bytes32) (contracts/DVA/IDVATransferManager.sol#116-123) has address parameters but no indexed parameters
+Event IDVATransferManager.TransferInitiated(bytes32,address,address,address,uint256,bytes32) (contracts/DVA/IDVATransferManager.sol#136-143) has address parameters but no indexed parameters
+Event IDVATransferManager.TransferApproved(bytes32,address) (contracts/DVA/IDVATransferManager.sol#151-154) has address parameters but no indexed parameters
+Event IDVATransferManager.TransferRejected(bytes32,address) (contracts/DVA/IDVATransferManager.sol#162-165) has address parameters but no indexed parameters
+Event IDVATransferManager.TransferCompleted(bytes32,address,address,address,uint256) (contracts/DVA/IDVATransferManager.sol#185-191) has address parameters but no indexed parameters
+Event ICompliance.TokenAgentAdded(address) (contracts/compliance/legacy/ICompliance.sol#71) has address parameters but no indexed parameters
+Event ICompliance.TokenAgentRemoved(address) (contracts/compliance/legacy/ICompliance.sol#78) has address parameters but no indexed parameters
+Event ICompliance.TokenBound(address) (contracts/compliance/legacy/ICompliance.sol#85) has address parameters but no indexed parameters
+Event ICompliance.TokenUnbound(address) (contracts/compliance/legacy/ICompliance.sol#92) has address parameters but no indexed parameters
+Event ApproveTransfer.TransferApproved(address,address,uint256,address) (contracts/compliance/legacy/features/ApproveTransfer.sol#85) has address parameters but no indexed parameters
+Event ApproveTransfer.ApprovalRemoved(address,address,uint256,address) (contracts/compliance/legacy/features/ApproveTransfer.sol#95) has address parameters but no indexed parameters
+Event ExchangeMonthlyLimits.ExchangeMonthlyLimitUpdated(address,uint256) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#94) has address parameters but no indexed parameters
+Event ExchangeMonthlyLimits.ExchangeIDAdded(address) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#101) has address parameters but no indexed parameters
+Event ExchangeMonthlyLimits.ExchangeIDRemoved(address) (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#108) has address parameters but no indexed parameters
+Event IModularCompliance.TokenBound(address) (contracts/compliance/modular/IModularCompliance.sol#82) has address parameters but no indexed parameters
+Event IModularCompliance.TokenUnbound(address) (contracts/compliance/modular/IModularCompliance.sol#89) has address parameters but no indexed parameters
+Event ConditionalTransferModule.TransferApproved(address,address,uint256,address) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#85) has address parameters but no indexed parameters
+Event ConditionalTransferModule.ApprovalRemoved(address,address,uint256,address) (contracts/compliance/modular/modules/ConditionalTransferModule.sol#95) has address parameters but no indexed parameters
+Event CountryAllowModule.CountryAllowed(address,uint16) (contracts/compliance/modular/modules/CountryAllowModule.sol#80) has address parameters but no indexed parameters
+Event CountryAllowModule.CountryUnallowed(address,uint16) (contracts/compliance/modular/modules/CountryAllowModule.sol#86) has address parameters but no indexed parameters
+Event ExchangeMonthlyLimitsModule.ExchangeIDAdded(address) (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#100) has address parameters but no indexed parameters
+Event ExchangeMonthlyLimitsModule.ExchangeIDRemoved(address) (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#107) has address parameters but no indexed parameters
+Event SupplyLimitModule.SupplyLimitSet(address,uint256) (contracts/compliance/modular/modules/SupplyLimitModule.sol#78) has address parameters but no indexed parameters
+Event TimeExchangeLimitsModule.ExchangeIDAdded(address) (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#115) has address parameters but no indexed parameters
+Event TimeExchangeLimitsModule.ExchangeIDRemoved(address) (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#122) has address parameters but no indexed parameters
+Event TransferRestrictModule.UserAllowed(address,address) (contracts/compliance/modular/modules/TransferRestrictModule.sol#76) has address parameters but no indexed parameters
+Event TransferRestrictModule.UserDisallowed(address,address) (contracts/compliance/modular/modules/TransferRestrictModule.sol#83) has address parameters but no indexed parameters
+Event ITREXFactory.IdFactorySet(address) (contracts/factory/ITREXFactory.sol#110) has address parameters but no indexed parameters
+Event ITREXFactory.ImplementationAuthoritySet(address) (contracts/factory/ITREXFactory.sol#113) has address parameters but no indexed parameters
+Event ITREXImplementationAuthority.ImplementationAuthoritySet(bool,address) (contracts/proxy/authority/ITREXImplementationAuthority.sol#105) has address parameters but no indexed parameters
+Event IToken.Paused(address) (contracts/token/IToken.sol#142) has address parameters but no indexed parameters
+Event IToken.Unpaused(address) (contracts/token/IToken.sol#149) has address parameters but no indexed parameters
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters
+INFO:Detectors:
+Detector: immutable-states
+AgentManager.token (contracts/roles/permissioning/agent/AgentManager.sol#74) should be immutable 
+IAFactory._trexFactory (contracts/proxy/authority/IAFactory.sol#72) should be immutable 
+OwnerManager.token (contracts/roles/permissioning/owner/OwnerManager.sol#78) should be immutable 
+TREXImplementationAuthority._reference (contracts/proxy/authority/TREXImplementationAuthority.sol#83) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+INFO:Slither:. analyzed (131 contracts with 101 detectors), 816 result(s) found
