@@ -1,5 +1,5 @@
 const { useRpcProvider } = require('../utils/useRpcProvider');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { getIdentity } = require('./getIdentity');
 
 async function linkWallet(address, identityFactory, signer = undefined) {

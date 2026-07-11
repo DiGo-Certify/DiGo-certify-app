@@ -1,4 +1,4 @@
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 
 /**
  * Search in the config file if is a wallet with admin permissions (claim issuer)

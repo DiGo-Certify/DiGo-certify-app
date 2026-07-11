@@ -2,7 +2,7 @@ const { ethers } = require('ethers');
 const {
     contracts: { ClaimIssuer }
 } = require('@onchain-id/solidity');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const { addClaim } = require('../claims/add-claim');
 const { CLAIM_TOPICS_OBJ, CLAIM_TOPICS } = require('../claims/claimTopics');

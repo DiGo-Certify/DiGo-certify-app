@@ -1,4 +1,4 @@
-const config = require('@/config.json');
+const config = require('../../../config/loadConfig');
 
 /**
  * Search for an admin by address in the list of institutions

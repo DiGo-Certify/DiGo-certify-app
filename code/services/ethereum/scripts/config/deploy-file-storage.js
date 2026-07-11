@@ -1,6 +1,6 @@
 const { ethers } = require('hardhat');
 const { useRpcProvider } = require('../utils/useRpcProvider');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 
 async function main() {
     const deployer = await useRpcProvider(
