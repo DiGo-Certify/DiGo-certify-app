@@ -50,6 +50,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#evaluation-and-static-analysis">Evaluation and Static Analysis</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -146,6 +147,18 @@ Use this space to show useful examples of how a project can be used. Additional 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
+
+<!-- EVALUATION -->
+
+# 🧪 `Evaluation and Static Analysis`
+
+The on-chain layer ships with a reproducible evaluation harness (gas, cost,
+scalability, and latency benchmarks) and a Slither static-analysis setup, all
+under `code/services/ethereum`. The run commands and the full methodology —
+research questions, metrics, and environments — live in the on-chain layer's
+**[README → Evaluation](code/services/ethereum/README.md#evaluation)**.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
 
