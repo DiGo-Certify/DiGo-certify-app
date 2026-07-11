@@ -44,7 +44,8 @@ web-build/
 *.key
 *.mobileprovision
 
-# Generated native projects
+# Development Builds
+ios/
 /code/android/
 /code/ios/
 

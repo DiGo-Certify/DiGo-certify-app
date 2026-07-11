@@ -1,7 +1,12 @@
+import '@walletconnect/react-native-compat';
+import 'react-native-get-random-values';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { PaperProvider } from 'react-native-paper';
+import { AppKit, AppKitProvider } from '@reown/appkit-react-native';
+import { SessionProvider } from '@/contexts/SessionContext';
+import { appKit } from '@/services/web3/app-kit';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,20 +35,22 @@ const RootLayout = () => {
         return null;
     }
 
-    if (!fontsLoaded && !error) {
-        return null;
-    }
-
     return (
-        <PaperProvider>
-            <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="initial-screen/initial-screen" options={{ headerShown: false }} />
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="emission" options={{ headerShown: false }} />
-            </Stack>
-        </PaperProvider>
+        <AppKitProvider instance={appKit}>
+            <SessionProvider>
+                <PaperProvider>
+                    <Stack>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="index" options={{ headerShown: false }} />
+                        <Stack.Screen name="profile-setup/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="emission/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="revoke/index" options={{ headerShown: false }} />
+                    </Stack>
+                    <AppKit />
+                </PaperProvider>
+            </SessionProvider>
+        </AppKitProvider>
     );
 };
 

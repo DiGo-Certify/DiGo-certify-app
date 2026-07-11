@@ -2,7 +2,6 @@ const { ethers } = require('ethers');
 const { isTrustedIssuer } = require('../claimIssuer/isTrustedIssuer');
 const { isSelfSigner } = require('../claimIssuer/isSelfSigner');
 const hash = require('../utils/encryption/hash');
-const { encrypt } = require('../utils/encryption/aes-256');
 
 /**
  * Responsible for adding a claim to an identity contract
@@ -30,11 +29,6 @@ async function addClaim(
     key = undefined
 ) {
     try {
-        console.log(
-            '[!] Adding claim to identity:',
-            await receiverIdentity.getAddress()
-        );
-
         if (
             !(await isTrustedIssuer(TIR, claimIssuerContract)) &&
             !(await isSelfSigner(claimIssuerContract, receiverIdentity))
@@ -43,13 +37,6 @@ async function addClaim(
                 '[x] Claim issuer is not trusted neither self-signer'
             );
         } else {
-            console.log('[✓] Claim issuer is trusted or self-signer');
-
-            console.log('claimData:', claimData);
-            console.log('claimTopic:', claimTopic);
-            console.log('claimScheme:', claimScheme);
-            console.log('uri:', uri);
-
             // Create the claim (see https://github.com/ethereum/EIPs/issues/735)
             const claim = {
                 data: ethers.toUtf8Bytes(claimData),
@@ -82,10 +69,6 @@ async function addClaim(
                 )
             );
 
-            console.log('claim data:', claimData);
-            console.log('key:', key);
-            console.log('claim:', claim);
-
             // Add the claim to the identity
             const tx = await receiverIdentity
                 .connect(claimIssuerWallet)
@@ -107,13 +90,11 @@ async function addClaim(
                     item.eventName !== undefined &&
                     item.eventName === 'ClaimAdded'
                 ) {
-                    console.log('[✓] Claim added:', item.args.claimId);
                     claimAdded = item.args;
                 } else if (
                     item.eventName !== undefined &&
                     item.eventName === 'ClaimChanged'
                 ) {
-                    console.log('[i] Claim Changed:', item.args.claimId);
                     claimAdded = item.args;
                 }
             });
@@ -121,7 +102,6 @@ async function addClaim(
             return claimAdded;
         }
     } catch (err) {
-        console.error(err);
         throw err;
     }
 }
