@@ -80,6 +80,19 @@ const validateForm = (form, fileInfo) => {
     }
 };
 
+const confirmCertificateReplacement = () =>
+    new Promise(resolve => {
+        Alert.alert(
+            'Certificate Already Exists',
+            'This institution already issued a certificate for this student. Replace the existing certificate?',
+            [
+                { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+                { text: 'Replace', style: 'destructive', onPress: () => resolve(true) },
+            ],
+            { cancelable: true, onDismiss: () => resolve(false) }
+        );
+    });
+
 export const useCertificateEmission = () => {
     const [state, dispatch] = useReducer(emissionReducer, initialState);
 
@@ -111,7 +124,21 @@ export const useCertificateEmission = () => {
                 password: state.form.password,
             };
 
-            await issueCertificate(certificate);
+            try {
+                await issueCertificate(certificate);
+            } catch (error) {
+                if (error.code !== 'CERTIFICATE_EXISTS') {
+                    throw error;
+                }
+
+                const shouldReplace = await confirmCertificateReplacement();
+                if (!shouldReplace) {
+                    dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+                    return false;
+                }
+
+                await issueCertificate({ ...certificate, replaceExisting: true });
+            }
 
             dispatch({ type: ACTIONS.SET_LOADING, payload: false });
             Alert.alert('Success', 'Certificate emitted successfully.');
