@@ -18,6 +18,7 @@ export async function issueCertificate({
     grade,
     certificateReference,
     password,
+    replaceExisting = false,
 }) {
     try {
         const institution = getIssuingInstitution(issuerWallet);
@@ -34,6 +35,13 @@ export async function issueCertificate({
 
         const claimIssuerWallet = getWalletFromPrivateKey(institution.wallet.privateKey);
         await assertIssuerCanWriteCertificate(identity, institution, claimIssuerWallet.address);
+
+        if (!replaceExisting && await hasCertificateFromIssuer(identity, institution.address)) {
+            throw new BlockchainError(
+                'This institution has already issued a certificate for this student in the certificate topic.',
+                'CERTIFICATE_EXISTS'
+            );
+        }
 
         const operations = buildCertificateClaims({
             institution,
@@ -67,6 +75,16 @@ export async function issueCertificate({
         if (error instanceof BlockchainError) throw error;
         throw new BlockchainError(`Failed to issue certificate: ${error.message}`);
     }
+}
+
+async function hasCertificateFromIssuer(identity, issuerAddress) {
+    const topic = ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE);
+    const expectedClaimId = ethers.keccak256(
+        ethers.AbiCoder.defaultAbiCoder().encode(['address', 'uint256'], [issuerAddress, topic])
+    );
+    const claimIds = await identity.getClaimIdsByTopic(topic);
+
+    return claimIds.some(claimId => claimId.toLowerCase() === expectedClaimId.toLowerCase());
 }
 
 export async function revokeCertificate({ issuerWallet, receiverWalletAddress, claimId = null }) {

@@ -106,5 +106,33 @@ describe('End-to-end certificate flow', () => {
             certificateData
         );
 
+        const replacementReference = 'ipfs://certificate/2024/0001-corrected';
+        const replacementData = {
+            ...certificateData,
+            grade: '19',
+            certificateDigest: hash(replacementReference),
+        };
+
+        await addClaim(
+            trustedIssuersRegistry,
+            studentIdentity,
+            claimIssuerContract,
+            institutionWallet,
+            CLAIM_TOPICS_OBJ.CERTIFICATE,
+            JSON.stringify(replacementData),
+            1,
+            replacementReference
+        );
+
+        const updatedCertificateClaims = await getClaimsByTopic(
+            studentIdentity,
+            CLAIM_TOPICS_OBJ.CERTIFICATE
+        );
+        expect(updatedCertificateClaims).to.have.lengthOf(1);
+        expect(updatedCertificateClaims[0].id).to.equal(certificateClaims[0].id);
+        expect(updatedCertificateClaims[0].uri).to.equal(hash(replacementReference));
+        expect(JSON.parse(ethers.toUtf8String(updatedCertificateClaims[0].data))).to.deep.equal(
+            replacementData
+        );
     });
 });
