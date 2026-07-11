@@ -4,8 +4,9 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { PaperProvider } from 'react-native-paper';
+import { AppKit, AppKitProvider } from '@reown/appkit-react-native';
 import { SessionProvider } from '@/contexts/SessionContext';
-import WalletConnectProvider from '@/services/web3/wallet-connect';
+import { appKit } from '@/services/web3/app-kit';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,19 +36,21 @@ const RootLayout = () => {
     }
 
     return (
-        <SessionProvider>
-            <PaperProvider>
-                <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
-                    <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="profile-setup/index" options={{ headerShown: false }} />
-                    <Stack.Screen name="emission/index" options={{ headerShown: false }} />
-                    <Stack.Screen name="revoke/index" options={{ headerShown: false }} />
-                </Stack>
-                <WalletConnectProvider />
-            </PaperProvider>
-        </SessionProvider>
+        <AppKitProvider instance={appKit}>
+            <SessionProvider>
+                <PaperProvider>
+                    <Stack>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="initial-screen/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="index" options={{ headerShown: false }} />
+                        <Stack.Screen name="profile-setup/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="emission/index" options={{ headerShown: false }} />
+                        <Stack.Screen name="revoke/index" options={{ headerShown: false }} />
+                    </Stack>
+                    <AppKit />
+                </PaperProvider>
+            </SessionProvider>
+        </AppKitProvider>
     );
 };
 

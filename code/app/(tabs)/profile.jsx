@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, Alert } from 'react-native';
 import { Text, TouchableRipple, Avatar, Divider } from 'react-native-paper';
 import { router } from 'expo-router';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { useAccount, useAppKit } from '@reown/appkit-react-native';
 
 import Background from '@/components/Background';
 import SettingsModal from '@/components/SettingsModal';
@@ -16,7 +16,8 @@ const { width } = Dimensions.get('window');
 const Profile = () => {
     const [showSettings, setShowSettings] = useState(false);
     const { logout, wallet, userInfo: sessionUserInfo, userType } = useSession();
-    const { isConnected, provider } = useWalletConnectModal();
+    const { isConnected } = useAccount();
+    const { disconnect } = useAppKit();
 
     const profile = useMemo(() => {
         const type = userType?.type || userType || USER_TYPES.DEFAULT;
@@ -39,7 +40,7 @@ const Profile = () => {
                 onPress: async () => {
                     try {
                         if (isConnected) {
-                            await provider?.disconnect();
+                            await disconnect('eip155');
                         }
                     } catch (error) {
                         console.error('Wallet disconnect failed:', error);
