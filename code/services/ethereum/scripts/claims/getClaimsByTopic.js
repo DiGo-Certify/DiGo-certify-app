@@ -1,4 +1,4 @@
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { getIdentity } = require('../identities/getIdentity');
 const { getContractAt } = require('../utils/ethers');
 const { useRpcProvider } = require('../utils/useRpcProvider');

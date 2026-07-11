@@ -3,7 +3,7 @@ const {
     contracts: { Identity }
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { getContractAt } = require('../utils/ethers');
 
 async function getIdentity(address, identityFactory, signer = undefined) {

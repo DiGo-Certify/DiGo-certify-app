@@ -2,7 +2,7 @@ const { ethers } = require('ethers');
 const {
     contracts: { ClaimIssuer }
 } = require('@onchain-id/solidity');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const { addClaim } = require('../claims/add-claim');
 const { CLAIM_TOPICS_OBJ, CLAIM_TOPICS } = require('../claims/claimTopics');
@@ -42,7 +42,7 @@ async function deployClaimIssuer(
         if (!issuerWallet) {
             console.log('Creating issuer wallet');
             console.log('privateKey:', privateKey);
-            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const provider = deployer.provider || new ethers.JsonRpcProvider(config.rpc);
             newIssuerWallet = new ethers.Wallet(privateKey, provider);
         } else {
             newIssuerWallet = issuerWallet;

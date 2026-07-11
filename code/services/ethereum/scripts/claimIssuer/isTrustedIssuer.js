@@ -1,5 +1,5 @@
 const { ethers } = require('ethers');
-const config = require('../../../../config.json');
+const config = require('../../../config/loadConfig');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 
 /**
