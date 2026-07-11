@@ -44,6 +44,7 @@ const RevokeCertificateScreen = () => {
     return (
         <Background
             noScroll
+            headerStyle={styles.backgroundHeader}
             header={
                 <View style={styles.header}>
                     <Appbar.Header style={styles.appbarHeader} statusBarHeight={0}>
@@ -84,6 +85,10 @@ const RevokeCertificateScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    backgroundHeader: {
+        height: 250,
+        minHeight: 250,
+    },
     header: {
         width: '100%',
         backgroundColor: Colors.backgroundColor,

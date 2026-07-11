@@ -3,11 +3,11 @@ import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 
-export default function Background({ header, body, footer, noScroll = false }) {
+export default function Background({ header, body, footer, noScroll = false, headerStyle }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={styles.header}>{header}</View>
+                <View style={[styles.header, headerStyle]}>{header}</View>
 
                 <View style={styles.bodyContainer}>
                     {noScroll ? (
