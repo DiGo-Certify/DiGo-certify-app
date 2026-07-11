@@ -4,7 +4,6 @@ const {
 } = require('@onchain-id/solidity');
 const { useRpcProvider } = require('../utils/useRpcProvider');
 const config = require('../../../config/loadConfig');
-const { getContractAt } = require('../utils/ethers');
 
 async function getIdentity(address, identityFactory, signer = undefined) {
     try {
@@ -34,7 +33,6 @@ async function getIdentity(address, identityFactory, signer = undefined) {
         }
     } catch (error) {
         console.error('[X] Error getting identity:', error);
-        console.error(error);
         return null;
     }
 }

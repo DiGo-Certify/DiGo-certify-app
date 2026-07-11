@@ -4,7 +4,6 @@ const { deployTrexSuite } = require('./suites/TREX');
 const { uploadConfig } = require('../../config/uploadConfiguration');
 const config = require('../../config/loadConfig');
 const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
-const { CLAIM_TOPICS } = require('./claims/claimTopics');
 const { getContractAt, getWallet } = require('./utils/ethers');
 
 /**
@@ -25,7 +24,8 @@ const { getContractAt, getWallet } = require('./utils/ethers');
  */
 async function main() {
     const provider = new ethers.JsonRpcProvider(config.rpc);
-    const deployer = getWallet(config.deployer.privateKey, provider); // app owner private key
+    const deployerWallet = getWallet(config.deployer.privateKey, provider);
+    const deployer = new ethers.NonceManager(deployerWallet);
 
     const { identityFactoryAbi, identityFactoryAddress } =
         await deployOnchainIDSuite(deployer);
@@ -59,14 +59,20 @@ async function main() {
         token
     );
 
-    // Initial trusted issuers for the CLAIM_TOPICS = ['INSTITUTION', 'STUDENT', 'CERTIFICATE'] is the app owner
-    // await deployClaimIssuer(
-    //     trustedIR,
-    //     undefined,
-    //     deployer,
-    //     config.deployer.privateKey,
-    //     3117,
-    // );
+    const institutions = config.institutions || [];
+    for (const institution of institutions) {
+        if (!institution.wallet?.privateKey || !institution.institutionID) {
+            continue;
+        }
+
+        await deployClaimIssuer(
+            trustedIR,
+            undefined,
+            deployer,
+            institution.wallet.privateKey,
+            institution.institutionID
+        );
+    }
 }
 
 main()

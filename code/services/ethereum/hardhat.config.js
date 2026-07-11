@@ -1,5 +1,19 @@
 require('@nomicfoundation/hardhat-ethers');
 
+const networks = {
+    hardhat: {
+        chainId: 31337
+    }
+};
+
+if (process.env.SEPOLIA_RPC && process.env.PRIVATE_KEY) {
+    networks.sepolia = {
+        url: process.env.SEPOLIA_RPC,
+        accounts: [process.env.PRIVATE_KEY],
+        chainId: 11155111,
+    };
+}
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     solidity: {
@@ -25,14 +39,5 @@ module.exports = {
         ]
     },
     defaultNetwork: 'hardhat',
-    networks: {
-        hardhat: {
-            chainId: 31337
-        },
-        sepolia: {
-            url: process.env.SEPOLIA_RPC || 'http://127.0.0.1:8545',
-            accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-            chainId: 11155111,
-        },
-    }
+    networks
 };

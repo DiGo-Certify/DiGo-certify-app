@@ -1,7 +1,3 @@
-const config = require('../../../config/loadConfig');
-const { getIdentity } = require('../identities/getIdentity');
-const { getContractAt } = require('../utils/ethers');
-const { useRpcProvider } = require('../utils/useRpcProvider');
 const { CLAIM_TOPICS_OBJ } = require('./claimTopics');
 const { ethers } = require('ethers');
 
@@ -13,17 +9,6 @@ async function getClaimsByTopic(identity, topic) {
     try {
         if (!(topic in CLAIM_TOPICS_OBJ)) {
             throw new Error('[x] Invalid topic');
-        }
-
-        try {
-            console.log(
-                '[i] Getting claims for identity: ',
-                await identity.getAddress(),
-                'by topic:',
-                topic
-            );
-        } catch (error) {
-            console.error('[x] Error getting identity address:', error);
         }
 
         let claims = [];
@@ -51,6 +36,7 @@ async function getClaimsByTopic(identity, topic) {
             });
         
         } else if (topic === CLAIM_TOPICS_OBJ.CERTIFICATE) {
+            let certificateClaims = [];
             try {
                 certificateClaims = await identity.getClaimIdsByTopic(
                     ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE)
