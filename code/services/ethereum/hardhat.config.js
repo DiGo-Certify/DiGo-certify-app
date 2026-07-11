@@ -2,7 +2,8 @@ require('@nomicfoundation/hardhat-ethers');
 
 const networks = {
     hardhat: {
-        chainId: 31337
+        chainId: 31337,
+        accounts: { count: 33 },
     }
 };
 

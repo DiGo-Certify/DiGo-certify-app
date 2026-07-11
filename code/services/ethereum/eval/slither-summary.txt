@@ -5,133 +5,134 @@ Problem executing hardhat: WARNING: You are currently using Node.js v25.2.1, whi
 'npx hardhat compile --force' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
 INFO:Printers:
 Compiled with Builder
-Total number of contracts in source files: 71
+Total number of contracts in source files: 72
 Number of contracts in dependencies: 53
 Number of contracts in tests       : 7
-Source lines of code (SLOC) in source files: 4948
+Source lines of code (SLOC) in source files: 4960
 Source lines of code (SLOC) in dependencies: 1090
 Source lines of code (SLOC) in tests       : 140
 Number of  assembly lines: 0
-Number of optimization issues: 4
-Number of informational issues: 705
-Number of low issues: 75
-Number of medium issues: 17
-Number of high issues: 15
+Number of optimization issues: [92m4[0m
+Number of informational issues: [92m760[0m
+Number of low issues: [92m119[0m
+Number of medium issues: [93m29[0m
+Number of high issues: [91m26[0m
 
 Use: Openzeppelin-Ownable, Openzeppelin-Ownable
 ERCs: ERC20
 
-+------------------------------+-------------+-------+--------------------+--------------+--------------------+
-| Name                         | # functions | ERCS  | ERC20 info         | Complex code | Features           |
-+------------------------------+-------------+-------+--------------------+--------------+--------------------+
-| FileStorage                  | 2           |       |                    | No           |                    |
-| DVATransferManager           | 33          |       |                    | No           | Ecrecover          |
-|                              |             |       |                    |              | Tokens interaction |
-| DVDTransferManager           | 20          |       |                    | No           | Tokens interaction |
-| DefaultCompliance            | 35          |       |                    | No           | Tokens interaction |
-| ModularCompliance            | 41          |       |                    | No           | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| AbstractModule               | 13          |       |                    | No           |                    |
-| ConditionalTransferModule    | 68          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| CountryAllowModule           | 67          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| CountryRestrictModule        | 67          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| ExchangeMonthlyLimitsModule  | 73          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| MaxBalanceModule             | 68          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| ModuleProxy                  | 21          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Proxy              |
-| SupplyLimitModule            | 63          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| TimeExchangeLimitsModule     | 72          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| TimeTransfersLimitsModule    | 68          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| TransferFeesModule           | 64          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| TransferRestrictModule       | 66          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-| TREXFactory                  | 31          |       |                    | Yes          | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-| TREXGateway                  | 51          |       |                    | No           | Tokens interaction |
-| ClaimTopicsRegistryProxy     | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| IdentityRegistryProxy        | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| IdentityRegistryStorageProxy | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| ModularComplianceProxy       | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| TokenProxy                   | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| TrustedIssuersRegistryProxy  | 10          |       |                    | No           | Receive ETH        |
-|                              |             |       |                    |              | Delegatecall       |
-|                              |             |       |                    |              | Assembly           |
-|                              |             |       |                    |              | Upgradeable        |
-|                              |             |       |                    |              | Proxy              |
-| IAFactory                    | 5           |       |                    | No           |                    |
-| TREXImplementationAuthority  | 47          |       |                    | Yes          | Tokens interaction |
-| ClaimTopicsRegistry          | 22          |       |                    | No           | Upgradeable        |
-| IdentityRegistry             | 49          |       |                    | Yes          | Upgradeable        |
-| IdentityRegistryStorage      | 37          |       |                    | No           | Upgradeable        |
-| TrustedIssuersRegistry       | 32          |       |                    | No           | Upgradeable        |
-| Roles                        | 3           |       |                    | No           |                    |
-| AgentManager                 | 50          |       |                    | No           | Tokens interaction |
-| AgentRolesUpgradeable        | 36          |       |                    | No           | Upgradeable        |
-| OwnerManager                 | 54          |       |                    | No           | Tokens interaction |
-|                              |             |       |                    |              | Assembly           |
-| OwnerRolesUpgradeable        | 36          |       |                    | No           | Upgradeable        |
-| Token                        | 102         | ERC20 | Pausable           | No           | Upgradeable        |
-|                              |             |       | ∞ Minting          |              |                    |
-|                              |             |       | Approve Race Cond. |              |                    |
-|                              |             |       |                    |              |                    |
-+------------------------------+-------------+-------+--------------------+--------------+--------------------+
-INFO:Slither:. analyzed (131 contracts)
+[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m
+[34m|[0m[96m Name                         [34m|[0m[96m # functions [34m|[0m[96m ERCS  [34m|[0m[96m ERC20 info         [34m|[0m[96m Complex code [34m|[0m[96m Features           [34m|[0m[96m
+[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m
+[34m|[0m[96m FileStorage                  [34m|[0m[96m 2           [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m HashAnchor                   [34m|[0m[96m 2           [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m DVATransferManager           [34m|[0m[96m 33          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Ecrecover          [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m DVDTransferManager           [34m|[0m[96m 20          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m DefaultCompliance            [34m|[0m[96m 35          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m ModularCompliance            [34m|[0m[96m 41          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m AbstractModule               [34m|[0m[96m 13          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m ConditionalTransferModule    [34m|[0m[96m 68          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m CountryAllowModule           [34m|[0m[96m 67          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m CountryRestrictModule        [34m|[0m[96m 67          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m ExchangeMonthlyLimitsModule  [34m|[0m[96m 73          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m MaxBalanceModule             [34m|[0m[96m 68          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m ModuleProxy                  [34m|[0m[96m 21          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m SupplyLimitModule            [34m|[0m[96m 63          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TimeExchangeLimitsModule     [34m|[0m[96m 72          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TimeTransfersLimitsModule    [34m|[0m[96m 68          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TransferFeesModule           [34m|[0m[96m 64          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TransferRestrictModule       [34m|[0m[96m 66          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TREXFactory                  [34m|[0m[96m 31          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [91mYes[0m          [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m TREXGateway                  [34m|[0m[96m 51          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m ClaimTopicsRegistryProxy     [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m IdentityRegistryProxy        [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m IdentityRegistryStorageProxy [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m ModularComplianceProxy       [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m TokenProxy                   [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m TrustedIssuersRegistryProxy  [34m|[0m[96m 10          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Receive ETH        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Delegatecall       [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Proxy              [34m|[0m[96m
+[34m|[0m[96m IAFactory                    [34m|[0m[96m 5           [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m TREXImplementationAuthority  [34m|[0m[96m 47          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [91mYes[0m          [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m ClaimTopicsRegistry          [34m|[0m[96m 22          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m IdentityRegistry             [34m|[0m[96m 49          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [91mYes[0m          [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m IdentityRegistryStorage      [34m|[0m[96m 37          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m TrustedIssuersRegistry       [34m|[0m[96m 32          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m Roles                        [34m|[0m[96m 3           [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m AgentManager                 [34m|[0m[96m 50          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m AgentRolesUpgradeable        [34m|[0m[96m 36          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m OwnerManager                 [34m|[0m[96m 54          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Tokens interaction [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m Assembly           [34m|[0m[96m
+[34m|[0m[96m OwnerRolesUpgradeable        [34m|[0m[96m 36          [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m Token                        [34m|[0m[96m 102         [34m|[0m[96m ERC20 [34m|[0m[96m [93mPausable[0m           [34m|[0m[96m [92mNo[0m           [34m|[0m[96m Upgradeable        [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m [91m∞ Minting[0m          [34m|[0m[96m              [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m [91mApprove Race Cond.[0m [34m|[0m[96m              [34m|[0m[96m                    [34m|[0m[96m
+[34m|[0m[96m                              [34m|[0m[96m             [34m|[0m[96m       [34m|[0m[96m                    [34m|[0m[96m              [34m|[0m[96m                    [34m|[0m[96m
+[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[34m-[0m[96m[36m+[0m[96m[0m
+INFO:Slither:. analyzed (132 contracts)

@@ -3,19 +3,24 @@
 Problem executing hardhat: WARNING: You are currently using Node.js v25.2.1, which is not supported by Hardhat. This can lead to unexpected behavior. See https://v2.hardhat.org/nodejs-versions
 
 'npx hardhat compile --force' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
-INFO:Detectors:
+INFO:Detectors:[91m
 Detector: arbitrary-send-erc20
-DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
 DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)
 DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
+DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,token1.counterpart,(token2.amount - fees.txFee2)) (contracts/DVD/DVDTransferManager.sol#334)
 ApproveTransfer.approveAndTransfer(address,address,uint256) (contracts/compliance/legacy/features/ApproveTransfer.sol#125-128) uses arbitrary from in transferFrom: tokenBound.transferFrom(_from,_to,_amount) (contracts/compliance/legacy/features/ApproveTransfer.sol#127)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom[0m
+INFO:Detectors:[91m
 Detector: encode-packed-collision
 TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) calls abi.encodePacked() with multiple dynamic arguments:
 	- _salt = string(abi.encodePacked(Strings.toHexString(_tokenDetails.owner),_tokenDetails.name)) (contracts/factory/TREXGateway.sol#358)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#abi-encodePacked-collision
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#abi-encodePacked-collision[0m
+INFO:Detectors:[91m
+Detector: incorrect-exp
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#116)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-exponentiation[0m
+INFO:Detectors:[91m
 Detector: unchecked-transfer
 DVATransferManager.initiateTransfer(address,address,uint256) (contracts/DVA/DVATransferManager.sol#131-164) ignores return value by token.transferFrom(msg.sender,address(this),amount) (contracts/DVA/DVATransferManager.sol#142)
 DVATransferManager._transferTokensTo(IDVATransferManager.Transfer,address) (contracts/DVA/DVATransferManager.sol#415-417) ignores return value by IToken(transfer.tokenAddress).transfer(to,transfer.amount) (contracts/DVA/DVATransferManager.sol#416)
@@ -27,8 +32,38 @@ DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.so
 DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) ignores return value by token2Contract.transferFrom(token2.counterpart,token1.counterpart,token2.amount) (contracts/DVD/DVDTransferManager.sol#338)
 ApproveTransfer.approveAndTransfer(address,address,uint256) (contracts/compliance/legacy/features/ApproveTransfer.sol#125-128) ignores return value by tokenBound.transferFrom(_from,_to,_amount) (contracts/compliance/legacy/features/ApproveTransfer.sol#127)
 TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) ignores return value by IERC20(_deploymentFee.feeToken).transferFrom(msg.sender,_deploymentFee.feeCollector,feeApplied) (contracts/factory/TREXGateway.sol#351-355)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-transfer
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-transfer[0m
+INFO:Detectors:[91m
+Detector: unprotected-upgrade
+ConditionalTransferModule (contracts/compliance/modular/modules/ConditionalTransferModule.sol#73-281) is an upgradeable contract that does not protect its initialize functions: ConditionalTransferModule.initialize() (contracts/compliance/modular/modules/ConditionalTransferModule.sol#101-103). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)CountryAllowModule (contracts/compliance/modular/modules/CountryAllowModule.sol#69-236) is an upgradeable contract that does not protect its initialize functions: CountryAllowModule.initialize() (contracts/compliance/modular/modules/CountryAllowModule.sol#99-101). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)CountryRestrictModule (contracts/compliance/modular/modules/CountryRestrictModule.sol#69-238) is an upgradeable contract that does not protect its initialize functions: CountryRestrictModule.initialize() (contracts/compliance/modular/modules/CountryRestrictModule.sol#91-93). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)ExchangeMonthlyLimitsModule (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#70-348) is an upgradeable contract that does not protect its initialize functions: ExchangeMonthlyLimitsModule.initialize() (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#117-119). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)MaxBalanceModule (contracts/compliance/modular/modules/MaxBalanceModule.sol#70-307) is an upgradeable contract that does not protect its initialize functions: MaxBalanceModule.initialize() (contracts/compliance/modular/modules/MaxBalanceModule.sol#110-112). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)SupplyLimitModule (contracts/compliance/modular/modules/SupplyLimitModule.sol#69-166) is an upgradeable contract that does not protect its initialize functions: SupplyLimitModule.initialize() (contracts/compliance/modular/modules/SupplyLimitModule.sol#84-86). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)TimeExchangeLimitsModule (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#70-378) is an upgradeable contract that does not protect its initialize functions: TimeExchangeLimitsModule.initialize() (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#134-136). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)TimeTransfersLimitsModule (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#70-278) is an upgradeable contract that does not protect its initialize functions: TimeTransfersLimitsModule.initialize() (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#111-113). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)TransferFeesModule (contracts/compliance/modular/modules/TransferFeesModule.sol#70-210) is an upgradeable contract that does not protect its initialize functions: TransferFeesModule.initialize() (contracts/compliance/modular/modules/TransferFeesModule.sol#97-99). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)TransferRestrictModule (contracts/compliance/modular/modules/TransferRestrictModule.sol#67-213) is an upgradeable contract that does not protect its initialize functions: TransferRestrictModule.initialize() (contracts/compliance/modular/modules/TransferRestrictModule.sol#89-91). Anyone can delete the contract with: UUPSUpgradeable.upgradeTo(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#74-77)UUPSUpgradeable.upgradeToAndCall(address,bytes) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#89-92)Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unprotected-upgradeable-contract[0m
+INFO:Detectors:[93m
+Detector: divide-before-multiply
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse = (3 * denominator) ^ 2 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#116)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#120)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#121)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#122)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#123)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#124)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- denominator = denominator / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#101)
+	- inverse *= 2 - denominator * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#125)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) performs a multiplication on the result of a division:
+	- prod0 = prod0 / twos (node_modules/@openzeppelin/contracts/utils/math/Math.sol#104)
+	- result = prod0 * inverse (node_modules/@openzeppelin/contracts/utils/math/Math.sol#131)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply[0m
+INFO:Detectors:[93m
 Detector: reentrancy-no-eth
 Reentrancy in ModularCompliance.addModule(address) (contracts/compliance/modular/ModularCompliance.sol#113-126):
 	External calls:
@@ -167,8 +202,8 @@ Reentrancy in DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTran
 	- DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256) (contracts/DVD/DVDTransferManager.sol#241-281)
 	- DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343)
 	- DVDTransferManager.token2ToDeliver (contracts/DVD/DVDTransferManager.sol#103)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2[0m
+INFO:Detectors:[93m
 Detector: tautology
 DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address) (contracts/DVD/DVDTransferManager.sol#178-225) contains a tautology or contradiction:
 	- require(bool,string)(_fee1 <= 10 ** _feeBase && _fee1 >= 0 && _fee2 <= 10 ** _feeBase && _fee2 >= 0 && _feeBase <= 5 && _feeBase >= 2,invalid fee settings) (contracts/DVD/DVDTransferManager.sol#195-200)
@@ -176,22 +211,120 @@ TokenProxy.constructor(address,address,address,string,string,uint8,address) (con
 	- require(bool,string)(0 <= _decimals && _decimals <= 18,decimals between 0 and 18) (contracts/proxy/TokenProxy.sol#88)
 Token.init(address,address,string,string,uint8,address) (contracts/token/Token.sol#100-132) contains a tautology or contradiction:
 	- require(bool,string)(0 <= _decimals && _decimals <= 18,decimals between 0 and 18) (contracts/token/Token.sol#122)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#tautology-or-contradiction
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#tautology-or-contradiction[0m
+INFO:Detectors:[93m
 Detector: uninitialized-local
-DVDTransferManager.calculateFee(bytes32).fees (contracts/DVD/DVDTransferManager.sol#430) is a local variable never initialized
 DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256).token2 (contracts/DVD/DVDTransferManager.sol#257) is a local variable never initialized
 DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address).reflectParityFee (contracts/DVD/DVDTransferManager.sol#217) is a local variable never initialized
+DVDTransferManager.calculateFee(bytes32).fees (contracts/DVD/DVDTransferManager.sol#430) is a local variable never initialized
 DVDTransferManager.modifyFee(address,address,uint256,uint256,uint256,address,address).parityFee (contracts/DVD/DVDTransferManager.sol#208) is a local variable never initialized
 DVDTransferManager.initiateDVDTransfer(address,uint256,address,address,uint256).token1 (contracts/DVD/DVDTransferManager.sol#253) is a local variable never initialized
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables[0m
+INFO:Detectors:[93m
+Detector: unused-return
+ERC1967UpgradeUpgradeable._upgradeToAndCall(address,bytes,bool) (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#65-70) ignores return value by AddressUpgradeable.functionDelegateCall(newImplementation,data) (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#68)
+ERC1967UpgradeUpgradeable._upgradeBeaconToAndCall(address,bytes,bool) (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#156-162) ignores return value by AddressUpgradeable.functionDelegateCall(IBeaconUpgradeable(newBeacon).implementation(),data) (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#160)
+ERC1967Upgrade._upgradeToAndCall(address,bytes,bool) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#59-64) ignores return value by Address.functionDelegateCall(newImplementation,data) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#62)
+ERC1967Upgrade._upgradeBeaconToAndCall(address,bytes,bool) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#150-156) ignores return value by Address.functionDelegateCall(IBeacon(newBeacon).implementation(),data) (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#154)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return[0m
+INFO:Detectors:[93m
 Detector: unused-return
 IdentityRegistry.isVerified(address) (contracts/registry/implementation/IdentityRegistry.sol#173-223) ignores return value by (foundClaimTopic,scheme,issuer,sig,data,None) = identity(_userAddress).getClaim(claimIds[j]) (contracts/registry/implementation/IdentityRegistry.sol#198)
 AgentManager.callForcedTransfer(address,address,uint256,IIdentity) (contracts/roles/permissioning/agent/AgentManager.sol#88-100) ignores return value by token.forcedTransfer(_from,_to,_amount) (contracts/roles/permissioning/agent/AgentManager.sol#99)
 AgentManager.callRecoveryAddress(address,address,address,IIdentity) (contracts/roles/permissioning/agent/AgentManager.sol#369-381) ignores return value by token.recoveryAddress(_lostWallet,_newWallet,_onchainID) (contracts/roles/permissioning/agent/AgentManager.sol#380)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return[0m
+INFO:Detectors:[92m
+Detector: shadowing-local
+OwnerRoles.addOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#97) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#103) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#109) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#115) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#121) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#127) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#133) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#139) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#145) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#151) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#157) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#163) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.addTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#169) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.removeTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#175) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#181) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#185) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#189) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#193) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#197) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#201) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRoles.isRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRoles.sol#205) shadows:
+	- Ownable._owner (node_modules/@openzeppelin/contracts/access/Ownable.sol#21) (state variable)
+OwnerRolesUpgradeable.addOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#99) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#105) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#111) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#117) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#123) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#129) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#135) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#141) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#147) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#153) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#159) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#165) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.addTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#171) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.removeTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#177) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isOwnerAdmin(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#183) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isTokenInfoManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#187) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isIssuersRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#191) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isClaimRegistryManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#195) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isComplianceManager(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#199) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isComplianceSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#203) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+OwnerRolesUpgradeable.isRegistryAddressSetter(address)._owner (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#207) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+Token.allowance(address,address)._owner (contracts/token/Token.sol#334) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+Token._approve(address,address,uint256)._owner (contracts/token/Token.sol#579) shadows:
+	- OwnableUpgradeable._owner (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#22) (state variable)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#local-variable-shadowing[0m
+INFO:Detectors:[92m
 Detector: missing-zero-check
 TREXGateway.constructor(address,bool).factory (contracts/factory/TREXGateway.sol#128) lacks a zero-check on :
 		- _factory = factory (contracts/factory/TREXGateway.sol#129)
@@ -209,8 +342,8 @@ Token.init(address,address,string,string,uint8,address)._onchainID (contracts/to
 		- _tokenOnchainID = _onchainID (contracts/token/Token.sol#127)
 Token.setOnchainID(address)._onchainID (contracts/token/Token.sol#180) lacks a zero-check on :
 		- _tokenOnchainID = _onchainID (contracts/token/Token.sol#181)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation[0m
+INFO:Detectors:[92m
 Detector: calls-loop
 DVATransferManager._canApprove(IDVATransferManager.Transfer,IDVATransferManager.Approver,address) (contracts/DVA/DVATransferManager.sol#419-422) has external calls inside a loop: approver.wallet == caller || (approver.anyTokenAgent && approver.wallet == address(0) && AgentRole(transfer.tokenAddress).isAgent(caller)) (contracts/DVA/DVATransferManager.sol#420-421)
 	Calls stack containing the loop:
@@ -287,8 +420,8 @@ Token.mint(address,uint256) (contracts/token/Token.sol#454-459) has external cal
 Token.burn(address,uint256) (contracts/token/Token.sol#464-474) has external calls inside a loop: _tokenCompliance.destroyed(_userAddress,_amount) (contracts/token/Token.sol#473)
 	Calls stack containing the loop:
 		Token.batchBurn(address[],uint256[])
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop[0m
+INFO:Detectors:[92m
 Detector: reentrancy-benign
 Reentrancy in IAFactory.deployIA(address) (contracts/proxy/authority/IAFactory.sol#86-97):
 	External calls:
@@ -320,8 +453,8 @@ Reentrancy in Token.recoveryAddress(address,address,address) (contracts/token/To
 	State variables written after the call(s):
 	- setAddressFrozen(_newWallet,true) (contracts/token/Token.sol#315)
 		- _frozen[_userAddress] = _freeze (contracts/token/Token.sol#480)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3[0m
+INFO:Detectors:[92m
 Detector: reentrancy-events
 Reentrancy in DVATransferManager._completeTransfer(bytes32,IDVATransferManager.Transfer) (contracts/DVA/DVATransferManager.sol#372-382):
 	External calls:
@@ -464,8 +597,8 @@ Reentrancy in IdentityRegistry.updateIdentity(address,IIdentity) (contracts/regi
 	- _tokenIdentityStorage.modifyStoredIdentity(_userAddress,_identity) (contracts/registry/implementation/IdentityRegistry.sol#124)
 	Event emitted after the call(s):
 	- IdentityUpdated(oldIdentity,_identity) (contracts/registry/implementation/IdentityRegistry.sol#125)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-4[0m
+INFO:Detectors:[92m
 Detector: timestamp
 DayMonthLimits.complianceCheckOnDayMonthLimits(address,address,uint256) (contracts/compliance/legacy/features/DayMonthLimits.sol#134-150) uses timestamp for comparisons
 	Dangerous comparisons:
@@ -501,8 +634,56 @@ TimeTransfersLimitsModule.moduleCheck(address,address,uint256,address) (contract
 TimeTransfersLimitsModule._isUserCounterFinished(address,address,uint32) (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#255-257) uses timestamp for comparisons
 	Dangerous comparisons:
 	- usersCounters[_compliance][_identity][_limitTime].timer <= block.timestamp (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#256)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp[0m
+INFO:Detectors:[92m
+Detector: assembly
+AddressUpgradeable._revert(bytes,string) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#231-243) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#236-239)
+StorageSlotUpgradeable.getAddressSlot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#62-67) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#64-66)
+StorageSlotUpgradeable.getBooleanSlot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#72-77) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#74-76)
+StorageSlotUpgradeable.getBytes32Slot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#82-87) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#84-86)
+StorageSlotUpgradeable.getUint256Slot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#92-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#94-96)
+StorageSlotUpgradeable.getStringSlot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#102-107) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#104-106)
+StorageSlotUpgradeable.getStringSlot(string) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#112-117) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#114-116)
+StorageSlotUpgradeable.getBytesSlot(bytes32) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#122-127) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#124-126)
+StorageSlotUpgradeable.getBytesSlot(bytes) (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#132-137) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#134-136)
+Proxy._delegate(address) (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#22-45) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#23-44)
+Address._revert(bytes,string) (node_modules/@openzeppelin/contracts/utils/Address.sol#231-243) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Address.sol#236-239)
+StorageSlot.getAddressSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#62-67) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#64-66)
+StorageSlot.getBooleanSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#72-77) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#74-76)
+StorageSlot.getBytes32Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#82-87) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#84-86)
+StorageSlot.getUint256Slot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#92-97) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#94-96)
+StorageSlot.getStringSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#102-107) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#104-106)
+StorageSlot.getStringSlot(string) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#112-117) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#114-116)
+StorageSlot.getBytesSlot(bytes32) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#122-127) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#124-126)
+StorageSlot.getBytesSlot(bytes) (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#132-137) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#134-136)
+Strings.toString(uint256) (node_modules/@openzeppelin/contracts/utils/Strings.sol#19-39) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#25-27)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/Strings.sol#31-33)
+Math.mulDiv(uint256,uint256,uint256) (node_modules/@openzeppelin/contracts/utils/math/Math.sol#55-134) uses assembly
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#62-66)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#85-92)
+	- INLINE ASM (node_modules/@openzeppelin/contracts/utils/math/Math.sol#99-108)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage[0m
+INFO:Detectors:[92m
 Detector: assembly
 ModularCompliance.callModuleFunction(bytes,address) (contracts/compliance/modular/ModularCompliance.sol#189-219) uses assembly
 	- INLINE ASM (contracts/compliance/modular/ModularCompliance.sol#198-215)
@@ -532,8 +713,8 @@ OwnerManager.callComplianceFunction(bytes,IIdentity) (contracts/roles/permission
 	- INLINE ASM (contracts/roles/permissioning/owner/OwnerManager.sol#148-165)
 OwnerManager._selector(bytes) (contracts/roles/permissioning/owner/OwnerManager.sol#433-446) uses assembly
 	- INLINE ASM (contracts/roles/permissioning/owner/OwnerManager.sol#442-444)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage[0m
+INFO:Detectors:[92m
 Detector: boolean-equal
 CountryAllowModule.addAllowedCountry(uint16) (contracts/compliance/modular/modules/CountryAllowModule.sol#140-144) compares to a boolean constant:
 	-(_allowedCountries[msg.sender])[_country] == true (contracts/compliance/modular/modules/CountryAllowModule.sol#141)
@@ -548,23 +729,172 @@ CountryRestrictModule.batchRestrictCountries(uint16[]) (contracts/compliance/mod
 CountryRestrictModule.batchUnrestrictCountries(uint16[]) (contracts/compliance/modular/modules/CountryRestrictModule.sol#149-156) compares to a boolean constant:
 	-require(bool,string)((_restrictedCountries[msg.sender])[_countries[i]] == true,country not restricted) (contracts/compliance/modular/modules/CountryRestrictModule.sol#152)
 TREXGateway.setPublicDeploymentStatus(bool) (contracts/factory/TREXGateway.sol#149-158) compares to a boolean constant:
-	-_isEnabled == _publicDeploymentStatus && _isEnabled == true (contracts/factory/TREXGateway.sol#150)
-TREXGateway.setPublicDeploymentStatus(bool) (contracts/factory/TREXGateway.sol#149-158) compares to a boolean constant:
 	-_isEnabled == _publicDeploymentStatus && _isEnabled == false (contracts/factory/TREXGateway.sol#153)
+TREXGateway.setPublicDeploymentStatus(bool) (contracts/factory/TREXGateway.sol#149-158) compares to a boolean constant:
+	-_isEnabled == _publicDeploymentStatus && _isEnabled == true (contracts/factory/TREXGateway.sol#150)
 TREXGateway.enableDeploymentFee(bool) (contracts/factory/TREXGateway.sol#170-179) compares to a boolean constant:
 	-_isEnabled == _deploymentFeeEnabled && _isEnabled == false (contracts/factory/TREXGateway.sol#174)
 TREXGateway.enableDeploymentFee(bool) (contracts/factory/TREXGateway.sol#170-179) compares to a boolean constant:
 	-_isEnabled == _deploymentFeeEnabled && _isEnabled == true (contracts/factory/TREXGateway.sol#171)
 TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
+	-_publicDeploymentStatus == false && ! isDeployer(msg.sender) (contracts/factory/TREXGateway.sol#341)
+TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
 	-_deploymentFeeEnabled == true (contracts/factory/TREXGateway.sol#348)
 TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
 	-_publicDeploymentStatus == true && msg.sender != _tokenDetails.owner && ! isDeployer(msg.sender) (contracts/factory/TREXGateway.sol#344)
-TREXGateway.deployTREXSuite(ITREXFactory.TokenDetails,ITREXFactory.ClaimDetails) (contracts/factory/TREXGateway.sol#339-361) compares to a boolean constant:
-	-_publicDeploymentStatus == false && ! isDeployer(msg.sender) (contracts/factory/TREXGateway.sol#341)
 Token.recoveryAddress(address,address,address) (contracts/token/Token.sol#297-322) compares to a boolean constant:
 	-_frozen[_lostWallet] == true (contracts/token/Token.sol#314)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#boolean-equality
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#boolean-equality[0m
+INFO:Detectors:[92m
+Detector: pragma
+4 different versions of Solidity are used:
+	- Version constraint ^0.8.0 is used by:
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#5)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+		-^0.8.0 (contracts/config/FileStorage.sol#2)
+	- Version constraint ^0.8.2 is used by:
+		-^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#4)
+		-^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#4)
+		-^0.8.2 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#4)
+	- Version constraint ^0.8.1 is used by:
+		-^0.8.1 (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#4)
+		-^0.8.1 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (contracts/config/HashAnchor.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used[0m
+INFO:Detectors:[92m
+Detector: pragma
+5 different versions of Solidity are used:
+	- Version constraint 0.8.17 is used by:
+		-0.8.17 (node_modules/@onchain-id/solidity/contracts/factory/IIdFactory.sol#2)
+		-0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IClaimIssuer.sol#2)
+		-0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IERC734.sol#2)
+		-0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IERC735.sol#2)
+		-0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IIdentity.sol#2)
+		-0.8.17 (contracts/DVA/DVATransferManager.sol#63)
+		-0.8.17 (contracts/DVA/IDVATransferManager.sol#63)
+		-0.8.17 (contracts/DVD/DVDTransferManager.sol#63)
+		-0.8.17 (contracts/compliance/legacy/BasicCompliance.sol#63)
+		-0.8.17 (contracts/compliance/legacy/DefaultCompliance.sol#63)
+		-0.8.17 (contracts/compliance/legacy/ICompliance.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/ApproveTransfer.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/CountryRestrictions.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/CountryWhitelisting.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/DayMonthLimits.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/MaxBalance.sol#63)
+		-0.8.17 (contracts/compliance/legacy/features/SupplyLimit.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/ApproveTransferTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/MaxBalanceTest.sol#63)
+		-0.8.17 (contracts/compliance/legacy/test/SupplyLimitTest.sol#63)
+		-0.8.17 (contracts/compliance/modular/IModularCompliance.sol#63)
+		-0.8.17 (contracts/compliance/modular/MCStorage.sol#64)
+		-0.8.17 (contracts/compliance/modular/ModularCompliance.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/AbstractModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/ConditionalTransferModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/CountryAllowModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/CountryRestrictModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/IModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/MaxBalanceModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/ModuleProxy.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#63)
+		-0.8.17 (contracts/compliance/modular/modules/TransferFeesModule.sol#63)
+		-0.8.17 (contracts/factory/ITREXFactory.sol#62)
+		-0.8.17 (contracts/factory/ITREXGateway.sol#62)
+		-0.8.17 (contracts/factory/TREXFactory.sol#62)
+		-0.8.17 (contracts/factory/TREXGateway.sol#62)
+		-0.8.17 (contracts/proxy/AbstractProxy.sol#63)
+		-0.8.17 (contracts/proxy/ClaimTopicsRegistryProxy.sol#63)
+		-0.8.17 (contracts/proxy/IdentityRegistryProxy.sol#63)
+		-0.8.17 (contracts/proxy/IdentityRegistryStorageProxy.sol#63)
+		-0.8.17 (contracts/proxy/ModularComplianceProxy.sol#63)
+		-0.8.17 (contracts/proxy/TokenProxy.sol#63)
+		-0.8.17 (contracts/proxy/TrustedIssuersRegistryProxy.sol#64)
+		-0.8.17 (contracts/proxy/authority/IAFactory.sol#63)
+		-0.8.17 (contracts/proxy/authority/IIAFactory.sol#63)
+		-0.8.17 (contracts/proxy/authority/ITREXImplementationAuthority.sol#63)
+		-0.8.17 (contracts/proxy/authority/TREXImplementationAuthority.sol#63)
+		-0.8.17 (contracts/proxy/interface/IProxy.sol#63)
+		-0.8.17 (contracts/registry/implementation/ClaimTopicsRegistry.sol#63)
+		-0.8.17 (contracts/registry/implementation/IdentityRegistry.sol#63)
+		-0.8.17 (contracts/registry/implementation/IdentityRegistryStorage.sol#63)
+		-0.8.17 (contracts/registry/implementation/TrustedIssuersRegistry.sol#64)
+		-0.8.17 (contracts/registry/interface/IClaimTopicsRegistry.sol#63)
+		-0.8.17 (contracts/registry/interface/IIdentityRegistry.sol#63)
+		-0.8.17 (contracts/registry/interface/IIdentityRegistryStorage.sol#63)
+		-0.8.17 (contracts/registry/interface/ITrustedIssuersRegistry.sol#64)
+		-0.8.17 (contracts/registry/storage/CTRStorage.sol#64)
+		-0.8.17 (contracts/registry/storage/IRSStorage.sol#64)
+		-0.8.17 (contracts/registry/storage/IRStorage.sol#64)
+		-0.8.17 (contracts/registry/storage/TIRStorage.sol#64)
+		-0.8.17 (contracts/roles/AgentRole.sol#64)
+		-0.8.17 (contracts/roles/AgentRoleUpgradeable.sol#64)
+		-0.8.17 (contracts/roles/Roles.sol#64)
+		-0.8.17 (contracts/roles/permissioning/agent/AgentManager.sol#64)
+		-0.8.17 (contracts/roles/permissioning/agent/AgentRoles.sol#64)
+		-0.8.17 (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#64)
+		-0.8.17 (contracts/roles/permissioning/owner/OwnerManager.sol#64)
+		-0.8.17 (contracts/roles/permissioning/owner/OwnerRoles.sol#64)
+		-0.8.17 (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#64)
+		-0.8.17 (contracts/token/IToken.sol#64)
+		-0.8.17 (contracts/token/Token.sol#64)
+		-0.8.17 (contracts/token/TokenStorage.sol#64)
+	- Version constraint ^0.8.0 is used by:
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#5)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+		-^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+	- Version constraint ^0.8.2 is used by:
+		-^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#4)
+		-^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#4)
+		-^0.8.2 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#4)
+	- Version constraint ^0.8.1 is used by:
+		-^0.8.1 (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#4)
+		-^0.8.1 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+	- Version constraint ^0.8.17 is used by:
+		-^0.8.17 (contracts/compliance/modular/modules/SupplyLimitModule.sol#63)
+		-^0.8.17 (contracts/compliance/modular/modules/TransferRestrictModule.sol#63)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used[0m
+INFO:Detectors:[92m
 Detector: costly-loop
 ModularCompliance.removeModule(address) (contracts/compliance/modular/ModularCompliance.sol#131-145) has costly operations inside a loop:
 	- _modules.pop() (contracts/compliance/modular/ModularCompliance.sol#139)
@@ -586,9 +916,191 @@ Token._burn(address,uint256) (contracts/token/Token.sol#565-573) has costly oper
 	Calls stack containing the loop:
 		Token.batchBurn(address[],uint256[])
 		Token.burn(address,uint256)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop[0m
+INFO:Detectors:[92m
 Detector: solc-version
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#5)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
+	- ^0.8.0 (contracts/config/FileStorage.sol#2)
+Version constraint ^0.8.2 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#4)
+	- ^0.8.2 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol#4)
+	- ^0.8.2 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Upgrade.sol#4)
+Version constraint ^0.8.1 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.1 (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#4)
+	- ^0.8.1 (node_modules/@openzeppelin/contracts/utils/Address.sol#4)
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.20 (contracts/config/HashAnchor.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity[0m
+INFO:Detectors:[92m
+Detector: solc-version
+Version constraint 0.8.17 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- 0.8.17 (node_modules/@onchain-id/solidity/contracts/factory/IIdFactory.sol#2)
+	- 0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IClaimIssuer.sol#2)
+	- 0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IERC734.sol#2)
+	- 0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IERC735.sol#2)
+	- 0.8.17 (node_modules/@onchain-id/solidity/contracts/interface/IIdentity.sol#2)
+	- 0.8.17 (contracts/DVA/DVATransferManager.sol#63)
+	- 0.8.17 (contracts/DVA/IDVATransferManager.sol#63)
+	- 0.8.17 (contracts/DVD/DVDTransferManager.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/BasicCompliance.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/DefaultCompliance.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/ICompliance.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/ApproveTransfer.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/CountryRestrictions.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/CountryWhitelisting.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/DayMonthLimits.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/ExchangeMonthlyLimits.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/MaxBalance.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/features/SupplyLimit.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/ApproveTransferTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/CountryRestrictionsTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/CountryWhitelistingTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/DayMonthLimitsTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/ExchangeMonthlyLimitsTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/MaxBalanceTest.sol#63)
+	- 0.8.17 (contracts/compliance/legacy/test/SupplyLimitTest.sol#63)
+	- 0.8.17 (contracts/compliance/modular/IModularCompliance.sol#63)
+	- 0.8.17 (contracts/compliance/modular/MCStorage.sol#64)
+	- 0.8.17 (contracts/compliance/modular/ModularCompliance.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/AbstractModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/AbstractModuleUpgradeable.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/ConditionalTransferModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/CountryAllowModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/CountryRestrictModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/ExchangeMonthlyLimitsModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/IModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/MaxBalanceModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/ModuleProxy.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/TimeExchangeLimitsModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/TimeTransfersLimitsModule.sol#63)
+	- 0.8.17 (contracts/compliance/modular/modules/TransferFeesModule.sol#63)
+	- 0.8.17 (contracts/factory/ITREXFactory.sol#62)
+	- 0.8.17 (contracts/factory/ITREXGateway.sol#62)
+	- 0.8.17 (contracts/factory/TREXFactory.sol#62)
+	- 0.8.17 (contracts/factory/TREXGateway.sol#62)
+	- 0.8.17 (contracts/proxy/AbstractProxy.sol#63)
+	- 0.8.17 (contracts/proxy/ClaimTopicsRegistryProxy.sol#63)
+	- 0.8.17 (contracts/proxy/IdentityRegistryProxy.sol#63)
+	- 0.8.17 (contracts/proxy/IdentityRegistryStorageProxy.sol#63)
+	- 0.8.17 (contracts/proxy/ModularComplianceProxy.sol#63)
+	- 0.8.17 (contracts/proxy/TokenProxy.sol#63)
+	- 0.8.17 (contracts/proxy/TrustedIssuersRegistryProxy.sol#64)
+	- 0.8.17 (contracts/proxy/authority/IAFactory.sol#63)
+	- 0.8.17 (contracts/proxy/authority/IIAFactory.sol#63)
+	- 0.8.17 (contracts/proxy/authority/ITREXImplementationAuthority.sol#63)
+	- 0.8.17 (contracts/proxy/authority/TREXImplementationAuthority.sol#63)
+	- 0.8.17 (contracts/proxy/interface/IProxy.sol#63)
+	- 0.8.17 (contracts/registry/implementation/ClaimTopicsRegistry.sol#63)
+	- 0.8.17 (contracts/registry/implementation/IdentityRegistry.sol#63)
+	- 0.8.17 (contracts/registry/implementation/IdentityRegistryStorage.sol#63)
+	- 0.8.17 (contracts/registry/implementation/TrustedIssuersRegistry.sol#64)
+	- 0.8.17 (contracts/registry/interface/IClaimTopicsRegistry.sol#63)
+	- 0.8.17 (contracts/registry/interface/IIdentityRegistry.sol#63)
+	- 0.8.17 (contracts/registry/interface/IIdentityRegistryStorage.sol#63)
+	- 0.8.17 (contracts/registry/interface/ITrustedIssuersRegistry.sol#64)
+	- 0.8.17 (contracts/registry/storage/CTRStorage.sol#64)
+	- 0.8.17 (contracts/registry/storage/IRSStorage.sol#64)
+	- 0.8.17 (contracts/registry/storage/IRStorage.sol#64)
+	- 0.8.17 (contracts/registry/storage/TIRStorage.sol#64)
+	- 0.8.17 (contracts/roles/AgentRole.sol#64)
+	- 0.8.17 (contracts/roles/AgentRoleUpgradeable.sol#64)
+	- 0.8.17 (contracts/roles/Roles.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/agent/AgentManager.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/agent/AgentRoles.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/agent/AgentRolesUpgradeable.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/owner/OwnerManager.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/owner/OwnerRoles.sol#64)
+	- 0.8.17 (contracts/roles/permissioning/owner/OwnerRolesUpgradeable.sol#64)
+	- 0.8.17 (contracts/token/IToken.sol#64)
+	- 0.8.17 (contracts/token/Token.sol#64)
+	- 0.8.17 (contracts/token/TokenStorage.sol#64)
+Version constraint ^0.8.0 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables
+	- ABIDecodeTwoDimensionalArrayMemory
+	- KeccakCaching.
+It is used by:
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/interfaces/draft-IERC1822Upgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/beacon/IBeaconUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts-upgradeable/utils/StorageSlotUpgradeable.sol#5)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/access/Ownable.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/interfaces/draft-IERC1822.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/Proxy.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/proxy/beacon/IBeacon.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/Context.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/StorageSlot.sol#5)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/Strings.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/Math.sol#4)
+	- ^0.8.0 (node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol#4)
 Version constraint ^0.8.17 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
 	- VerbatimInvalidDeduplication
 	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
@@ -596,8 +1108,27 @@ Version constraint ^0.8.17 contains known severe issues (https://solidity.readth
 It is used by:
 	- ^0.8.17 (contracts/compliance/modular/modules/SupplyLimitModule.sol#63)
 	- ^0.8.17 (contracts/compliance/modular/modules/TransferRestrictModule.sol#63)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity[0m
+INFO:Detectors:[92m
+Detector: low-level-calls
+Low level call in AddressUpgradeable.sendValue(address,uint256) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#64-69):
+	- (success,None) = recipient.call{value: amount}() (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#67)
+Low level call in AddressUpgradeable.functionCallWithValue(address,bytes,uint256,string) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#128-137):
+	- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#135)
+Low level call in AddressUpgradeable.functionStaticCall(address,bytes,string) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#155-162):
+	- (success,returndata) = target.staticcall(data) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#160)
+Low level call in AddressUpgradeable.functionDelegateCall(address,bytes,string) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#180-187):
+	- (success,returndata) = target.delegatecall(data) (node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol#185)
+Low level call in Address.sendValue(address,uint256) (node_modules/@openzeppelin/contracts/utils/Address.sol#64-69):
+	- (success,None) = recipient.call{value: amount}() (node_modules/@openzeppelin/contracts/utils/Address.sol#67)
+Low level call in Address.functionCallWithValue(address,bytes,uint256,string) (node_modules/@openzeppelin/contracts/utils/Address.sol#128-137):
+	- (success,returndata) = target.call{value: value}(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#135)
+Low level call in Address.functionStaticCall(address,bytes,string) (node_modules/@openzeppelin/contracts/utils/Address.sol#155-162):
+	- (success,returndata) = target.staticcall(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#160)
+Low level call in Address.functionDelegateCall(address,bytes,string) (node_modules/@openzeppelin/contracts/utils/Address.sol#180-187):
+	- (success,returndata) = target.delegatecall(data) (node_modules/@openzeppelin/contracts/utils/Address.sol#185)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls[0m
+INFO:Detectors:[92m
 Detector: low-level-calls
 Low level call in ClaimTopicsRegistryProxy.constructor(address) (contracts/proxy/ClaimTopicsRegistryProxy.sol#69-79):
 	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/ClaimTopicsRegistryProxy.sol#77)
@@ -611,12 +1142,25 @@ Low level call in TokenProxy.constructor(address,address,address,string,string,u
 	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init(address,address,string,string,uint8,address),_identityRegistry,_compliance,_name,_symbol,_decimals,_onchainID)) (contracts/proxy/TokenProxy.sol#95-105)
 Low level call in TrustedIssuersRegistryProxy.constructor(address) (contracts/proxy/TrustedIssuersRegistryProxy.sol#70-80):
 	- (success,None) = logic.delegatecall(abi.encodeWithSignature(init())) (contracts/proxy/TrustedIssuersRegistryProxy.sol#78)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls[0m
+INFO:Detectors:[92m
 Detector: naming-convention
+Function OwnableUpgradeable.__Ownable_init() (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#29-31) is not in mixedCase
+Function OwnableUpgradeable.__Ownable_init_unchained() (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#33-35) is not in mixedCase
+Variable OwnableUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#94) is not in mixedCase
+Function ERC1967UpgradeUpgradeable.__ERC1967Upgrade_init() (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#30-31) is not in mixedCase
+Function ERC1967UpgradeUpgradeable.__ERC1967Upgrade_init_unchained() (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#33-34) is not in mixedCase
+Variable ERC1967UpgradeUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol#169) is not in mixedCase
+Function UUPSUpgradeable.__UUPSUpgradeable_init() (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#48-49) is not in mixedCase
+Function UUPSUpgradeable.__UUPSUpgradeable_init_unchained() (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#51-52) is not in mixedCase
+Variable UUPSUpgradeable.__self (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#24) is not in mixedCase
+Variable UUPSUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#111) is not in mixedCase
+Function ContextUpgradeable.__Context_init() (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#18-19) is not in mixedCase
+Function ContextUpgradeable.__Context_init_unchained() (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#21-22) is not in mixedCase
+Variable ContextUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol#40) is not in mixedCase
 Parameter FileStorage.storeFileHash(bytes32)._fileHash (contracts/config/FileStorage.sol#12) is not in mixedCase
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions[0m
+INFO:Detectors:[92m
 Detector: naming-convention
 Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._nonce (contracts/DVA/DVATransferManager.sol#319) is not in mixedCase
 Parameter DVATransferManager.calculateTransferID(uint256,address,address,uint256)._sender (contracts/DVA/DVATransferManager.sol#320) is not in mixedCase
@@ -1241,8 +1785,8 @@ Parameter Token.setIdentityRegistry(address)._identityRegistry (contracts/token/
 Parameter Token.setCompliance(address)._compliance (contracts/token/Token.sol#515) is not in mixedCase
 Parameter Token.balanceOf(address)._userAddress (contracts/token/Token.sol#527) is not in mixedCase
 Variable TokenStorage.__gap (contracts/token/TokenStorage.sol#97) is not in mixedCase
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions[0m
+INFO:Detectors:[92m
 Detector: too-many-digits
 TREXFactory._deployTIR(string,address) (contracts/factory/TREXFactory.sol#253-262) uses literals with too many digits:
 	- _code = type()(TrustedIssuersRegistryProxy).creationCode (contracts/factory/TREXFactory.sol#258)
@@ -1256,8 +1800,13 @@ TREXFactory._deployIR(string,address,address,address,address) (contracts/factory
 	- _code = type()(IdentityRegistryProxy).creationCode (contracts/factory/TREXFactory.sol#309)
 TREXFactory._deployToken(string,address,address,address,string,string,uint8,address) (contracts/factory/TREXFactory.sol#322-346) uses literals with too many digits:
 	- _code = type()(TokenProxy).creationCode (contracts/factory/TREXFactory.sol#333)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits[0m
+INFO:Detectors:[92m
+Detector: unimplemented-functions
+UUPSUpgradeable (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#22-112) does not implement functions:
+	- UUPSUpgradeable._authorizeUpgrade(address) (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#104)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions[0m
+INFO:Detectors:[92m
 Detector: unimplemented-functions
 AbstractModule (contracts/compliance/modular/modules/AbstractModule.sol#67-116) does not implement functions:
 	- IModule.canComplianceBind(address) (contracts/compliance/modular/modules/IModule.sol#161)
@@ -1267,8 +1816,13 @@ AbstractModule (contracts/compliance/modular/modules/AbstractModule.sol#67-116) 
 	- IModule.moduleMintAction(address,uint256) (contracts/compliance/modular/modules/IModule.sol#126)
 	- IModule.moduleTransferAction(address,address,uint256) (contracts/compliance/modular/modules/IModule.sol#115)
 	- IModule.name() (contracts/compliance/modular/modules/IModule.sol#172)
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions[0m
+INFO:Detectors:[92m
+Detector: unindexed-event-address
+Event IERC1967Upgradeable.AdminChanged(address,address) (node_modules/@openzeppelin/contracts-upgradeable/interfaces/IERC1967Upgradeable.sol#20) has address parameters but no indexed parameters
+Event IERC1967.AdminChanged(address,address) (node_modules/@openzeppelin/contracts/interfaces/IERC1967.sol#20) has address parameters but no indexed parameters
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters[0m
+INFO:Detectors:[92m
 Detector: unindexed-event-address
 Event IDVATransferManager.ApprovalCriteriaSet(address,bool,bool,bool,address[],bytes32) (contracts/DVA/IDVATransferManager.sol#116-123) has address parameters but no indexed parameters
 Event IDVATransferManager.TransferInitiated(bytes32,address,address,address,uint256,bytes32) (contracts/DVA/IDVATransferManager.sol#136-143) has address parameters but no indexed parameters
@@ -1302,12 +1856,17 @@ Event ITREXFactory.ImplementationAuthoritySet(address) (contracts/factory/ITREXF
 Event ITREXImplementationAuthority.ImplementationAuthoritySet(bool,address) (contracts/proxy/authority/ITREXImplementationAuthority.sol#105) has address parameters but no indexed parameters
 Event IToken.Paused(address) (contracts/token/IToken.sol#142) has address parameters but no indexed parameters
 Event IToken.Unpaused(address) (contracts/token/IToken.sol#149) has address parameters but no indexed parameters
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters
-INFO:Detectors:
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters[0m
+INFO:Detectors:[92m
+Detector: unused-state
+OwnableUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#94) is never used in OwnableUpgradeable (node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol#21-95)
+UUPSUpgradeable.__gap (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#111) is never used in UUPSUpgradeable (node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol#22-112)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-state-variable[0m
+INFO:Detectors:[92m
 Detector: immutable-states
 AgentManager.token (contracts/roles/permissioning/agent/AgentManager.sol#74) should be immutable 
 IAFactory._trexFactory (contracts/proxy/authority/IAFactory.sol#72) should be immutable 
 OwnerManager.token (contracts/roles/permissioning/owner/OwnerManager.sol#78) should be immutable 
 TREXImplementationAuthority._reference (contracts/proxy/authority/TREXImplementationAuthority.sol#83) should be immutable 
-Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
-INFO:Slither:. analyzed (131 contracts with 101 detectors), 816 result(s) found
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable[0m
+INFO:Slither:. analyzed (132 contracts with 101 detectors), 938 result(s) found
