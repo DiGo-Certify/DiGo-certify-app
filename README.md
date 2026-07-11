@@ -193,11 +193,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 # 🧪 `Evaluation and Static Analysis`
 
-The on-chain layer ships with a reproducible evaluation harness (gas, cost,
-scalability, and latency benchmarks) and a Slither static-analysis setup, all
-under `code/services/ethereum`. The run commands and the full methodology —
-research questions, metrics, and environments — live in the on-chain layer's
-**[README → Evaluation](code/services/ethereum/README.md#evaluation)**.
+The on-chain layer includes benchmarking scripts (gas, cost, scalability, and
+latency) and a Slither static-analysis setup, all under `code/services/ethereum`.
+The scripts, run commands, and caveats are documented in the on-chain layer's
+**[README → Benchmarks](code/services/ethereum/README.md#benchmarks-eval)**.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

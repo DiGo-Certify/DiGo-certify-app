@@ -8,15 +8,15 @@
  * It measures gas + cost + latency for each certificate life-cycle operation
  * and appends one CSV row per run to eval/results/measure.csv.
  *
- * STATUS: helpers, CSV writer and setup are working; `deployIdentity` and
- * `addClaim` (cold + warm) are fully wired. The remaining operations are marked
- * `TODO` — copy the wired patterns using the real script functions (see
- * eval/methodology.md §4 for the catalog).
+ * STATUS: every life-cycle operation in the catalog is wired — deployIdentity,
+ * addClaim (cold + warm), addKeyToIdentity, addTrustedIssuer, deployClaimIssuer,
+ * the contract deployments, and the E4 validation read path. See the "Operation
+ * catalog" section of ../README.md for the catalog.
  *
  * Gas is the primary, deterministic metric (identical on any EVM chain). On the
  * local network the cost columns are ~0 and are computed in post-processing from
- * gasUsed using the scenario grid in methodology.md §5; on a testnet the cost
- * columns are meaningful.
+ * gasUsed using the scenario grid in ../README.md (Experiments, E2); on a
+ * testnet the cost columns are meaningful.
  */
 
 const fs = require('fs');
@@ -37,7 +37,7 @@ const { addKeyToIdentity } = require('../scripts/claimIssuer/addKeyToIdentity');
 const { CLAIM_TOPICS, CLAIM_TOPICS_OBJ } = require('../scripts/claims/claimTopics');
 const hash = require('../scripts/utils/encryption/hash');
 // const { addClaim } = require('../scripts/claims/add-claim'); // see buildClaimTx note
-// const { getClaimsByTopic } = require('../scripts/claims/getClaimsByTopic');
+const { getClaimsByTopic } = require('../scripts/claims/getClaimsByTopic');
 
 const REPS = Number(process.env.REPS ?? 30);
 const DEPLOY_REPS = Number(process.env.DEPLOY_REPS ?? 3); // deploy gas is deterministic
@@ -344,18 +344,31 @@ async function main() {
     }
 
     // ====================================================================
-    // E4 — validation read path (0 gas; latency)  [TODO]
+    // E4 — validation read path (0 gas to the caller; latency + view gas)
     // ====================================================================
-    // Reuse identities[0] (it holds a CERTIFICATE claim from the cold loop):
-    // const { getClaimsByTopic } = require('../scripts/claims/getClaimsByTopic');
-    // await measureView(
-    //   'validate',
-    //   () => warm.identity.getClaimIdsByTopic.estimateGas(ethers.id(claimTopic)),
-    //   async () => {
-    //       const claims = await getClaimsByTopic(warm.identity, claimTopic);
-    //       claims.some(c => c.uri === hash(presentedCertificate)); // the compare
-    //   }
-    // );
+    // Verification reads the subject's CERTIFICATE claims and re-computes the
+    // digest of the presented certificate, comparing it against the stored one
+    // (methodology: getClaimsByTopic + local SHA-256 compare). It is a read-only
+    // op, so measureView records the estimated compute gas of the on-chain read
+    // (getClaimIdsByTopic) plus the RPC round-trip latency of the full compare.
+    // Reuse warm.identity, which holds a CERTIFICATE claim from the cold/warm
+    // loops; derive the "presented" digest from the actually-stored claim so the
+    // compare mirrors a genuine (matching) verification regardless of REPS.
+    if (warm) {
+        const stored = await getClaimsByTopic(warm.identity, claimTopic);
+        const presentedDigest = stored.length
+            ? hash(ethers.toUtf8String(stored[0].data)) // what a verifier recomputes
+            : null;
+        await measureView(
+            'validate',
+            () => warm.identity.getClaimIdsByTopic.estimateGas(ethers.id(claimTopic)),
+            async () => {
+                const claims = await getClaimsByTopic(warm.identity, claimTopic);
+                // integrity check: recompute each stored certificate's digest and compare
+                claims.some(c => hash(ethers.toUtf8String(c.data)) === presentedDigest);
+            }
+        );
+    }
 
     console.log('\nDone. Summarise eval/results/measure.csv into the paper tables.');
 }
