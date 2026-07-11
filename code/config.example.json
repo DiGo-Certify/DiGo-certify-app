@@ -1,0 +1,25 @@
+{
+  "rpc": "",
+  "deployer": {},
+  "identityFactory": {
+    "address": "",
+    "abi": [],
+    "bytecode": ""
+  },
+  "trex": {
+    "implementationAuthority": {
+      "address": "",
+      "abi": []
+    },
+    "claimsTopicRegistry": {
+      "address": "",
+      "abi": []
+    },
+    "trustedIssuersRegistry": {},
+    "identityRegistry": {},
+    "identityRegistryStorage": {},
+    "modularCompliance": {},
+    "token": {}
+  },
+  "institutions": []
+}

@@ -21,10 +21,6 @@
 *.glo
 *.synctex(busy)
 
-# Mac OS ignored files
-*.DS_Store
-*.idea
-
 # File for personal notes
 notes.md
 
@@ -32,8 +28,42 @@ notes.md
 
 .idea
 
-# Expo files
-.expo
-
 # Ignore the directory of wiki
 DiGo-certify-app.wiki/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Generated native projects
+/code/android/
+/code/ios/
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+.env
+/code/config.json
+
+# typescript
+*.tsbuildinfo
