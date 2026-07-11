@@ -6,7 +6,7 @@ import Colors from '@/constants/colors.js';
 import Images from '../../constants/images.js';
 import ClickableText from '@/components/ClickableText.jsx';
 
-function InitialScreen({ handleConnectPress, handleGuestPress, WalletConnectModal }) {
+function InitialScreen({ onConnect, onGuest }) {
     return (
         <View style={styles.container}>
             <View style={styles.swiperContainer}>
@@ -16,6 +16,7 @@ function InitialScreen({ handleConnectPress, handleGuestPress, WalletConnectModa
                     activeDotColor={Colors.black}
                     loop={false}
                     index={0}
+                    removeClippedSubviews={false}
                 >
                     <View style={styles.slide}>
                         <Image source={Images.wallet} style={styles.image} />
@@ -27,11 +28,12 @@ function InitialScreen({ handleConnectPress, handleGuestPress, WalletConnectModa
                     </View>
                 </Swiper>
             </View>
-            <Button mode="contained" onPress={handleConnectPress} style={styles.button} labelStyle={styles.buttonText}>
+
+            <Button mode="contained" onPress={onConnect} style={styles.button} labelStyle={styles.buttonText}>
                 Connect Your Wallet
             </Button>
-            <ClickableText text="Join as a guest" onPress={handleGuestPress} style={styles.guestText} />
-            {WalletConnectModal}
+
+            <ClickableText text="Join as a guest" onPress={onGuest} style={styles.guestText} />
         </View>
     );
 }

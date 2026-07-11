@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Text, Portal, Modal } from 'react-native-paper';
+import { Button, Text, Portal, Modal } from 'react-native-paper';
 import Colors from '@/constants/colors';
 import FormField from '@/components/FormField';
-import ActionButton from '@/components/ActionButton';
 
 /**
  * Component that renders a modal to input a private key
@@ -16,22 +15,23 @@ function PrivateKeyModal({ visible, onDismiss, privateKey, onChangePrivateKey, o
                 visible={visible}
                 contentContainerStyle={styles.modalView}
             >
-                <Text style={styles.modalTitle}>Private Key</Text>
-                <Text style={styles.modalSubtitleText}>Don't Share with anyone that you don't trust!</Text>
+                <Text style={styles.modalTitle}>Activate Identity</Text>
+                <Text style={styles.modalSubtitleText}>Import your private key to create your identity and authorize issuers.</Text>
                 <FormField
                     label="Private Key"
                     value={privateKey}
                     onChange={onChangePrivateKey}
+                    secure={true}
                     style={styles.modalInput}
                 />
-                <ActionButton
-                    text="Add"
+                <Button
+                    mode="contained"
                     onPress={onSubmitPrivateKey}
-                    textStyle={styles.modalButtonText}
-                    buttonStyle={styles.modalSubmitButton}
-                    mode={'elevated'}
-                    color={Colors.backgroundColor}
-                />
+                    style={styles.modalSubmitButton}
+                    labelStyle={styles.modalButtonText}
+                >
+                    Activate
+                </Button>
             </Modal>
         </Portal>
     );
@@ -40,42 +40,33 @@ function PrivateKeyModal({ visible, onDismiss, privateKey, onChangePrivateKey, o
 const styles = StyleSheet.create({
     modalView: {
         backgroundColor: Colors.solitudeGrey,
-        padding: 20,
-        marginHorizontal: 20,
-        borderRadius: 20,
+        padding: 24,
+        marginHorizontal: 24,
+        borderRadius: 8,
     },
     modalTitle: {
-        fontSize: 28,
+        fontSize: 24,
         fontFamily: 'Poppins-Bold',
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
+        color: Colors.black,
     },
     modalSubtitleText: {
-        fontSize: 20,
-        fontFamily: 'Poppins-Bold',
-        color: Colors.caution,
+        fontSize: 15,
+        lineHeight: 22,
+        fontFamily: 'Poppins-Regular',
+        color: Colors.darkGray,
+        marginTop: 4,
     },
     modalInput: {
-        justifyContent: 'center',
-        marginTop: 20,
-        borderRadius: 10,
-        borderBottomWidth: 2,
-        borderBottomColor: Colors.sonicSilver,
+        marginTop: 16,
     },
     modalSubmitButton: {
         marginTop: 20,
-        borderRadius: 16,
-        borderWidth: 4,
-        borderColor: Colors.white,
+        borderRadius: 8,
         backgroundColor: Colors.green,
-        elevation: 5,
-        alignSelf: 'center',
-        width: '80%',
+        width: '100%',
     },
     modalButtonText: {
-        fontSize: 15,
+        fontSize: 14,
         lineHeight: 20,
         fontFamily: 'Poppins-Bold',
         color: Colors.black,
