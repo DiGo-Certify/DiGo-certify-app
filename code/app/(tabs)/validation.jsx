@@ -1,5 +1,10 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { IconButton } from 'react-native-paper';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+
+// Components & Constants
 import Images from '@/constants/images';
 import FormField from '@/components/FormField';
 import ActionButton from '@/components/ActionButton';
@@ -7,19 +12,11 @@ import colors from '@/constants/colors';
 import Background from '@/components/Background';
 import HeaderImage from '@/components/HeaderImage';
 import ValidatedModal from '@/components/ValidatedModal';
-import FeatureUnderDev from '@/components/FeatureUnderDev';
-import { CLAIM_TOPICS_OBJ } from '@/services/ethereum/scripts/claims/claimTopics';
-import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
-import config from '@/config.json';
-import { getIdentity } from '@/services/ethereum/scripts/identities/getIdentity';
-import hash from '@/services/ethereum/scripts/utils/encryption/hash';
-import { getClaimsByTopic } from '@/services/ethereum/scripts/claims/getClaimsByTopic';
-import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
-import { IconButton } from 'react-native-paper';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
-import { getValueFor } from '@/services/storage/storage';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
+
+import * as SecureStore from 'expo-secure-store';
+import { STORAGE_KEYS } from '@/constants/app';
+import { validateValidationForm } from '@/utils/validation';
+import { validateCertificate } from '@/services/blockchain';
 
 const Validation = () => {
     const [valid, setValid] = useState(false);
@@ -27,95 +24,88 @@ const Validation = () => {
     const [certificateLink, setCertificateLink] = useState('');
     const [content, setContent] = useState('');
     const [userAddress, setUserAddress] = useState('');
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [validationResult, setValidationResult] = useState(null);
 
-    const handleQRCodeScan = event => {
-        // Process the scanned QR code (event.data) as needed
-        console.log('Scanned QR code:', event.data);
-        setCertificateLink(event.data);
-    };
-
+    // Check user auth on mount
     useEffect(() => {
-        const isUserAuthenticated = async () => {
-            const userWallet = await getValueFor('wallet');
-            console.log(userWallet);
-            userWallet.address ? setIsUserAuthenticated(true) : setIsUserAuthenticated(false);
+        const checkAuth = async () => {
+            const storedWallet = await SecureStore.getItemAsync(STORAGE_KEYS.WALLET);
+            const userWallet = storedWallet ? JSON.parse(storedWallet) : null;
+            setIsAuthenticated(!!(userWallet && userWallet.address));
         };
-        isUserAuthenticated();
+        checkAuth();
     }, []);
 
-    // If the input of link is empty, clean the content
+    // Clear content if link is cleared manually
     useEffect(() => {
         if (!certificateLink) {
             setContent('');
         }
     }, [certificateLink]);
 
+    const handleCertificateLinkChange = value => {
+        setCertificateLink(value);
+        if (content) {
+            setContent('');
+        }
+    };
+
     const handleValidate = async () => {
-        // Validate the claiom that has the link to the certificate (claimTopic CERTIFICATE)
-        // If the claim is valid, and hash of the certificate is the same as the hash of the certificate in the claim uri field, setValid(true)
-        // Otherwise, setValid(false)
         try {
-            if (!userAddress || !certificateLink) {
-                Alert.alert('Error', 'Please fill in all fields');
-                return;
-            } else if (!content && !certificateLink) {
+            if (!content && !certificateLink) {
                 Alert.alert('Error', 'Please upload a certificate or insert a URL');
                 return;
             }
-            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
 
-            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
-            console.log(userAddress);
-            const userIdentity = await getIdentity(userAddress, identityFactory, signer);
-            if (userIdentity) {
-                const certificates = await getClaimsByTopic(userIdentity, CLAIM_TOPICS_OBJ.CERTIFICATE);
-                console.log('Certificates:', certificates);
-                if (certificates.length === 0) {
-                    Alert.alert('Error', 'No certificates found');
-                    return;
-                }
-                let valid = false;
-                for (const certificate of certificates) {
-                    const claimUri = certificate.uri;
-                    if (claimUri === hash(certificateLink) || claimUri === hash(content)) {
-                        setValid(true);
-                        valid = true;
-                        break;
-                    }
-                }
-                if (!valid) {
-                    setValid(false);
-                }
-                setShowModal(true);
-            } else {
-                Alert.alert('Error', 'User identity not found');
+            const validation = validateValidationForm({
+                userAddress,
+                certificateProvided: !!(content || certificateLink),
+                certificateLink: content ? '' : certificateLink,
+            });
+            if (!validation.isValid) {
+                Alert.alert('Error', Object.values(validation.errors).join('\n'));
+                return;
             }
+
+            const result = await validateCertificate(userAddress, content || certificateLink);
+            setValid(result.isValid);
+            setValidationResult(result);
+            setShowModal(true);
         } catch (error) {
-            Alert.alert('Error', error.message);
+            console.error(error);
+            Alert.alert('Error', error.message || 'Validation failed');
         }
     };
 
     const handleDocumentPicker = async () => {
-        const result = await DocumentPicker.getDocumentAsync({
-            type: '*/*',
-            copyToCacheDirectory: true,
-        });
-        if (result) {
+        try {
+            const result = await DocumentPicker.getDocumentAsync({
+                type: '*/*',
+                copyToCacheDirectory: true,
+            });
+
+            if (result.canceled) return;
+
             const { uri, name } = result.assets[0];
             const fileContents = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64,
             });
+
             setContent(fileContents);
             setCertificateLink(name);
-            onChange(result.uri);
+        } catch (err) {
+            console.log('Picker Error:', err);
         }
     };
 
     const handleImportOwnWallet = async () => {
-        const userWallet = await getValueFor('wallet');
-        if (userWallet) {
+        const storedWallet = await SecureStore.getItemAsync(STORAGE_KEYS.WALLET);
+        const userWallet = storedWallet ? JSON.parse(storedWallet) : null;
+        if (userWallet?.address) {
             setUserAddress(userWallet.address);
+        } else {
+            Alert.alert('No Wallet', 'Could not find a connected wallet on this device.');
         }
     };
 
@@ -130,44 +120,37 @@ const Validation = () => {
                 body={
                     <View>
                         <Text style={styles.title}>Certificate Validation</Text>
-                        <View style={{ marginTop: 16 }}>
+
+                        <View style={styles.formContainer}>
                             <FormField
                                 label="Insert Student Address"
                                 icon="account"
                                 value={userAddress}
-                                onChange={address => setUserAddress(address)}
+                                onChange={setUserAddress}
                                 outSideIconComponent={
                                     <IconButton
-                                        icon={isUserAuthenticated ? 'account-plus' : ''}
-                                        color="black"
-                                        size={20}
+                                        icon={isAuthenticated ? 'account-plus' : 'account-off'}
+                                        iconColor="black"
+                                        size={24}
                                         onPress={handleImportOwnWallet}
-                                    />
-                                }
-                            />
-                            <FormField
-                                label="Insert Certificate Link"
-                                icon="certificate"
-                                value={certificateLink}
-                                onChange={link => setCertificateLink(link)}
-                                outSideIconComponent={
-                                    <IconButton
-                                        icon="file-upload"
-                                        color="black"
-                                        size={20}
-                                        onPress={handleDocumentPicker}
+                                        disabled={!isAuthenticated}
                                     />
                                 }
                             />
 
-                            <Text style={styles.or}>OR</Text>
-                            <ActionButton
-                                text="Scan QR Code"
-                                buttonStyle={styles.qrButton}
-                                textStyle={styles.qrButtonText}
-                                mode={'elevated'}
-                                color={colors.backgroundColor}
-                                onPress={() => FeatureUnderDev()}
+                            <FormField
+                                label="Insert Certificate Link"
+                                icon="certificate"
+                                value={certificateLink}
+                                onChange={handleCertificateLinkChange}
+                                outSideIconComponent={
+                                    <IconButton
+                                        icon="file-upload"
+                                        iconColor="black"
+                                        size={24}
+                                        onPress={handleDocumentPicker}
+                                    />
+                                }
                             />
                         </View>
                     </View>
@@ -183,7 +166,13 @@ const Validation = () => {
                     />
                 }
             />
-            <ValidatedModal visible={showModal} onDismiss={() => setShowModal(false)} valid={valid} />
+
+            <ValidatedModal
+                visible={showModal}
+                onDismiss={() => setShowModal(false)}
+                valid={valid}
+                result={validationResult}
+            />
         </>
     );
 };
@@ -194,31 +183,18 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center', 
     },
     title: {
         fontSize: 30,
         fontFamily: 'Poppins-ExtraBold',
-    },
-    or: {
         textAlign: 'center',
+        marginBottom: 10,
+    },
+    formContainer: {
         marginTop: 16,
-        fontFamily: 'Poppins-ExtraBold',
-        fontSize: 24,
-    },
-    qrButton: {
-        marginTop: 24,
-        borderRadius: 10,
-        borderWidth: 4,
-        borderColor: colors.white,
-    },
-    qrButtonText: {
-        fontSize: 24,
-        lineHeight: 35,
-        color: colors.black,
-        fontFamily: 'Poppins-ExtraBold',
     },
     validateButton: {
-        marginTop: -25,
         borderRadius: 16,
         borderWidth: 4,
         borderColor: colors.white,

@@ -1,233 +1,239 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
-import Icons from '@/constants/icons';
-import Images from '@/constants/images';
-import * as ImagePicker from 'expo-image-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Colors from '@/constants/colors';
-import { List, ActivityIndicator } from 'react-native-paper';
+import React, { useMemo, useState } from 'react';
+import { View, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { Text, TouchableRipple, Avatar, Divider } from 'react-native-paper';
 import { router } from 'expo-router';
-import { getValueFor, removeValueFor, save } from '@/services/storage/storage';
-import useWalletConnect from '@/services/web3/wallet-connect';
+import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+
+import Background from '@/components/Background';
 import SettingsModal from '@/components/SettingsModal';
+import Colors from '@/constants/colors';
+import Images from '@/constants/images';
+import { useSession } from '@/contexts/SessionContext';
+import { USER_TYPES } from '@/constants/app';
+
+const { width } = Dimensions.get('window');
 
 const Profile = () => {
-    const [onSettings, setOnSettings] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const { isConnected, address, handlePress, provider, WalletConnectModal } = useWalletConnect();
-    const [profile, setProfile] = useState({
-        username: '',
-        image: Images.mockupProfileImage,
-        wallet: 'Not connected',
-        since: '2024',
-    });
+    const [showSettings, setShowSettings] = useState(false);
+    const { logout, wallet, userInfo: sessionUserInfo, userType } = useSession();
+    const { isConnected, provider } = useWalletConnectModal();
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            const userInfo = await getValueFor('user_info');
-            const profileImage = await getValueFor('profile_image');
-            const wallet = await getValueFor('wallet');
-            if (userInfo && wallet) {
-                setProfile(() => ({
-                    username: userInfo.username,
-                    since: userInfo.year,
-                    image: profileImage || Images.mockupProfileImage,
-                    wallet: wallet.address,
-                }));
-            }
+    const profile = useMemo(() => {
+        const type = userType?.type || userType || USER_TYPES.DEFAULT;
+
+        return {
+            username: sessionUserInfo?.name || 'User',
+            profileScope: sessionUserInfo?.profileScope || 'Stored on this device',
+            memberSince: sessionUserInfo?.year?.toString() || '2024',
+            walletAddress: wallet?.address || '',
+            userType: type,
         };
-        fetchUserInfo();
-    }, []);
+    }, [sessionUserInfo, userType, wallet?.address]);
 
-    const handleWalletConnect = async () => {
-        console.log('Connecting wallet...');
-        setIsSaving(true);
-        await handlePress();
-    };
-
-    // Handle logout
     const handleLogout = () => {
-        removeValueFor('OID').then(() =>
-            removeValueFor('user_info').then(() =>
-                removeValueFor('wallet').then(async () => {
-                    if (isConnected) {
-                        await handlePress();
+        Alert.alert('Log Out', 'Are you sure you want to log out?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Log Out',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        if (isConnected) {
+                            await provider?.disconnect();
+                        }
+                    } catch (error) {
+                        console.error('Wallet disconnect failed:', error);
                     }
-                    return router.replace('/');
-                })
-            )
-        );
+
+                    await logout();
+                    router.replace('/');
+                },
+            },
+        ]);
     };
 
-    useEffect(() => {
-        if (address) {
-            if (profile.wallet === address || profile.wallet === 'Not connected') {
-                setIsSaving(false);
-                return;
-            }
-            const saveWalletAddress = async () => {
-                await save('wallet', JSON.stringify({ address: address }));
-                setProfile(currentProfile => ({
-                    ...currentProfile,
-                    wallet: address,
-                }));
-                setIsSaving(false);
-            };
-            saveWalletAddress();
-        }
-    }, [address]);
-
-    const handlePickImage = async () => {
-        let result = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (result.granted === false) {
-            Alert.alert('Permission to access camera roll is required!');
-            return;
-        }
-
-        let pickerResult = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!pickerResult.canceled) {
-            setProfile(prevProfile => ({
-                ...prevProfile,
-                image: { uri: pickerResult.assets[0].uri },
-            }));
-            await save('profile_image', JSON.stringify({ uri: pickerResult.assets[0].uri }));
-        }
+    const formatAddress = addr => {
+        if (!addr || addr.length < 10) return 'Not Connected';
+        return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.profile}>
-                <ProfileImage source={profile.image} pickImage={handlePickImage} />
-                <ProfileInfo username={profile.username} since={profile.since} />
-            </View>
-            <View style={styles.walletAccount}>
-                <WalletInfo
-                    title="Your Wallet Address"
-                    info={profile.wallet}
-                    disabled={isConnected}
-                    isLoading={isSaving}
-                />
-            </View>
-            <View style={styles.options}>
-                <ListItem title="Your favorite" onPress={() => console.log('Favorite')} icon={Icons.favorite} />
-                <ListItem
-                    title="Tell your friends"
-                    onPress={() => console.log('Tell your friends')}
-                    icon={Icons.send}
-                />
-                <ListItem title="Settings" onPress={() => setOnSettings(true)} icon={Icons.settings} />
-                <ListItem title="Log out" onPress={handleLogout} icon={Icons.logOut} />
-            </View>
-            {onSettings && (
-                <SettingsModal
-                    isVisible={onSettings}
-                    onDismiss={() => setOnSettings(false)}
-                    onChangeWallet={handleWalletConnect}
-                    onRequestAdmin={() => console.log('Request Admin')}
-                />
-            )}
-            {WalletConnectModal}
-        </SafeAreaView>
+        <Background
+            noScroll={false}
+            header={
+                <View style={styles.headerContainer}>
+                    <Text style={styles.screenTitle}>My Profile</Text>
+                    <TouchableRipple onPress={() => setShowSettings(true)} borderless style={styles.settingsButton}>
+                        <Avatar.Icon size={44} icon="cog-outline" color={Colors.black} style={styles.settingsIcon} />
+                    </TouchableRipple>
+                </View>
+            }
+            body={
+                <View style={styles.container}>
+                    <View style={styles.profileHeader}>
+                        <View style={styles.imageContainer}>
+                            <Image source={Images.mockupProfileImage} style={styles.profileImage} />
+                        </View>
+
+                        <View style={styles.profileInfo}>
+                            <View style={styles.badgeContainer}>
+                                <Text style={styles.badgeText}>{profile.userType}</Text>
+                            </View>
+                            <Text style={styles.username} numberOfLines={1} adjustsFontSizeToFit>
+                                {profile.username}
+                            </Text>
+                            <Text style={styles.profileScope} numberOfLines={1}>
+                                {profile.profileScope}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <Divider style={styles.divider} />
+
+                    <View style={styles.statsContainer}>
+                        <DetailItem
+                            label="Wallet Connected"
+                            value={formatAddress(profile.walletAddress)}
+                            icon="wallet-outline"
+                        />
+                        <DetailItem
+                            label="Local Profile Since"
+                            value={profile.memberSince}
+                            icon="calendar-account-outline"
+                        />
+                    </View>
+
+                    <SettingsModal
+                        isVisible={showSettings}
+                        onDismiss={() => setShowSettings(false)}
+                        onLogout={handleLogout}
+                        walletAddress={profile.walletAddress}
+                    />
+                </View>
+            }
+        />
     );
 };
 
-const ProfileImage = ({ source, pickImage }) => (
-    <TouchableOpacity onPress={pickImage}>
-        <Image source={{ uri: source?.uri || source }} style={styles.profileImage} />
-    </TouchableOpacity>
-);
-
-const ProfileInfo = ({ username, from, since }) => (
-    <View style={styles.profileInfo}>
-        <Text style={styles.username}>{username}</Text>
-        <Text style={styles.info}>{'Since ' + since}</Text>
+const DetailItem = ({ label, value, icon, valueColor }) => (
+    <View style={styles.detailRow}>
+        <View style={styles.detailIconBox}>
+            <Avatar.Icon size={24} icon={icon} color={Colors.darkGray} style={{ backgroundColor: 'transparent' }} />
+        </View>
+        <View style={styles.detailContent}>
+            <Text style={styles.detailLabel}>{label}</Text>
+            <Text style={[styles.detailValue, valueColor && { color: valueColor }]}>{value}</Text>
+        </View>
     </View>
 );
 
-const WalletInfo = ({ title, info, isLoading = false }) => (
-    <TouchableOpacity disabled={true} style={styles.walletInfo}>
-        <Text style={styles.title}>{title}</Text>
-        {isLoading ? <ActivityIndicator size="small" color={Colors.green} /> : <Text style={styles.info}>{info}</Text>}
-    </TouchableOpacity>
-);
-
-const ListItem = ({ title, onPress, icon }) => (
-    <List.Item
-        title={title}
-        style={styles.item}
-        titleStyle={styles.itemTitle}
-        onPress={onPress}
-        left={() => <List.Icon icon={icon} />}
-    />
-);
-
-const windowWidth = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingBottom: 10,
+    },
+    screenTitle: {
+        fontFamily: 'Poppins-Bold',
+        fontSize: 28,
+        color: Colors.black,
+    },
+    settingsButton: {
+        borderRadius: 22,
+        paddingHorizontal: 16,
+    },
+    settingsIcon: {
+        backgroundColor: Colors.solitudeGrey,
+    },
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
-        padding: 20,
+        paddingHorizontal: 24,
+        marginTop: -30,
     },
-    profile: {
+    profileHeader: {
         flexDirection: 'row',
-        marginBottom: 50,
-        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 30,
+    },
+    imageContainer: {
+        width: width * 0.35,
+        height: width * 0.35,
+        borderRadius: (width * 0.35) / 2,
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: Colors.white,
+        marginRight: 24,
     },
     profileImage: {
-        width: windowWidth * 0.4,
-        height: windowWidth * 0.4,
-        borderRadius: windowWidth * 0.2, // Half of width and height
-        paddingRight: 50,
+        width: '100%',
+        height: '100%',
+        borderRadius: 999,
     },
     profileInfo: {
-        marginLeft: 50,
+        flex: 1,
         justifyContent: 'center',
     },
+    badgeContainer: {
+        backgroundColor: Colors.primary,
+        alignSelf: 'flex-start',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+        marginBottom: 8,
+    },
+    badgeText: {
+        color: 'white',
+        fontSize: 10,
+        fontFamily: 'Poppins-Bold',
+        textTransform: 'uppercase',
+    },
     username: {
-        fontSize: 25,
-        fontFamily: 'Poppins-SemiBold',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 24,
+        color: Colors.black,
+        lineHeight: 30,
     },
-    info: {
-        paddingTop: 10,
-        fontSize: 15,
+    profileScope: {
         fontFamily: 'Poppins-Regular',
+        fontSize: 13,
+        color: Colors.darkGray,
+        marginTop: 4,
     },
-    walletAccount: {
+    divider: {
+        backgroundColor: '#E0E0E0',
+        height: 1,
+        marginBottom: 24,
+    },
+    statsContainer: {
+        gap: 16,
+    },
+    detailRow: {
         flexDirection: 'row',
-        marginBottom: 20,
-        borderWidth: 1,
-        borderColor: Colors.black,
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F5F5F5',
     },
-    walletInfo: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: 'black',
-        padding: 10,
+    detailIconBox: {
+        width: 40,
         alignItems: 'center',
     },
-    title: {
-        fontSize: 20,
-        fontFamily: 'Poppins-SemiBold',
+    detailContent: {
+        marginLeft: 12,
     },
-    options: {
-        flex: 1,
-        marginHorizontal: 10,
-        marginBottom: 40,
-    },
-    item: {
-        padding: 20,
-        marginVertical: 8,
-    },
-    itemTitle: {
-        fontSize: 20,
+    detailLabel: {
         fontFamily: 'Poppins-Regular',
+        fontSize: 12,
+        color: Colors.darkGray,
+    },
+    detailValue: {
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 16,
+        color: Colors.black,
     },
 });
 
