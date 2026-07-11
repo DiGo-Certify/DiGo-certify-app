@@ -1,68 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import Colors from '@/constants/colors';
-import { StatusBar } from 'expo-status-bar';
-import icons from '@/constants/icons';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BottomNavigation } from 'react-native-paper';
+import { StatusBar } from 'expo-status-bar';
+
+import Colors from '@/constants/colors';
+import icons from '@/constants/icons';
 import ProfileScreen from './profile';
 import ValidationScreen from './validation';
-import HomeScreen from './home/home';
+import HomeScreen from './home/index';
 import AdminScreen from './admin';
-import * as SecureStore from 'expo-secure-store';
+import { USER_TYPES } from '@/constants/app';
+import { useSession } from '@/contexts/SessionContext';
 
 const HomeRoute = () => <HomeScreen />;
 const ProfileRoute = () => <ProfileScreen />;
 const ValidationRoute = () => <ValidationScreen />;
 const AdminRoute = () => <AdminScreen />;
 
-const USER_TYPES = {
-    Admin: 'Admin',
-    Guest: 'Guest',
-    Default: 'Default',
-};
-
 function TabLayout() {
     const [idx, setIdx] = useState(0);
-    const [routes, setRoutes] = useState([{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }]);
-    const [userType, setUserType] = useState(null);
+    const { userType } = useSession();
+    const type = userType?.type || userType || USER_TYPES.DEFAULT;
+
+    const routes = useMemo(() => {
+        switch (type) {
+            case USER_TYPES.ADMIN:
+                return [
+                    { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
+                    { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
+                    { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+                ];
+            case USER_TYPES.GUEST:
+                return [{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }];
+            case USER_TYPES.DEFAULT:
+            default:
+                return [
+                    { key: 'home', title: 'Home', focusedIcon: icons.home },
+                    { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
+                    { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
+                ];
+        }
+    }, [type]);
 
     useEffect(() => {
-        const getUserType = async () => {
-            const userType = await SecureStore.getItemAsync('user_type');
-            setUserType(JSON.parse(userType));
-        };
-        getUserType();
-    }, []);
-
-    useEffect(() => {
-        if (!userType) return;
-        const getRoutesForUserType = async () => {
-            let availableRoutes;
-            switch (userType.type) {
-                case USER_TYPES.Admin:
-                    availableRoutes = [
-                        { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
-                        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
-                        { key: 'admin', title: 'Admin', focusedIcon: icons.admin },
-                    ];
-                    break;
-                case USER_TYPES.Guest:
-                    availableRoutes = [{ key: 'validation', title: 'Validation', focusedIcon: icons.certificate }];
-                    break;
-                case USER_TYPES.Default:
-                    availableRoutes = [
-                        { key: 'home', title: 'Home', focusedIcon: icons.home },
-                        { key: 'profile', title: 'Profile', focusedIcon: icons.profile },
-                        { key: 'validation', title: 'Validation', focusedIcon: icons.certificate },
-                    ];
-                    break;
-            }
-            if (availableRoutes) {
-                setRoutes(availableRoutes);
-            }
-        };
-
-        getRoutesForUserType();
-    }, [userType]);
+        if (idx >= routes.length) {
+            setIdx(0);
+        }
+    }, [idx, routes.length]);
 
     const renderScene = BottomNavigation.SceneMap({
         home: HomeRoute,
@@ -71,16 +54,15 @@ function TabLayout() {
         admin: AdminRoute,
     });
 
-    const validIdx = idx >= 0 && idx < routes.length ? idx : 0;
-
     return (
         <>
             <BottomNavigation
-                navigationState={{ index: validIdx, routes }}
+                navigationState={{ index: idx, routes }}
                 onIndexChange={setIdx}
                 renderScene={renderScene}
-                barStyle={{ backgroundColor: Colors.grey }}
-                activeIndicatorStyle={{ backgroundColor: Colors.white }}
+                barStyle={{ backgroundColor: Colors.grey || '#f0f0f0' }}
+                activeIndicatorStyle={{ backgroundColor: Colors.white || '#fff' }}
+                sceneAnimationEnabled={false}
             />
             <StatusBar backgroundColor={Colors.grey} style="light" />
         </>

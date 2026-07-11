@@ -69,24 +69,24 @@ SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform applic
 
 # 🧰 `Built With`
 
-  [![Node][Node.js]][Node-url]
+[![Node][Node.js]][Node-url]
 
-  [![React Native][ReactNative.js]][ReactNative-url]
+[![React Native][ReactNative.js]][ReactNative-url]
 
-  [![Expo React Native][Expo.js]][Expo-url]
+[![Expo React Native][Expo.js]][Expo-url]
 
-  [![Smart Contract][Solidity.sol]][Solidity-url]
+[![Smart Contract][Solidity.sol]][Solidity-url]
 
-  [![Hardhat][Hardhat.js]][Hardhat-url]
+[![Hardhat][Hardhat.js]][Hardhat-url]
 
-  [![Ethereum][Ethereum.js]][Ethereum-url]
+[![Ethereum][Ethereum.js]][Ethereum-url]
 
-  [![Javasript][Javascript.js]][Javascript-url]
-
+[![Javasript][Javascript.js]][Javascript-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Star Us -->
+
 # ⭐️ `Star us`
 
 If you like this project, don't forget to give it a star on GitHub! Every star make us very happy and we will be very grateful to you!
@@ -102,41 +102,82 @@ The following instructions will guide you through the installation process.
 
 1. You need to have node to run the application.
 
-    [![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en)
+   [![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/en)
 
 2. Install npm globally on your machine:
-  ```sh
-  npm install npm@latest -g
-  ```
+
+```sh
+npm install npm@latest -g
+```
 
 3. Install Expo Go on your smart phone:
 
-    [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/expo-go/id982107779)
-    [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en)
+   [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/expo-go/id982107779)
+   [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en)
 
 4. Install a wallet provider application, such as Metamask, on your smart phone:
 
-    [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/metamask/id1438144202)
-    [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=io.metamask&hl=en)
+   [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/us/app/metamask/id1438144202)
+   [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=io.metamask&hl=en)
 
 ## 🛠️ Installation and Usage
 
 📄 Clone or fork `DiGo Certify App`:
-   ```sh
-   git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
-   cd DiGo-certify-app/
-   ```
-📦 Install All Dependencies And Deploy the initial smart contracts onto the blockchain:
-   ```sh
-    ./install.sh
-   ```
-🚴‍♂️ Run the app
-   ```sh
-    npx expo start
-   ```
+
+```sh
+git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
+cd DiGo-certify-app/
+```
+
+⛓️ Start a local blockchain in a separate terminal:
+
+```sh
+cd code/services/ethereum
+npm run node
+```
+
+📦 Install dependencies, configure local demo accounts, deploy the registry contracts, and seed institutional issuers:
+
+```sh
+./install.sh --local
+```
+
+🚴‍♂️ Run the app:
+
+```sh
+cd code
+npm start
+```
+
 📱 Scan the QR Code provided with your smart phone to run the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Reference Implementation Workflow
+
+This branch is shaped around the certificate life cycle described in the paper:
+
+1. Start the local Hardhat node with `npm run node` from `code/services/ethereum`.
+2. Run `./install.sh --local` from the repository root. The script installs dependencies, writes the local Hardhat deployer and demo institution wallets to `code/config.json`, deploys the OnchainID and T-REX suite, and creates institutional ClaimIssuer contracts.
+3. Sign in with a wallet configured as an accredited institution in `code/config.json`.
+4. As a student, import a funded local private key from the Home tab to create or resolve the OnchainID identity and authorize accredited issuer keys.
+5. Open the Admin tab and issue a certificate to the student wallet. Submitting the same issuer/topic again updates the certificate claim.
+6. The certificate is stored as an ERC-735 claim on the student's identity. Sensitive certificate references are encrypted in the claim data, while the validation digest is stored as the claim URI.
+7. The student can see issued certificates on the Home tab.
+8. A verifier can validate a pasted certificate URL or uploaded certificate file from the Validation tab without connecting a wallet. Validation checks the digest, the issuer's current accreditation for the certificate topic, and the claim signature.
+9. An accredited institution can revoke its certificate claim from the Admin tab.
+
+The intended demo path is: accredited institution -> identity activation and issuer authorization -> identity-bound claim issuance/update -> student certificate listing -> wallet-free validation -> revocation.
+
+For a custom RPC deployment, run `./install.sh` without `--local` and provide the owner wallet and RPC URL when prompted. The local mode is the recommended replication path for the prototype.
+
+For physical phone testing, use a phone-reachable RPC URL instead of `127.0.0.1`. Keep the phone and Mac on the same network, start Hardhat with `npm run node`, find your Mac IP with `ipconfig getifaddr en0`, then run:
+
+```sh
+./install.sh --local --rpc http://YOUR_MAC_IP:8545/
+```
+
+The Hardhat node script listens on `0.0.0.0`, so the phone can reach it over Wi-Fi when the network/firewall allows it. If the phone is not on the same network, use an externally reachable RPC URL, such as ngrok or an INESC server, with the same `--rpc` flag.
 
 <!-- USAGE EXAMPLES -->
 
@@ -172,9 +213,9 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 # 📬 `Contact Us`
 
-:inbox_tray: Diogo Rodrigues(developer) - [a49513@alunos.isel.pt](mailto:a49513@alunos.isel.pt)
+:inbox_tray: Diogo Rodrigues(developer) - [diogo.rodrigues.business@gmail.com](mailto:diogo.rodrigues.business@gmail.com)
 
-:inbox_tray: Gonçalo Frutuoso(developer) - [a49495@alunos.isel.pt](mailto:a49495@alunos.isel.pt)
+:inbox_tray: Gonçalo Frutuoso(developer) - [goncalo.frutuoso@tecnico.ulisboa.pt](mailto:goncalo.frutuoso@tecnico.ulisboa.pt)
 
 :inbox_tray: Cátia Vaz(supervisor) - [cvaz@isel.pt](mailto:cvaz@isel.pt)
 

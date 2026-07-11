@@ -40,41 +40,42 @@ async function deployClaimIssuer(
 
         let newIssuerWallet;
         if (!issuerWallet) {
-            console.log('Creating issuer wallet');
-            console.log('privateKey:', privateKey);
             const provider = deployer.provider || new ethers.JsonRpcProvider(config.rpc);
             newIssuerWallet = new ethers.Wallet(privateKey, provider);
         } else {
             newIssuerWallet = issuerWallet;
         }
+        const issuerAddress = await newIssuerWallet.getAddress();
+        const issuerSigner = new ethers.NonceManager(newIssuerWallet);
 
         console.log(
             '[!] Deploying ClaimIssuer for wallet with address:',
-            newIssuerWallet.address
+            issuerAddress
         );
 
         const claimIssuerContract = await new ethers.ContractFactory(
             ClaimIssuer.abi,
             ClaimIssuer.bytecode,
-            newIssuerWallet
-        ).deploy(newIssuerWallet.address);
+            issuerSigner
+        ).deploy(issuerAddress);
 
         // Wait for contract to be deployed
         await claimIssuerContract.waitForDeployment();
 
         // Add keys for signing claims to the ClaimIssuer
-        await claimIssuerContract
-            .connect(newIssuerWallet)
+        const addKeyTx = await claimIssuerContract
+            .connect(issuerSigner)
             .addKey(
                 ethers.keccak256(
                     ethers.AbiCoder.defaultAbiCoder().encode(
                         ['address'],
-                        [newIssuerWallet.address]
+                        [issuerAddress]
                     )
                 ),
                 SIGN_CLAIM_PURPOSE,
                 ECDSA_KEY_TYPE
             );
+        await addKeyTx.wait();
 
         console.log(
             `[+] Deployed ClaimIssuer: ${await claimIssuerContract.getAddress()}`
@@ -117,7 +118,7 @@ async function deployClaimIssuer(
                 TIR,
                 claimIssuerContract,
                 claimIssuerContract,
-                newIssuerWallet,
+                issuerSigner,
                 CLAIM_TOPICS_OBJ.INSTITUTION,
                 institutionCode.toString()
             );
@@ -130,7 +131,7 @@ async function deployClaimIssuer(
             // This is useful for the app to know which claim issuers are available
             addIssuerToConfig(
                 institutionCode.toString(),
-                newIssuerWallet.address,
+                issuerAddress,
                 privateKey,
                 await claimIssuerContract.getAddress(),
                 claimIssuerContract.interface.fragments

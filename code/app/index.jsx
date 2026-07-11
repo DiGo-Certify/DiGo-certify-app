@@ -1,115 +1,83 @@
-import '@walletconnect/react-native-compat';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { router } from 'expo-router';
-import { ActivityIndicator, Alert } from 'react-native-paper';
+import { ActivityIndicator, Button, Dialog, Portal, Text } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import Colors from '@/constants/colors';
-import { getValueFor, save } from '@/services/storage/storage';
-import InitialScreen from './initial-screen/initial-screen';
-import useWalletConnect from '@/services/web3/wallet-connect.js';
-import isAdminWallet from '@/services/ethereum/scripts/utils/isAdminWallet';
-import { deployIdentity } from '@/services/ethereum/scripts/identities/deploy-identity';
-import { getContractAt } from '@/services/ethereum/scripts/utils/ethers';
-import { v4 as uuidv4 } from 'uuid';
-import { useRpcProvider } from '@/services/ethereum/scripts/utils/useRpcProvider';
-import config from '@/config.json';
+import { ROUTES, USER_TYPES } from '@/constants/app';
+import { useSession } from '@/contexts/SessionContext';
+import { useWalletConnectionManager } from '@/hooks/useWalletConnectionManager';
+import InitialScreen from './initial-screen';
 
 function App() {
-    const [loading, setLoading] = useState(true);
-    const { isConnected, address, handlePress, error, WalletConnectModal } = useWalletConnect();
+    const { isAuthenticated, hasWallet, userInfo, isLoading, error, resetError, setUserType } = useSession();
+    const { isConnected, address, connectWallet } = useWalletConnectionManager();
 
     useEffect(() => {
-        const checkWalletConnection = async () => {
-            const userInfo = await getValueFor('user_info');
-            const walletAddress = await getValueFor('wallet');
-            if (userInfo && walletAddress) {
-                // Create OID if it doesn't exist or if the user is not an admin
-                if (!isAdminWallet(walletAddress.address)) {
-                    deployUserIdentity();
-                }
-                setLoading(false);
-                return router.replace('/profile');
-            }
-            setLoading(false);
-        };
-        checkWalletConnection();
-    }, [isConnected]);
+        if (isAuthenticated && hasWallet && userInfo) {
+            router.replace(ROUTES.PROFILE);
+        }
+    }, [isAuthenticated, hasWallet, userInfo]);
 
     useEffect(() => {
-        if (isConnected && address) {
-            save('wallet', JSON.stringify({ address: address }));
-            if (isAdminWallet(address)) {
-                save('user_type', JSON.stringify({ type: 'Admin' }));
-            } else {
-                deployUserIdentity();
-                save('user_type', JSON.stringify({ type: 'Default' }));
-            }
-            const checkUserInfo = async () => {
-                const userInfo = await getValueFor('user_info');
-                if (userInfo) {
-                    return router.replace('/profile');
-                } else {
-                    console.log('User not found, redirecting to sign-up');
-                    return router.replace('/sign-up');
-                }
-            };
-
-            checkUserInfo();
+        if (isConnected && address && !userInfo) {
+            router.replace('/profile-setup');
         }
-    }, [isConnected, address]);
+    }, [isConnected, address, userInfo]);
 
-    const deployUserIdentity = async () => {
-        try {
-            const walletAddress = await getValueFor('wallet');
-            const signer = useRpcProvider(config.rpc, config.deployer.privateKey);
-            const identityFactory = getContractAt(config.identityFactory.address, config.identityFactory.abi, signer);
-            const user_salt = uuidv4();
-            const idContract = await deployIdentity(identityFactory, walletAddress.address, user_salt, signer);
-            if (idContract) {
-                const idAddress = await idContract.getAddress();
-                await save('OID', JSON.stringify({ OID: idAddress }));
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.primary} />
+            </View>
+        );
+    }
 
-    useEffect(() => {
-        if (error) {
-            Alert.alert('Wallet Connection Error', error);
-        }
-    }, [error]);
+    if (error) {
+        return (
+            <View style={styles.errorContainer}>
+                <Portal>
+                    <Dialog visible onDismiss={resetError}>
+                        <Dialog.Title>Error</Dialog.Title>
+                        <Dialog.Content>
+                            <Text>{error}</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={resetError}>OK</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+            </View>
+        );
+    }
 
-    const handleGuestPress = () => {
-        save('user_type', JSON.stringify({ type: 'Guest' }));
-        return router.push('/(tabs)/validation');
+    const handleGuest = async () => {
+        await setUserType({ type: USER_TYPES.GUEST });
+        router.push('/validation');
     };
 
     return (
-        <>
-            {loading ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator animating={true} size={'large'} color={Colors.green} />
-                </View>
-            ) : (
-                !isConnected && (
-                    <InitialScreen
-                        handleConnectPress={handlePress}
-                        handleGuestPress={handleGuestPress}
-                        WalletConnectModal={WalletConnectModal}
-                    />
-                )
-            )}
-        </>
+        <View style={styles.container}>
+            <InitialScreen onConnect={connectWallet} onGuest={handleGuest} />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.background,
+    },
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.backgroundColor,
+        backgroundColor: Colors.background,
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.background,
     },
 });
 

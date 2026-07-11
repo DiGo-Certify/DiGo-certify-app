@@ -7,6 +7,7 @@ async function deployTrexLogicSuite(deployer) {
     // Deploy implementations
     const claimTopicsRegistryImplementation = await ethers.deployContract(
         'ClaimTopicsRegistry',
+        [],
         deployer
     );
 
@@ -14,6 +15,7 @@ async function deployTrexLogicSuite(deployer) {
 
     const trustedIssuersRegistryImplementation = await ethers.deployContract(
         'TrustedIssuersRegistry',
+        [],
         deployer
     );
 
@@ -21,6 +23,7 @@ async function deployTrexLogicSuite(deployer) {
 
     const identityRegistryStorageImplementation = await ethers.deployContract(
         'IdentityRegistryStorage',
+        [],
         deployer
     );
 
@@ -28,6 +31,7 @@ async function deployTrexLogicSuite(deployer) {
 
     const identityRegistryImplementation = await ethers.deployContract(
         'IdentityRegistry',
+        [],
         deployer
     );
 
@@ -35,12 +39,17 @@ async function deployTrexLogicSuite(deployer) {
 
     const modularComplianceImplementation = await ethers.deployContract(
         'ModularCompliance',
+        [],
         deployer
     );
 
     await modularComplianceImplementation.waitForDeployment();
 
-    const tokenImplementation = await ethers.deployContract('Token', deployer);
+    const tokenImplementation = await ethers.deployContract(
+        'Token',
+        [],
+        deployer
+    );
 
     await tokenImplementation.waitForDeployment();
 
@@ -118,88 +127,85 @@ async function deployTrexSuite(deployer) {
     );
 
     // Deploy registries using the proxy pattern
-    const claimTopicsRegistry = await ethers
-        .deployContract(
-            'ClaimTopicsRegistryProxy',
-            [await trexImplementationAuthority.getAddress()],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt(
-                'ClaimTopicsRegistry',
-                await proxy.getAddress()
-            )
-        );
+    const claimTopicsRegistryProxy = await ethers.deployContract(
+        'ClaimTopicsRegistryProxy',
+        [await trexImplementationAuthority.getAddress()],
+        deployer
+    );
+    await claimTopicsRegistryProxy.waitForDeployment();
+    const claimTopicsRegistry = await ethers.getContractAt(
+        'ClaimTopicsRegistry',
+        await claimTopicsRegistryProxy.getAddress()
+    );
 
-    const trustedIssuersRegistry = await ethers
-        .deployContract(
-            'TrustedIssuersRegistryProxy',
-            [await trexImplementationAuthority.getAddress()],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt(
-                'TrustedIssuersRegistry',
-                await proxy.getAddress()
-            )
-        );
+    const trustedIssuersRegistryProxy = await ethers.deployContract(
+        'TrustedIssuersRegistryProxy',
+        [await trexImplementationAuthority.getAddress()],
+        deployer
+    );
+    await trustedIssuersRegistryProxy.waitForDeployment();
+    const trustedIssuersRegistry = await ethers.getContractAt(
+        'TrustedIssuersRegistry',
+        await trustedIssuersRegistryProxy.getAddress()
+    );
 
-    const identityRegistryStorage = await ethers
-        .deployContract(
-            'IdentityRegistryStorageProxy',
-            [await trexImplementationAuthority.getAddress()],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt(
-                'IdentityRegistryStorage',
-                await proxy.getAddress()
-            )
-        );
+    const identityRegistryStorageProxy = await ethers.deployContract(
+        'IdentityRegistryStorageProxy',
+        [await trexImplementationAuthority.getAddress()],
+        deployer
+    );
+    await identityRegistryStorageProxy.waitForDeployment();
+    const identityRegistryStorage = await ethers.getContractAt(
+        'IdentityRegistryStorage',
+        await identityRegistryStorageProxy.getAddress()
+    );
 
-    const identityRegistry = await ethers
-        .deployContract(
-            'IdentityRegistryProxy',
-            [
-                await trexImplementationAuthority.getAddress(),
-                await trustedIssuersRegistry.getAddress(),
-                await claimTopicsRegistry.getAddress(),
-                await identityRegistryStorage.getAddress()
-            ],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt('IdentityRegistry', await proxy.getAddress())
-        );
+    const identityRegistryProxy = await ethers.deployContract(
+        'IdentityRegistryProxy',
+        [
+            await trexImplementationAuthority.getAddress(),
+            await trustedIssuersRegistry.getAddress(),
+            await claimTopicsRegistry.getAddress(),
+            await identityRegistryStorage.getAddress()
+        ],
+        deployer
+    );
+    await identityRegistryProxy.waitForDeployment();
+    const identityRegistry = await ethers.getContractAt(
+        'IdentityRegistry',
+        await identityRegistryProxy.getAddress()
+    );
 
-    const modularCompliance = await ethers
-        .deployContract(
-            'ModularComplianceProxy',
-            [await trexImplementationAuthority.getAddress()],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt('ModularCompliance', await proxy.getAddress())
-        );
+    const modularComplianceProxy = await ethers.deployContract(
+        'ModularComplianceProxy',
+        [await trexImplementationAuthority.getAddress()],
+        deployer
+    );
+    await modularComplianceProxy.waitForDeployment();
+    const modularCompliance = await ethers.getContractAt(
+        'ModularCompliance',
+        await modularComplianceProxy.getAddress()
+    );
 
     // Need to initialize the OID later
-    const token = await ethers
-        .deployContract(
-            'TokenProxy',
-            [
-                await trexImplementationAuthority.getAddress(),
-                await identityRegistry.getAddress(),
-                await modularCompliance.getAddress(),
-                'TREX-TOKEN',
-                'TREX',
-                0n,
-                ethers.ZeroAddress
-            ],
-            deployer
-        )
-        .then(async proxy =>
-            ethers.getContractAt('Token', await proxy.getAddress())
-        );
+    const tokenProxy = await ethers.deployContract(
+        'TokenProxy',
+        [
+            await trexImplementationAuthority.getAddress(),
+            await identityRegistry.getAddress(),
+            await modularCompliance.getAddress(),
+            'TREX-TOKEN',
+            'TREX',
+            0n,
+            ethers.ZeroAddress
+        ],
+        deployer
+    );
+    await tokenProxy.waitForDeployment();
+    const token = await ethers.getContractAt(
+        'Token',
+        await tokenProxy.getAddress()
+    );
 
     console.log(
         `[+] Deployed Claim Topic Registry at ${await claimTopicsRegistry.getAddress()}`

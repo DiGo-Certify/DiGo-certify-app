@@ -1,9 +1,12 @@
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions } from 'react-native';
 import React from 'react';
 
 export default function HeaderImage({ imageSource }) {
+    const { width } = useWindowDimensions();
+    const size = Math.min(160, width * 0.4);
+
     return (
-        <View style={styles.header}>
+        <View style={[styles.header, { width: size, height: size, borderRadius: size / 2 }]}>
             <Image source={imageSource} style={styles.headerImage} />
         </View>
     );
@@ -12,10 +15,7 @@ export default function HeaderImage({ imageSource }) {
 const styles = StyleSheet.create({
     header: {
         aspectRatio: 1,
-        borderRadius: Dimensions.get('window').width * 0.325,
         borderWidth: 5,
-        width: '65%',
-        height: '65%',
     },
     headerImage: {
         width: '100%',
