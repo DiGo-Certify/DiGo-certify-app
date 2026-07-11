@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     input: {
+        flex: 1,
         backgroundColor: Colors.white,
         fontFamily: 'Poppins-Regular',
     },

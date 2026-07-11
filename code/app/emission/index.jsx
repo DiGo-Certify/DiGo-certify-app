@@ -84,6 +84,7 @@ const EmissionScreen = () => {
     return (
         <Background
             noScroll
+            headerStyle={styles.backgroundHeader}
             header={
                 <View style={styles.header}>
                     <Appbar.Header style={styles.appbarHeader} statusBarHeight={0}>
@@ -248,6 +249,10 @@ const EmissionScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    backgroundHeader: {
+        height: 250,
+        minHeight: 250,
+    },
     header: {
         backgroundColor: Colors.backgroundColor,
         width: '100%',

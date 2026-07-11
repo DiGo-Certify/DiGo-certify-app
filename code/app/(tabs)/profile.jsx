@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Text, TouchableRipple, Avatar, Divider } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useAccount, useAppKit } from '@reown/appkit-react-native';
@@ -7,11 +7,17 @@ import { useAccount, useAppKit } from '@reown/appkit-react-native';
 import Background from '@/components/Background';
 import SettingsModal from '@/components/SettingsModal';
 import Colors from '@/constants/colors';
-import Images from '@/constants/images';
 import { useSession } from '@/contexts/SessionContext';
 import { USER_TYPES } from '@/constants/app';
 
-const { width } = Dimensions.get('window');
+const getInitials = name =>
+    name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part[0])
+        .join('')
+        .toUpperCase();
 
 const Profile = () => {
     const [showSettings, setShowSettings] = useState(false);
@@ -24,6 +30,7 @@ const Profile = () => {
 
         return {
             username: sessionUserInfo?.name || 'User',
+            initials: getInitials(sessionUserInfo?.name || 'User'),
             profileScope: sessionUserInfo?.profileScope || 'Stored on this device',
             memberSince: sessionUserInfo?.year?.toString() || '2024',
             walletAddress: wallet?.address || '',
@@ -72,9 +79,12 @@ const Profile = () => {
             body={
                 <View style={styles.container}>
                     <View style={styles.profileHeader}>
-                        <View style={styles.imageContainer}>
-                            <Image source={Images.mockupProfileImage} style={styles.profileImage} />
-                        </View>
+                        <Avatar.Text
+                            size={112}
+                            label={profile.initials}
+                            style={styles.profileAvatar}
+                            labelStyle={styles.profileAvatarLabel}
+                        />
 
                         <View style={styles.profileInfo}>
                             <View style={styles.badgeContainer}>
@@ -157,22 +167,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 30,
     },
-    imageContainer: {
-        width: width * 0.35,
-        height: width * 0.35,
-        borderRadius: (width * 0.35) / 2,
-        elevation: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        backgroundColor: Colors.white,
+    profileAvatar: {
+        backgroundColor: Colors.primary,
         marginRight: 24,
     },
-    profileImage: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 999,
+    profileAvatarLabel: {
+        color: Colors.white,
+        fontFamily: 'Poppins-SemiBold',
     },
     profileInfo: {
         flex: 1,
