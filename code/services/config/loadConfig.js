@@ -1,7 +1,13 @@
-const fs = require('fs');
-const path = require('path');
+let config;
 
-const configPath = path.resolve(__dirname, '../../config.json');
-const exampleConfigPath = path.resolve(__dirname, '../../config.example.json');
+try {
+    config = require('../../config.json');
+} catch (error) {
+    if (error.code !== 'MODULE_NOT_FOUND') {
+        throw error;
+    }
 
-module.exports = require(fs.existsSync(configPath) ? configPath : exampleConfigPath);
+    config = require('../../config.example.json');
+}
+
+module.exports = config;
