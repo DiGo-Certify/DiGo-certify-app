@@ -42,7 +42,7 @@ async function deployClaimIssuer(
         if (!issuerWallet) {
             console.log('Creating issuer wallet');
             console.log('privateKey:', privateKey);
-            const provider = new ethers.JsonRpcProvider(config.rpc);
+            const provider = deployer.provider || new ethers.JsonRpcProvider(config.rpc);
             newIssuerWallet = new ethers.Wallet(privateKey, provider);
         } else {
             newIssuerWallet = issuerWallet;

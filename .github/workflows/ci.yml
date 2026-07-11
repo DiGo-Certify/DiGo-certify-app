@@ -36,6 +36,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: |
+            code/package-lock.json
+            code/services/ethereum/package-lock.json
 
       - name: Check Client Lock File
         run: ls -la ./code/
