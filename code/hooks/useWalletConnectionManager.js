@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { Alert } from 'react-native';
-import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { useAccount, useAppKit } from '@reown/appkit-react-native';
 import { useSession } from '@/contexts/SessionContext';
 import ErrorHandler from '@/services/errors/ErrorHandler';
 import { USER_TYPES } from '@/constants/app';
@@ -17,7 +17,8 @@ function getUserTypeForWallet(address) {
 
 export const useWalletConnectionManager = () => {
     const { setLoading, setError, setWallet, setUserType } = useSession();
-    const { address, isConnected, open, provider } = useWalletConnectModal();
+    const { address, isConnected } = useAccount();
+    const { disconnect, open } = useAppKit();
 
     const syncedAddress = useRef(null);
 
@@ -56,9 +57,9 @@ export const useWalletConnectionManager = () => {
             setLoading(true);
 
             if (isConnected) {
-                await provider?.disconnect();
+                await disconnect('eip155');
             } else {
-                await open();
+                await open({ view: 'Connect' });
             }
         } catch (error) {
             const processedError = ErrorHandler.processError(error, 'connectWallet');
@@ -67,7 +68,7 @@ export const useWalletConnectionManager = () => {
         } finally {
             setLoading(false);
         }
-    }, [isConnected, open, provider, setLoading, setError]);
+    }, [disconnect, isConnected, open, setLoading, setError]);
 
     return {
         isConnected,
