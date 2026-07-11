@@ -11,7 +11,7 @@ async function deployOnchainIDSuite(deployer) {
         Identity.abi,
         Identity.bytecode,
         deployer
-    ).deploy(deployer.address, true);
+    ).deploy(await deployer.getAddress(), true);
 
     // Wait for implementation transaction to be deployed
     await identityImplementation.waitForDeployment();
