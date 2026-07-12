@@ -9,9 +9,10 @@
  * and appends one CSV row per run to eval/results/measure.csv.
  *
  * STATUS: every life-cycle operation in the catalog is wired — deployIdentity,
- * addClaim (cold + warm), addKeyToIdentity, addTrustedIssuer, deployClaimIssuer,
- * the contract deployments, and the E4 validation read path. See the "Operation
- * catalog" section of ../README.md for the catalog.
+ * addClaim (cold + warm), addKeyToIdentity, addTrustedIssuer, deployClaimIssuer
+ * and its lightweight alternative onboardIssuerIdentity (issuer as identity
+ * proxy), the contract deployments, and the E4 validation read path. See the
+ * "Operation catalog" section of ../README.md for the catalog.
  *
  * Gas is the primary, deterministic metric (identical on any EVM chain). On the
  * local network the cost columns are ~0 and are computed in post-processing from
@@ -322,6 +323,40 @@ async function main() {
                 rTI.blockNumber, { parts: 'deploy+addKey+addTrustedIssuer' });
         }
         console.log(`[✓] deployClaimIssuer: ${runs} runs -> ${CSV}`);
+    }
+
+    // --- onboardIssuerIdentity (composite: createIdentity + addKey +
+    // addTrustedIssuer; the institution is registered as a lightweight identity
+    // proxy through the factory instead of a full ClaimIssuer contract. Mirrors
+    // scripts/claimIssuer/deploy-issuer-identity.js) ------------------------
+    {
+        const s = await deployFullTREXSuiteFixture();
+        const runs = Math.min(REPS, 45);
+        if (runs < REPS) console.warn(`[!] onboardIssuerIdentity capped at ${runs} (registry limit 50)`);
+        for (let run = 0; run < runs; run++) {
+            // Fresh institution wallet, funded so it can send its own addKey tx.
+            const iw = ethers.Wallet.createRandom().connect(ethers.provider);
+            await (await s.deployerWallet.sendTransaction({
+                to: iw.address, value: ethers.parseEther('1'),
+            })).wait();
+            const t0 = performance.now();
+            // 1. Lightweight identity proxy for the institution (factory owner pays).
+            const rId = await (
+                await s.identityFactory.connect(s.deployerWallet).createIdentity(iw.address, `issuer-${run}`)
+            ).wait();
+            const issuerIdAddr = await s.identityFactory.getIdentity(iw.address);
+            const issuerId = new ethers.Contract(issuerIdAddr, Identity.abi, iw);
+            // 2. Authorise the institution's own key as a CLAIM_SIGNER.
+            const rKey = await (await issuerId.addKey(keyHash(iw.address), 3, 1)).wait();
+            // 3. Accredit the issuer identity in the registry.
+            const rTI = await (
+                await s.trustedIssuersRegistry.connect(s.deployerWallet).addTrustedIssuer(issuerIdAddr, topics)
+            ).wait();
+            const total = rId.gasUsed + rKey.gasUsed + rTI.gasUsed;
+            await recordGas('onboardIssuerIdentity', run, total, rTI.gasPrice, performance.now() - t0,
+                rTI.blockNumber, { parts: 'createIdentity+addKey+addTrustedIssuer' });
+        }
+        console.log(`[✓] onboardIssuerIdentity: ${runs} runs -> ${CSV}`);
     }
 
     // ====================================================================
