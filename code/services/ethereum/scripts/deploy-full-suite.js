@@ -4,7 +4,13 @@ const { deployTrexSuite } = require('./suites/TREX');
 const { uploadConfig } = require('../../config/uploadConfiguration');
 const config = require('../../config/loadConfig');
 const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
+const { deployIssuerIdentity } = require('./claimIssuer/deploy-issuer-identity');
 const { getContractAt, getWallet } = require('./utils/ethers');
+
+// Institution onboarding path (see the paper's evaluation, onboarding cost):
+//   ISSUER_ONBOARDING=claimissuer  -> full ClaimIssuer contract per institution (default)
+//   ISSUER_ONBOARDING=identity     -> lightweight identity proxy (~10x cheaper)
+const ISSUER_ONBOARDING = (process.env.ISSUER_ONBOARDING || 'claimissuer').toLowerCase();
 
 /**
  * Responsible for deploying into the Ethereum network the following contracts(addresses and ABIs):
@@ -46,6 +52,12 @@ async function main() {
         deployer
     );
 
+    const identityFactory = getContractAt(
+        identityFactoryAddress,
+        identityFactoryAbi,
+        deployer
+    );
+
     // Update the configuration file
     uploadConfig(
         identityFactoryAddress,
@@ -65,13 +77,24 @@ async function main() {
             continue;
         }
 
-        await deployClaimIssuer(
-            trustedIR,
-            undefined,
-            deployer,
-            institution.wallet.privateKey,
-            institution.institutionID
-        );
+        if (ISSUER_ONBOARDING === 'identity') {
+            await deployIssuerIdentity(
+                trustedIR,
+                identityFactory,
+                undefined,
+                deployer,
+                institution.wallet.privateKey,
+                institution.institutionID
+            );
+        } else {
+            await deployClaimIssuer(
+                trustedIR,
+                undefined,
+                deployer,
+                institution.wallet.privateKey,
+                institution.institutionID
+            );
+        }
     }
 }
 
