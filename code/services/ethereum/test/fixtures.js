@@ -3,6 +3,25 @@ const {
     contracts: { Factory, Identity, ImplementationAuthority, ClaimIssuer }
 } = require('@onchain-id/solidity');
 
+// hardhat's ethers.deployContract / ContractFactory.deploy resolve as soon as the
+// deployment tx is *broadcast*, not mined. On the in-process Hardhat network every
+// tx is auto-mined instantly so that is invisible; on a real block-time chain
+// (e.g. the Besu consortium) the contract has no code yet, and the next
+// estimateGas/call against it silently runs against a code-less address (a no-op
+// that under-estimates gas -> the follow-up tx runs out of gas). These helpers
+// force each deployment/dependent tx to be mined before we depend on it. They are
+// no-ops on the instant-mining network, so the test suite is unaffected.
+async function deployed(deployPromise) {
+    const contract = await deployPromise;
+    await contract.waitForDeployment();
+    return contract;
+}
+async function sent(txPromise) {
+    const tx = await txPromise;
+    await tx.wait();
+    return tx;
+}
+
 async function deployFactoryFixture() {
     const [deployerWallet, aliceWallet, bobWallet] = await ethers.getSigners();
 
@@ -12,10 +31,10 @@ async function deployFactoryFixture() {
         Identity.bytecode,
         deployerWallet
     );
-    const identityImplementation = await IdentityContract.deploy(
+    const identityImplementation = await deployed(IdentityContract.deploy(
         deployerWallet.address, // owner
         true // isLibrary - true for IdentityFactory
-    );
+    ));
 
     // On Chain Id implementation authority -> Points to the implementation contract
     const ImplementationAuthorityContract = await new ethers.ContractFactory(
@@ -25,9 +44,9 @@ async function deployFactoryFixture() {
     );
 
     const implementationAuthority =
-        await ImplementationAuthorityContract.deploy(
+        await deployed(ImplementationAuthorityContract.deploy(
             await identityImplementation.getAddress()
-        );
+        ));
 
     // On Chain Id Factory -> Points to the implementation authority
     const IdentityFactory = await new ethers.ContractFactory(
@@ -35,9 +54,9 @@ async function deployFactoryFixture() {
         Factory.bytecode,
         deployerWallet
     );
-    const identityFactory = await IdentityFactory.deploy(
+    const identityFactory = await deployed(IdentityFactory.deploy(
         await implementationAuthority.getAddress()
-    );
+    ));
 
     return {
         deployerWallet,
@@ -57,14 +76,14 @@ async function deployIdentityFixture() {
         await deployFactoryFixture();
 
     // Add the ClaimIssuer as a ClaimIssuer
-    const claimIssuer = await new ethers.ContractFactory(
+    const claimIssuer = await deployed(new ethers.ContractFactory(
         ClaimIssuer.abi,
         ClaimIssuer.bytecode,
         claimIssuerWallet
-    ).deploy(claimIssuerWallet.address);
+    ).deploy(claimIssuerWallet.address));
 
     // Add ClaimIssuer as self claim signer
-    await claimIssuer
+    await sent(claimIssuer
         .connect(claimIssuerWallet)
         .addKey(
             ethers.keccak256(
@@ -75,22 +94,22 @@ async function deployIdentityFixture() {
             ),
             3,
             1
-        );
+        ));
 
     // Create an identity for Alice
-    await identityFactory
+    await sent(identityFactory
         .connect(deployerWallet)
-        .createIdentity(aliceWallet.address, 'alice-salt');
+        .createIdentity(aliceWallet.address, 'alice-salt'));
 
     // Create an identity for Bob
-    await identityFactory
+    await sent(identityFactory
         .connect(deployerWallet)
-        .createIdentity(bobWallet.address, 'bob-salt');
+        .createIdentity(bobWallet.address, 'bob-salt'));
 
     // Create an identity for ClaimIssuer
-    await identityFactory
+    await sent(identityFactory
         .connect(deployerWallet)
-        .createIdentity(claimIssuerWallet.address, 'claim-issuer-salt');
+        .createIdentity(claimIssuerWallet.address, 'claim-issuer-salt'));
 
     // Get the identity address for Alice
     const aliceIdentity = await identityFactory.getIdentity(
@@ -118,37 +137,37 @@ async function deployFullTREXSuiteFixture() {
     const [deployerWallet, agentWallet] = await ethers.getSigners();
 
     // Deploy implementations
-    const claimTopicsRegistryImplementation = await ethers.deployContract(
+    const claimTopicsRegistryImplementation = await deployed(ethers.deployContract(
         'ClaimTopicsRegistry',
         deployerWallet
-    );
-    const trustedIssuersRegistryImplementation = await ethers.deployContract(
+    ));
+    const trustedIssuersRegistryImplementation = await deployed(ethers.deployContract(
         'TrustedIssuersRegistry',
         deployerWallet
-    );
-    const identityRegistryStorageImplementation = await ethers.deployContract(
+    ));
+    const identityRegistryStorageImplementation = await deployed(ethers.deployContract(
         'IdentityRegistryStorage',
         deployerWallet
-    );
-    const identityRegistryImplementation = await ethers.deployContract(
+    ));
+    const identityRegistryImplementation = await deployed(ethers.deployContract(
         'IdentityRegistry',
         deployerWallet
-    );
-    const modularComplianceImplementation = await ethers.deployContract(
+    ));
+    const modularComplianceImplementation = await deployed(ethers.deployContract(
         'ModularCompliance',
         deployerWallet
-    );
-    const tokenImplementation = await ethers.deployContract('Token', deployerWallet);
+    ));
+    const tokenImplementation = await deployed(ethers.deployContract('Token', deployerWallet));
     const {
         identityFactory,
         implementationAuthority: identityImplementationAuthority
     } = await deployFactoryFixture();
 
-    const trexImplementationAuthority = await ethers.deployContract(
+    const trexImplementationAuthority = await deployed(ethers.deployContract(
         'TREXImplementationAuthority',
         [true, ethers.ZeroAddress, ethers.ZeroAddress],
         deployerWallet
-    );
+    ));
     const versionStruct = {
         major: 4,
         minor: 0,
@@ -164,21 +183,21 @@ async function deployFullTREXSuiteFixture() {
             await trustedIssuersRegistryImplementation.getAddress(),
         mcImplementation: await modularComplianceImplementation.getAddress()
     };
-    await trexImplementationAuthority
+    await sent(trexImplementationAuthority
         .connect(deployerWallet)
-        .addAndUseTREXVersion(versionStruct, contractsStruct);
+        .addAndUseTREXVersion(versionStruct, contractsStruct));
 
-    const trexFactory = await ethers.deployContract(
+    const trexFactory = await deployed(ethers.deployContract(
         'TREXFactory',
         [
             await trexImplementationAuthority.getAddress(),
             await identityFactory.getAddress()
         ],
         deployerWallet
-    );
-    await identityFactory
+    ));
+    await sent(identityFactory
         .connect(deployerWallet)
-        .addTokenFactory(await trexFactory.getAddress());
+        .addTokenFactory(await trexFactory.getAddress()));
 
     const claimTopicsRegistry = await ethers
         .deployContract(
@@ -186,12 +205,13 @@ async function deployFullTREXSuiteFixture() {
             [await trexImplementationAuthority.getAddress()],
             deployerWallet
         )
-        .then(async proxy =>
-            ethers.getContractAt(
+        .then(async proxy => {
+            await proxy.waitForDeployment();
+            return ethers.getContractAt(
                 'ClaimTopicsRegistry',
                 await proxy.getAddress()
-            )
-        );
+            );
+        });
 
     const trustedIssuersRegistry = await ethers
         .deployContract(
@@ -199,12 +219,13 @@ async function deployFullTREXSuiteFixture() {
             [await trexImplementationAuthority.getAddress()],
             deployerWallet
         )
-        .then(async proxy =>
-            ethers.getContractAt(
+        .then(async proxy => {
+            await proxy.waitForDeployment();
+            return ethers.getContractAt(
                 'TrustedIssuersRegistry',
                 await proxy.getAddress()
-            )
-        );
+            );
+        });
 
     const identityRegistryStorage = await ethers
         .deployContract(
@@ -212,17 +233,18 @@ async function deployFullTREXSuiteFixture() {
             [await trexImplementationAuthority.getAddress()],
             deployerWallet
         )
-        .then(async proxy =>
-            ethers.getContractAt(
+        .then(async proxy => {
+            await proxy.waitForDeployment();
+            return ethers.getContractAt(
                 'IdentityRegistryStorage',
                 await proxy.getAddress()
-            )
-        );
+            );
+        });
 
-    const defaultCompliance = await ethers.deployContract(
+    const defaultCompliance = await deployed(ethers.deployContract(
         'DefaultCompliance',
         deployerWallet
-    );
+    ));
 
     const identityRegistry = await ethers
         .deployContract(
@@ -235,9 +257,10 @@ async function deployFullTREXSuiteFixture() {
             ],
             deployerWallet
         )
-        .then(async proxy =>
-            ethers.getContractAt('IdentityRegistry', await proxy.getAddress())
-        );
+        .then(async proxy => {
+            await proxy.waitForDeployment();
+            return ethers.getContractAt('IdentityRegistry', await proxy.getAddress());
+        });
 
     const tokenName = 'TREXDINO';
     const tokenSymbol = 'TREX';
@@ -255,9 +278,10 @@ async function deployFullTREXSuiteFixture() {
             ],
             deployerWallet
         )
-        .then(async proxy =>
-            ethers.getContractAt('Token', await proxy.getAddress())
-        );
+        .then(async proxy => {
+            await proxy.waitForDeployment();
+            return ethers.getContractAt('Token', await proxy.getAddress());
+        });
 
 
     return {

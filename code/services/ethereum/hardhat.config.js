@@ -15,6 +15,23 @@ if (process.env.SEPOLIA_RPC && process.env.PRIVATE_KEY) {
     };
 }
 
+// Permissioned consortium (Hyperledger Besu QBFT). Enabled when BESU_RPC is set.
+// Signers come from the mnemonic prefunded in the Besu genesis (see
+// eval/consortium/besu/derive-accounts.js), so ethers.getSigners() is funded.
+//   BESU_RPC=http://<node-ip>:8545 npx hardhat run eval/throughput.js --network besu
+if (process.env.BESU_RPC) {
+    networks.besu = {
+        url: process.env.BESU_RPC,
+        chainId: Number(process.env.BESU_CHAIN_ID || 1337),
+        accounts: {
+            mnemonic: process.env.BESU_MNEMONIC
+                || 'test test test test test test test test test test test junk',
+            count: Number(process.env.BESU_ACCOUNTS || 20),
+        },
+        gasPrice: 0, // free-gas permissioned chain
+    };
+}
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     solidity: {

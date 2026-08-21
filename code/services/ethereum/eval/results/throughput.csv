@@ -1,0 +1,15 @@
+iso,network,chainId,workload,experiment,blockPeriodS,target,maxInflight,submitted,mined,errors,durationS,achievedTps,latMinMs,latMedMs,latP95Ms,latMaxMs,firstBlock,lastBlock,blocksUsed,avgTxPerBlock,avgGasPerBlock,gasLimit,params
+2026-08-21T00:13:18.893Z,besu,1337,addClaim,E-TPS,2,300,64,300,300,0,27.370,10.96,3234.1,5195.6,6573.0,8929.3,980,990,11,27.27,3505236,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T00:13:58.149Z,besu,1337,addClaim,E-LAT,2,300,64,20,20,0,39.242,0.00,1643.4,2163.0,2313.4,2313.4,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T00:37:45.670Z,besu,1337,addClaim,E-TPS,2,600,200,600,600,0,112.501,5.33,2556.6,33858.4,46378.1,49584.7,1670,1694,25,24.00,3005696,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T00:38:24.597Z,besu,1337,addClaim,E-LAT,2,600,200,20,20,0,38.911,0.00,627.2,2171.7,2205.4,2205.4,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T01:07:58.769Z,besu,1337,addClaim,E-TPS,2,600,200,600,600,0,15.233,39.39,1593.0,4104.9,7753.2,7753.6,2611,2617,7,85.71,10738323,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T01:08:38.330Z,besu,1337,addClaim,E-LAT,2,600,200,20,20,0,39.534,0.00,1514.9,1926.1,2376.6,2376.6,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T01:13:00.221Z,besu,1337,addClaim,E-TPS,2,1200,400,1200,1200,0,19.006,63.14,2274.6,5352.6,8778.7,10758.3,2759,2765,7,171.43,21231327,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T01:13:40.320Z,besu,1337,addClaim,E-LAT,2,1200,400,20,20,0,40.067,0.00,1062.2,1940.7,2622.6,2622.6,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T01:23:11.768Z,besu,1337,addClaim,E-TPS,1,1200,400,1200,1200,0,26.327,45.58,2456.6,7809.9,12798.3,13947.0,135,141,7,171.43,21193417,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T01:23:31.299Z,besu,1337,addClaim,E-LAT,1,1200,400,20,20,0,19.504,0.00,616.9,1059.0,1080.1,1080.1,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T01:32:47.593Z,besu,1337,addClaim,E-TPS,5,1200,400,1200,1200,0,28.704,41.81,2867.5,8700.7,12285.5,14412.1,74,79,6,200.00,24725653,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T01:34:40.199Z,besu,1337,addClaim,E-LAT,5,1200,400,20,20,0,112.578,0.00,2924.2,5012.9,13041.1,13041.1,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}
+2026-08-21T01:38:08.764Z,besu,1337,transfer,E-TPS,2,2000,500,2000,2000,0,17.507,114.24,930.7,3433.9,9597.3,10445.1,39,46,8,250.00,5250000,600000,{"note":"loaded latency incl. queueing"}
+2026-08-21T01:38:47.242Z,besu,1337,transfer,E-LAT,2,2000,500,20,20,0,38.449,0.00,765.7,1993.1,2073.6,2073.6,0,0,0,0.00,0,600000,{"note":"unloaded sequential"}

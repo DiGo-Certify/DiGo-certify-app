@@ -1,0 +1,6 @@
+config.env
+nodes*.env
+besu/out/
+besu/alloc.json
+besu/qbft-config.json
+ansible/inventory.ini

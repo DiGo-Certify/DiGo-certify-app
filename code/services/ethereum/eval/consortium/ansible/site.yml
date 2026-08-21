@@ -1,0 +1,85 @@
+---
+# Install Docker and start a Besu QBFT validator on each VM.
+# Run from eval/consortium:  ansible-playbook -i ansible/inventory.ini ansible/site.yml
+#
+# Optional WAN emulation:  add  -e netem_delay=30ms  to apply a one-way delay on
+# the tenant interface (tag: netem) for a WAN-sensitivity datapoint.
+- name: Deploy Besu QBFT consortium
+  hosts: besu
+  become: true
+  vars:
+    besu_dir: /opt/besu
+    besu_image: "{{ lookup('env', 'BESU_IMAGE') | default('hyperledger/besu:24.9.1', true) }}"
+    out_dir: "{{ playbook_dir }}/../besu/out"
+    netem_delay: ""          # e.g. '30ms' to emulate cross-region WAN; empty = off
+    netem_iface: ens3        # tenant NIC on the VM (check with `ip route`)
+
+  tasks:
+    - name: Install Docker engine and compose plugin
+      ansible.builtin.apt:
+        name: [docker.io, docker-compose-v2]
+        state: present
+        update_cache: true
+
+    - name: Ensure Docker is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Create Besu data directory
+      ansible.builtin.file:
+        path: "{{ besu_dir }}/data"
+        state: directory
+        mode: "0755"
+
+    - name: Copy genesis and static-nodes
+      ansible.builtin.copy:
+        src: "{{ out_dir }}/{{ item.src }}"
+        dest: "{{ besu_dir }}/{{ item.dest }}"
+        mode: "0644"
+      loop:
+        - { src: genesis.json,       dest: genesis.json }
+        - { src: static-nodes.json,  dest: static-nodes.json }
+
+    - name: Copy this node's validator key
+      ansible.builtin.copy:
+        src: "{{ out_dir }}/node{{ node_index }}/key"
+        dest: "{{ besu_dir }}/data/key"
+        mode: "0600"
+
+    - name: Install docker-compose file
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../besu/docker-compose.node.yml"
+        dest: "{{ besu_dir }}/docker-compose.yml"
+        mode: "0644"
+
+    - name: Write per-node environment (advertised P2P host = this node's local IP)
+      ansible.builtin.copy:
+        dest: "{{ besu_dir }}/.env"
+        mode: "0644"
+        content: |
+          P2P_HOST={{ ansible_host }}
+          BESU_IMAGE={{ besu_image }}
+
+    - name: Optional WAN emulation on the tenant interface
+      ansible.builtin.command: "tc qdisc replace dev {{ netem_iface }} root netem delay {{ netem_delay }}"
+      when: netem_delay | length > 0
+      tags: [netem]
+
+    - name: Start / update Besu
+      ansible.builtin.command:
+        cmd: docker compose up -d
+        chdir: "{{ besu_dir }}"
+
+    - name: Wait for JSON-RPC to answer
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}:8545"
+        method: POST
+        body_format: json
+        body: { jsonrpc: "2.0", method: "net_peerCount", params: [], id: 1 }
+        status_code: 200
+      register: rpc
+      retries: 20
+      delay: 6
+      until: rpc.status == 200

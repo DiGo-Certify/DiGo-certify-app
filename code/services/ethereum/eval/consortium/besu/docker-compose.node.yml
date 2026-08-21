@@ -1,0 +1,36 @@
+# Per-VM Besu QBFT validator. Ansible drops this at /opt/besu on each node,
+# writes a .env with P2P_HOST=<that node's local IP>, and runs `docker compose up -d`.
+# Host networking: p2p (30303) and rpc (8545) bind on the VM's interfaces; the
+# OpenStack security group governs who can reach them.
+services:
+  besu:
+    image: ${BESU_IMAGE:-hyperledger/besu:24.9.1}
+    container_name: besu
+    restart: unless-stopped
+    # Data dir and validator key are root-owned on the host (Ansible copies them
+    # as root); run as root so Besu can read the key and write chain data.
+    user: "0:0"
+    network_mode: host
+    volumes:
+      - ./data:/besu/data
+      - ./genesis.json:/besu/genesis.json:ro
+      - ./static-nodes.json:/besu/data/static-nodes.json:ro
+    command:
+      - --genesis-file=/besu/genesis.json
+      - --data-path=/besu/data
+      - --node-private-key-file=/besu/data/key
+      - --p2p-host=${P2P_HOST}
+      - --p2p-port=30303
+      - --nat-method=NONE
+      - --min-gas-price=0
+      - --rpc-http-enabled
+      - --rpc-http-host=0.0.0.0
+      - --rpc-http-port=8545
+      - --rpc-http-api=ETH,NET,WEB3,QBFT,ADMIN,TXPOOL,DEBUG
+      - --rpc-http-cors-origins=all
+      - --host-allowlist=*
+      # Load-test headroom: the throughput harness opens many concurrent RPC
+      # connections (in-flight sends + per-tx receipt polling). Defaults (80
+      # active connections) are too low and the node drops sockets under load.
+      - --rpc-http-max-active-connections=2000
+      - --rpc-http-max-batch-size=512
