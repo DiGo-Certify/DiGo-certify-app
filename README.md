@@ -8,7 +8,7 @@
 <br />
 <div align="center">
 
-<h3 align="center">SCAR: A Blockchain based approach for academic registry</h3>
+<h3 align="center">A Blockchain based approach for academic registry</h3>
 
   <p align="center">
     Academic certificates registry on blockchain for secure and tamper-proof verification.
@@ -49,7 +49,7 @@
 
 [![Block Chain and Smart Contracts][product-screenshot]][product-screenshot]
 
-SCAR, **S**mart **C**ontract **A**cademic **R**egistry is a multiplatform application that allows a entity to register academic certificates on a blockchain, and allows a third party to verify the authenticity of the certificate.
+Certify App is a multiplatform application that allows a entity to register academic certificates on a blockchain, and allows a third party to verify the authenticity of the certificate.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
