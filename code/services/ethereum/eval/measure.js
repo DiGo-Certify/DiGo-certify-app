@@ -124,15 +124,16 @@ async function measureDeploy(operation, deployFn, reps = DEPLOY_REPS) {
  * Measure a read-only op (0 gas to caller): record its estimated compute gas and
  * the RPC round-trip latency.
  */
-async function measureView(operation, estimateFn, callFn) {
+async function measureView(operation, estimateFn, callFn, params = {}) {
     const est = await estimateFn();
+    const paramsJson = JSON.stringify(params);
     for (let run = 0; run < REPS; run++) {
         const t0 = performance.now();
         await callFn();
         const latencyMs = performance.now() - t0;
         appendRow([
             new Date().toISOString(), network.name, operation, run,
-            est.toString(), '0', '0', '0', latencyMs.toFixed(1), '-', '{}',
+            est.toString(), '0', '0', '0', latencyMs.toFixed(1), '-', paramsJson,
         ]);
     }
     console.log(`[✓] ${operation} (view): ${REPS} runs -> ${CSV}`);
@@ -381,11 +382,24 @@ async function main() {
     // ====================================================================
     // E4 — validation read path (0 gas to the caller; latency + view gas)
     // ====================================================================
-    // Verification reads the subject's CERTIFICATE claims and re-computes the
-    // digest of the presented certificate, comparing it against the stored one
-    // (methodology: getClaimsByTopic + local SHA-256 compare). It is a read-only
-    // op, so measureView records the estimated compute gas of the on-chain read
-    // (getClaimIdsByTopic) plus the RPC round-trip latency of the full compare.
+    // Two distinct validation paths, both read-only (external callers pay 0 gas
+    // via eth_call). We record the estimated on-chain compute gas of each (the
+    // cost it WOULD incur if invoked from within a transaction, e.g. by another
+    // contract) alongside the RPC round-trip latency:
+    //
+    //   'validate'              -- the CLIENT read path: fetch the subject's
+    //                              CERTIFICATE claims (getClaimIdsByTopic) and
+    //                              recompute + compare the digest off-chain
+    //                              (SHA-256). Trust (issuer accreditation) is
+    //                              checked client-side here.
+    //   'validate:onchain-view' -- the COMPOSITE on-chain view
+    //                              (CertificateVerifier.isCertifiedBy): a single
+    //                              call that consults the trusted-issuer registry
+    //                              AND the issuer's isClaimValid, enforcing
+    //                              accreditation as an on-chain invariant. Costs
+    //                              more gas than the plain read because it also
+    //                              walks the registry and verifies the signature.
+    //
     // Reuse warm.identity, which holds a CERTIFICATE claim from the cold/warm
     // loops; derive the "presented" digest from the actually-stored claim so the
     // compare mirrors a genuine (matching) verification regardless of REPS.
@@ -403,6 +417,30 @@ async function main() {
                 claims.some(c => hash(ethers.toUtf8String(c.data)) === presentedDigest);
             }
         );
+
+        // Composite on-chain view: deploy the verifier bound to the same
+        // trusted-issuer registry the claim issuer is accredited in, then
+        // estimate/exercise isCertifiedBy for a single accredited issuer,
+        // payload-bound to the actually-stored claim (mirrors the payload-bound
+        // case in test/verifier/certificate-verifier.test.js).
+        if (stored.length) {
+            const verifier = await ethers.deployContract(
+                'CertificateVerifier',
+                [await trustedIssuersRegistry.getAddress()],
+                deployerWallet
+            );
+            const subject = await warm.identity.getAddress();
+            const topicId = BigInt(ethers.id(claimTopic));
+            const expectedData = stored[0].data; // exact stored bytes => payload-bound
+            await measureView(
+                'validate:onchain-view',
+                () => verifier.isCertifiedBy.estimateGas(subject, topicId, expectedData),
+                async () => {
+                    await verifier.isCertifiedBy(subject, topicId, expectedData);
+                },
+                { issuers: 1 }
+            );
+        }
     }
 
     console.log('\nDone. Summarise eval/results/measure.csv into the paper tables.');
