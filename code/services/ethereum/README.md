@@ -1,7 +1,7 @@
-# On-Chain Layer — SCAR / DiGo Certify
+# On-Chain Layer — Certify App
 
 This is the [Hardhat](https://hardhat.org/) project for the **on-chain layer** of
-SCAR / DiGo Certify: an academic-certificate registry built by repurposing
+Certify App: an academic-certificate registry built by repurposing
 **OnchainID** (ERC-734/735 self-sovereign identity) and **T-REX / ERC-3643**
 (permissioned-token compliance) into a registry for identity-bound, accredited,
 updatable, and privately verifiable credentials. Verification runs directly

@@ -1,34 +1,20 @@
-# `DiGo Certify`
+# `Certify App`
 
 <a name="readme-top"></a>
-
-[![Contributors][contributors-shield]][contributors-url]
-![GitHub repo size](https://img.shields.io/github/repo-size/DiGo-Certify/DiGo-certify-app)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/DiGo-Certify/DiGo-certify-app/cl.yml)
-![GitHub License](https://img.shields.io/github/license/DiGo-Certify/DiGo-certify-app)
 
 ---
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/DiGo-Certify/DiGo-certify-app/blob/main/docs/images/logo.png">
-    <img src="docs/images/splash-screen.png" alt="Logo">
-  </a>
 
 <h3 align="center">SCAR: A Blockchain based approach for academic registry</h3>
 
   <p align="center">
     Academic certificates registry on blockchain for secure and tamper-proof verification.
     <br />
-    <a href="https://github.com/DiGo-Certify/DiGo-certify-app/wiki"><strong>Explore the docs »</strong></a>
     <br />
-    <br />
-    <a href="https://www.youtube.com/watch?v=4c9EznTLqlo&ab_channel=DiogoRodrigues">View Demo</a>
-    ·
-    <a href="https://github.com/DiGo-Certify/DiGo-certify-app/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/DiGo-Certify/DiGo-certify-app/issues">Request Feature</a>
+    <em>Repository anonymized for double-anonymous review.</em>
   </p>
 </div>
 
@@ -95,7 +81,7 @@ If you like this project, don't forget to give it a star on GitHub! Every star m
 
 # 🚀 `Getting Started`
 
-We need to install the DiGo Certify app on your device.
+We need to install the Certify App on your device.
 The following instructions will guide you through the installation process.
 
 ## 📋 Prerequisites
@@ -122,11 +108,11 @@ npm install npm@latest -g
 
 ## 🛠️ Installation and Usage
 
-📄 Clone or fork `DiGo Certify App`:
+📄 Clone or fork `Certify App`:
 
 ```sh
-git clone https://github.com/DiGo-Certify/DiGo-certify-app.git && \
-cd DiGo-certify-app/
+git clone <anonymized-repository-url> && \
+cd certify-app/
 ```
 
 ⛓️ Start a local blockchain in a separate terminal:
@@ -177,7 +163,7 @@ For physical phone testing, use a phone-reachable RPC URL instead of `127.0.0.1`
 ./install.sh --local --rpc http://YOUR_MAC_IP:8545/
 ```
 
-The Hardhat node script listens on `0.0.0.0`, so the phone can reach it over Wi-Fi when the network/firewall allows it. If the phone is not on the same network, use an externally reachable RPC URL, such as ngrok or an INESC server, with the same `--rpc` flag.
+The Hardhat node script listens on `0.0.0.0`, so the phone can reach it over Wi-Fi when the network/firewall allows it. If the phone is not on the same network, use an externally reachable RPC URL, such as ngrok or a remote server, with the same `--rpc` flag.
 
 <!-- USAGE EXAMPLES -->
 
@@ -210,15 +196,9 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- CONTACT -->
 
-# 📬 `Contact Us`
+# 📬 `Contact`
 
-:inbox_tray: Diogo Rodrigues(developer) - [diogo.rodrigues.business@gmail.com](mailto:diogo.rodrigues.business@gmail.com)
-
-:inbox_tray: Gonçalo Frutuoso(developer) - [goncalo.frutuoso@tecnico.ulisboa.pt](mailto:goncalo.frutuoso@tecnico.ulisboa.pt)
-
-:inbox_tray: Cátia Vaz(supervisor) - [cvaz@isel.pt](mailto:cvaz@isel.pt)
-
-:inbox_tray: Alexandre Francisco(supervisor) - [aplf@tecnico.pt](mailto:aplf@tecnico.pt)
+Author and contact details are omitted for double-anonymous review.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -234,9 +214,9 @@ Distributed under the GNU GENERAL PUBLIC LICENSE License. See `LICENSE.txt` for 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/DiGo-Certify/DiGo-certify-app.svg
-[contributors-url]: https://github.com/DiGo-Certify/DiGo-certify-app/graphs/contributors
-[product-screenshot]: ./docs/images/blockchain-and-smart-contract-image.png
+[contributors-shield]: https://img.shields.io/badge/contributors-anonymized-lightgrey.svg
+[contributors-url]: #
+[product-screenshot]: #
 [Node.js]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/
 [Expo.js]: https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37

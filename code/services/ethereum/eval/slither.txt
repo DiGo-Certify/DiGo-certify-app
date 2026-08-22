@@ -1,8 +1,8 @@
-'npx hardhat clean' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
-'npx hardhat clean --global' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+'npx hardhat clean' running (wd: /workspace/code/services/ethereum)
+'npx hardhat clean --global' running (wd: /workspace/code/services/ethereum)
 Problem executing hardhat: WARNING: You are currently using Node.js v25.2.1, which is not supported by Hardhat. This can lead to unexpected behavior. See https://v2.hardhat.org/nodejs-versions
 
-'npx hardhat compile --force' running (wd: /home/aplf/stage/scar-paper/DiGo-certify-app/code/services/ethereum)
+'npx hardhat compile --force' running (wd: /workspace/code/services/ethereum)
 INFO:Detectors:[91m
 Detector: arbitrary-send-erc20
 DVDTransferManager.takeDVDTransfer(bytes32) (contracts/DVD/DVDTransferManager.sol#306-343) uses arbitrary from in transferFrom: token2Contract.transferFrom(token2.counterpart,fees.fee2Wallet,fees.txFee2) (contracts/DVD/DVDTransferManager.sol#335)

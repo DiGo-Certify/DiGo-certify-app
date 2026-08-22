@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "DiGo-Certify",
-    "scheme": "digo-certify",
-    "slug": "digo-certify",
+    "name": "Certify-App",
+    "scheme": "certify-app",
+    "slug": "certify-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,14 +28,14 @@
         ],
         "CFBundleAllowMixedLocalizations": true
       },
-      "bundleIdentifier": "com.digocertify"
+      "bundleIdentifier": "com.certifyapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.digocertify"
+      "package": "com.certifyapp"
     },
     "plugins": [
       [

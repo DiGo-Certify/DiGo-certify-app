@@ -29,7 +29,7 @@ notes.md
 .idea
 
 # Ignore the directory of wiki
-DiGo-certify-app.wiki/
+certify-app.wiki/
 
 # Expo
 .expo/

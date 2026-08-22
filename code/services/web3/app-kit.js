@@ -9,7 +9,7 @@ import { mainnet, sepolia } from 'viem/chains';
 import config from '@/config.json';
 
 const projectId = 'b57487c51107cc8b2509a12a8d028338';
-const storagePrefix = '@digo-certify/appkit-v1:';
+const storagePrefix = '@certify-app/appkit-v1:';
 
 const getStorageKey = key => `${storagePrefix}${key}`;
 
@@ -50,12 +50,12 @@ export const appKit = createAppKit({
     defaultNetwork: hardhat,
     storage,
     metadata: {
-        name: 'DiGo Certify',
+        name: 'Certify App',
         description: 'Issue and validate academic certificates on Ethereum.',
-        url: 'https://github.com/DiGo-Certify/DiGo-certify-app',
-        icons: ['https://raw.githubusercontent.com/DiGo-Certify/DiGo-certify-app/main/docs/images/logo.png'],
+        url: 'https://example.org',
+        icons: [],
         redirect: {
-            native: 'digo-certify://',
+            native: 'certify-app://',
         },
     },
     features: {

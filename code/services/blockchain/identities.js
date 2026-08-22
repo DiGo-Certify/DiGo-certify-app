@@ -82,7 +82,7 @@ export async function createIdentityForWallet(walletAddress) {
             throw new BlockchainError('Wallet address is required');
         }
 
-        const salt = `digo-${walletAddress.toLowerCase()}`;
+        const salt = `certify-${walletAddress.toLowerCase()}`;
         const identity = await deployIdentity(getIdentityFactory(), walletAddress, salt, getSigner());
 
         invalidateUserCache(walletAddress);
