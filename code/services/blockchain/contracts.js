@@ -28,6 +28,14 @@ export function getTrustedIssuerRegistry() {
     );
 }
 
+export function getCertificateVerifier() {
+    return getContractAt(
+        config.certificateVerifier.address,
+        config.certificateVerifier.abi,
+        getProvider()
+    );
+}
+
 export function getClaimIssuerContract(institution) {
     return getContractAt(institution.address, institution.abi, getSigner());
 }

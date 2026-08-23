@@ -6,6 +6,7 @@ const config = require('../../config/loadConfig');
 const { deployClaimIssuer } = require('./claimIssuer/deploy-claim-issuer');
 const { deployIssuerIdentity } = require('./claimIssuer/deploy-issuer-identity');
 const { getContractAt, getWallet } = require('./utils/ethers');
+const CertificateVerifier = require('../artifacts/contracts/verifier/CertificateVerifier.sol/CertificateVerifier.json');
 
 // Institution onboarding path (see the paper's evaluation, onboarding cost):
 //   ISSUER_ONBOARDING=claimissuer  -> full ClaimIssuer contract per institution (default)
@@ -46,6 +47,22 @@ async function main() {
         token
     } = await deployTrexSuite(deployer);
 
+    const certificateVerifier = await new ethers.ContractFactory(
+        CertificateVerifier.abi,
+        CertificateVerifier.bytecode,
+        deployer
+    ).deploy(trustedIssuersRegistry.address);
+    await certificateVerifier.waitForDeployment();
+
+    const certificateVerifierConfig = {
+        address: await certificateVerifier.getAddress(),
+        abi: certificateVerifier.interface.fragments
+    };
+
+    console.log(
+        `[+] Deployed CertificateVerifier at ${certificateVerifierConfig.address}`
+    );
+
     const trustedIR = getContractAt(
         trustedIssuersRegistry.address,
         trustedIssuersRegistry.abi,
@@ -68,7 +85,8 @@ async function main() {
         identityRegistryStorage,
         identityRegistry,
         modularCompliance,
-        token
+        token,
+        certificateVerifierConfig
     );
 
     const institutions = config.institutions || [];

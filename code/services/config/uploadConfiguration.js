@@ -14,7 +14,8 @@ function uploadConfig(
     identityRegistryStorage,
     identityRegistry,
     modularCompliance,
-    token
+    token,
+    certificateVerifier
 ) {
     // Update the configuration file with the address of the deployed factory
     const configFilePath = path.resolve(__dirname, '../../config.json');
@@ -34,6 +35,16 @@ function uploadConfig(
     }
 
     try {
+        configuration.identityFactory ??= {};
+        configuration.trex ??= {};
+        configuration.trex.implementationAuthority ??= {};
+        configuration.trex.claimsTopicRegistry ??= {};
+        configuration.trex.trustedIssuersRegistry ??= {};
+        configuration.trex.identityRegistryStorage ??= {};
+        configuration.trex.identityRegistry ??= {};
+        configuration.trex.modularCompliance ??= {};
+        configuration.trex.token ??= {};
+
         // Identity Factory configuration
         configuration.identityFactory.address = identityFactoryAddress;
         configuration.identityFactory.abi = identityFactoryAbi;
@@ -68,6 +79,12 @@ function uploadConfig(
         configuration.trex.token.address = token.address;
         configuration.trex.token.abi = token.abi;
 
+        // Certificate verification configuration
+        configuration.certificateVerifier = {
+            address: certificateVerifier.address,
+            abi: certificateVerifier.abi
+        };
+
         // Write the updated config object to the file
         fs.writeFileSync(
             configFilePath,
@@ -79,7 +96,7 @@ function uploadConfig(
         return;
     }
 
-    console.log(`[✓] Added the onchainid and trex to configurations`);
+    console.log(`[✓] Added the onchainid, trex and certificate verifier to configurations`);
 }
 
 module.exports = { uploadConfig };
