@@ -1,19 +1,15 @@
 import { CLAIM_TOPICS_OBJ } from '../ethereum/scripts/claims/claimTopics';
+import { ethers } from 'ethers';
 import hash from '../ethereum/scripts/utils/encryption/hash';
 import { BlockchainError } from '../errors/ErrorHandler';
 import { parseClaimData, formatCertificateClaim } from './claimFormat';
-import { getContractAt, getSigner } from './contracts';
+import { getCertificateVerifier } from './contracts';
 import { getUserClaims, getUserIdentity } from './identities';
-import { findInstitutionByIssuerAddress, isTrustedIssuerForTopic } from './institutions';
-
-const CLAIM_ISSUER_VALIDATION_ABI = [
-    'function isClaimValid(address identity, uint256 claimTopic, bytes sig, bytes data) view returns (bool)',
-];
+import { findInstitutionByIssuerAddress } from './institutions';
 
 const failedChecks = {
     digestMatch: false,
-    issuerTrusted: false,
-    signatureValid: false,
+    onChainVerified: false,
 };
 
 export async function validateCertificate(userAddress, certificateData) {
@@ -40,17 +36,18 @@ export async function validateCertificate(userAddress, certificateData) {
         const identity = await getUserIdentity(userAddress);
         const identityAddress = await identity.getAddress();
         const institution = findInstitutionByIssuerAddress(matchedClaim.issuer);
-        const issuerTrusted = await isTrustedIssuerForTopic(matchedClaim.issuer, CLAIM_TOPICS_OBJ.CERTIFICATE);
-        const signatureValid = await validateClaimSignature(identityAddress, matchedClaim, institution);
-        const isValid = issuerTrusted && signatureValid;
+        const isValid = await getCertificateVerifier().isCertifiedBy(
+            identityAddress,
+            ethers.id(CLAIM_TOPICS_OBJ.CERTIFICATE),
+            matchedClaim.data
+        );
 
         return {
             isValid,
-            reason: isValid ? null : 'Certificate claim exists, but issuer trust or signature validation failed',
+            reason: isValid ? null : 'Certificate claim exists, but on-chain verification failed',
             checks: {
                 digestMatch: true,
-                issuerTrusted,
-                signatureValid,
+                onChainVerified: isValid,
             },
             issuer: formatIssuer(institution, matchedClaim.issuer),
             claim: formatCertificateClaim(matchedClaim, 0),
@@ -84,25 +81,6 @@ function findMatchingClaim(claims, certificateReference) {
         const data = parseClaimData(claim.data);
         return claim.uri === targetHash || data.certificateDigest === targetHash;
     });
-}
-
-async function validateClaimSignature(identityAddress, claim, institution) {
-    try {
-        const claimIssuerContract = getContractAt(
-            claim.issuer,
-            institution?.abi || CLAIM_ISSUER_VALIDATION_ABI,
-            getSigner()
-        );
-
-        return await claimIssuerContract.isClaimValid(
-            identityAddress,
-            claim.topic,
-            claim.signature,
-            claim.data
-        );
-    } catch {
-        return false;
-    }
 }
 
 function formatIssuer(institution, issuerAddress) {

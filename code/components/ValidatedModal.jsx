@@ -27,8 +27,7 @@ const ValidatedModal = ({ visible, onDismiss, valid, result }) => {
                 {result?.reason ? <Text style={styles.reason}>{result.reason}</Text> : null}
                 <View style={styles.checks}>
                     <ValidationCheck label="Certificate digest" passed={!!checks.digestMatch} />
-                    <ValidationCheck label="Accredited issuer" passed={!!checks.issuerTrusted} />
-                    <ValidationCheck label="Claim signature" passed={!!checks.signatureValid} />
+                    <ValidationCheck label="On-chain trust verification" passed={!!checks.onChainVerified} />
                 </View>
                 {result?.issuer?.institutionID ? (
                     <Text style={styles.issuer}>Institution #{result.issuer.institutionID}</Text>
